@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <title>CB – Product Setup Wizard (Product + Options)</title>
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+  <div class="min-h-screen">
+
+    <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+      <div class="mx-auto max-w-5xl px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="h-9 w-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-semibold">cb</div>
+          <div class="leading-tight">
+            <div class="text-sm font-semibold">Product setup</div>
+            <div class="text-xs text-slate-500">Wizard</div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50">Cancel</button>
+          <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50">Save draft</button>
+          <button type="button" id="headerNextBtn" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800" onclick="nextStep()">Next</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-4 py-5">
+
+      <div class="rounded-2xl border border-slate-200 bg-white shadow-sm px-4 py-3">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
+              <span id="dot1" class="h-6 w-6 rounded-full bg-slate-900 text-white text-xs font-semibold flex items-center justify-center">1</span>
+              <span id="lbl1" class="text-sm font-medium">Product</span>
+            </div>
+            <span class="text-slate-300">›</span>
+            <div class="flex items-center gap-2">
+              <span id="dot2" class="h-6 w-6 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold flex items-center justify-center">2</span>
+              <span id="lbl2" class="text-sm text-slate-600">Options</span>
+            </div>
+            <span class="text-slate-300">›</span>
+            <div class="flex items-center gap-2">
+              <span id="dot3" class="h-6 w-6 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold flex items-center justify-center">3</span>
+              <span id="lbl3" class="text-sm text-slate-600">Review</span>
+            </div>
+          </div>
+
+          <div class="text-xs text-slate-500">
+            <span id="stepHint">Step 1 of 3</span>
+          </div>
+        </div>
+      </div>
+
+      <section id="step1" class="mt-5">
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <div class="text-base font-semibold">Product</div>
+              <div class="mt-1 text-sm text-slate-500">
+                A product is a reusable invoice template. Prices are defined on options.
+              </div>
+
+              <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 py-0.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                  Status: <span class="font-medium text-slate-700">Draft</span> (editable after save)
+                </span>
+                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 py-0.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                  Tax is product-wide
+                </span>
+              </div>
+            </div>
+
+            <img src="assets/product-setup-reference.png" alt="Reference"
+                 class="h-12 w-20 object-cover rounded-lg border border-slate-200 bg-slate-100" />
+          </div>
+
+          <div class="px-5 py-5 space-y-5">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="md:col-span-2">
+                <label class="text-sm font-medium">Name</label>
+                <input id="pName" type="text" value="Membership fee 2026"
+                       class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="text-sm font-medium">Description <span class="text-slate-400 font-normal">(optional)</span></label>
+                <textarea id="pDesc" rows="2"
+                          class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300">Used for standard annual membership billing.</textarea>
+                <div class="mt-1 text-xs text-slate-500">Internal note only.</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="text-sm font-medium">Category <span class="text-slate-400 font-normal">(filter only)</span></label>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  <button type="button" class="px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white">Membership</button>
+                  <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">Course</button>
+                  <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">Event</button>
+                  <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">Other</button>
+                </div>
+                <div class="mt-1 text-xs text-slate-500">Used for filtering and reporting only.</div>
+              </div>
+
+              <div>
+                <label class="text-sm font-medium">Tax rate</label>
+                <select id="pTax" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300">
+                  <option value="none">No tax rate</option>
+                  <option value="0">0%</option>
+                  <option value="7.7" selected>7.7%</option>
+                  <option value="19">19%</option>
+                  <option value="20">20%</option>
+                </select>
+                <div class="mt-1 text-xs text-slate-500">Applied to all invoices created from this product.</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="md:col-span-2">
+                <div class="text-sm font-medium">Available in</div>
+                <div class="mt-1 text-xs text-slate-500">Controls where the product can be selected.</div>
+              </div>
+
+              <label class="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700">
+                <input id="availInvoice" type="checkbox" checked class="mt-1 h-4 w-4"/>
+                <span class="min-w-0">
+                  <span class="font-medium">Invoice creation</span>
+                  <span class="block text-xs text-slate-500 mt-0.5">Selectable in manual invoice creation.</span>
+                </span>
+              </label>
+
+              <label class="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700">
+                <input id="availMembership" type="checkbox" checked class="mt-1 h-4 w-4"/>
+                <span class="min-w-0">
+                  <span class="font-medium">Membership fee assignment</span>
+                  <span class="block text-xs text-slate-500 mt-0.5">Shown in membership fee assignment flow.</span>
+                </span>
+              </label>
+            </div>
+
+            <details class="group">
+              <summary class="list-none cursor-pointer flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-medium">Meta settings</span>
+                  <span class="text-xs text-slate-400">(optional)</span>
+                </div>
+                <span class="text-xs text-slate-500 group-open:hidden">Show</span>
+                <span class="text-xs text-slate-500 hidden group-open:inline">Hide</span>
+              </summary>
+
+              <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <div class="flex items-center justify-between">
+                    <div class="text-sm font-medium">Scope</div>
+                    <span class="text-xs text-slate-400">Filter / warning</span>
+                  </div>
+                  <div class="mt-1 text-xs text-slate-500">
+                    Used for filtering and warnings only. Department scope does not block assignment.
+                  </div>
+
+                  <div class="mt-2 flex flex-wrap gap-4 text-sm text-slate-700">
+                    <label class="flex items-center gap-2">
+                      <input type="checkbox" checked class="h-4 w-4"/>
+                      Club
+                    </label>
+                    <label class="flex items-center gap-2">
+                      <input type="checkbox" class="h-4 w-4"/>
+                      Department
+                    </label>
+                  </div>
+
+                  <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700">
+                    <option>Select department…</option>
+                    <option>Football</option>
+                    <option>Tennis</option>
+                    <option>Gymnastics</option>
+                  </select>
+                  <div class="mt-1 text-xs text-slate-500">Only relevant if Department is selected.</div>
+                </div>
+
+                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <div class="flex items-center justify-between">
+                    <div class="text-sm font-medium">Status</div>
+                    <span class="text-xs text-slate-400">Create mode</span>
+                  </div>
+                  <div class="mt-1 text-xs text-slate-500">Status can be changed after saving (edit mode).</div>
+                  <select disabled class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600">
+                    <option>Draft</option>
+                    <option>Active</option>
+                    <option>Inactive</option>
+                  </select>
+                </div>
+              </div>
+            </details>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div class="md:col-span-2">
+                <div class="text-sm font-medium">Default service period <span class="text-slate-400 font-normal">(optional)</span></div>
+                <div class="mt-1 text-xs text-slate-500">
+                  A relative period keeps the product reusable. Final dates are set on the invoice.
+                </div>
+                <div class="mt-2 grid grid-cols-2 gap-3 max-w-md">
+                  <input id="spDur" type="number" value="1" min="1"
+                         class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
+                  <select id="spUnit" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300">
+                    <option>Year</option>
+                    <option>Month</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between">
+            <div class="text-xs text-slate-500">Next: add pricing options (one-off, installments, subscription).</div>
+            <div class="flex items-center gap-2">
+              <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="goToStep(1)">Stay</button>
+              <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800" onclick="goToStep(2)">Continue</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="step2" class="mt-5 hidden">
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <div class="text-base font-semibold">Options</div>
+              <div class="mt-1 text-sm text-slate-500">
+                Each option defines a pricing variant and payment type. Dates are finalized when invoices are created.
+              </div>
+              <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 py-0.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                  Product tax: <span id="taxBadge" class="font-medium text-slate-700">7.7%</span>
+                </span>
+                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 py-0.5">
+                  <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+                  Service period: <span id="spBadge" class="font-medium text-slate-700">1 Year</span>
+                </span>
+              </div>
+            </div>
+
+            <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="openOptionModal()">
+              Add option
+            </button>
+          </div>
+
+          <div class="px-5 py-4">
+            <div class="overflow-hidden rounded-xl border border-slate-200">
+              <table class="w-full text-sm">
+                <thead class="bg-slate-50 text-slate-600">
+                  <tr>
+                    <th class="text-left font-medium px-3 py-2">Option</th>
+                    <th class="text-left font-medium px-3 py-2">Type</th>
+                    <th class="text-left font-medium px-3 py-2">Default</th>
+                    <th class="text-left font-medium px-3 py-2">Indicators</th>
+                    <th class="text-right font-medium px-3 py-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="optionsTbody" class="divide-y divide-slate-100">
+                  <tr class="hover:bg-slate-50/50">
+                    <td class="px-3 py-2">
+                      <div class="font-medium">Standard</div>
+                      <div class="text-xs text-slate-500">Default membership fee</div>
+                    </td>
+                    <td class="px-3 py-2">
+                      <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700">Once off</span>
+                    </td>
+                    <td class="px-3 py-2">
+                      <div>CHF 220.00</div>
+                      <div class="text-xs text-slate-500">Tax via product</div>
+                    </td>
+                    <td class="px-3 py-2">
+                      <div class="flex flex-wrap gap-1.5">
+                        <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-600">Initial invoice</span>
+                        <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-600">Fees</span>
+                      </div>
+                    </td>
+                    <td class="px-3 py-2 text-right">
+                      <button type="button" class="text-sm text-slate-700 hover:text-slate-900" onclick="openOptionModal()">Edit</button>
+                      <span class="mx-2 text-slate-300">·</span>
+                      <button type="button" class="text-sm text-slate-500 hover:text-slate-700">Remove</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="mt-3 text-xs text-slate-500">
+              Initial payment always creates a separate initial invoice and is not combined with the first plan invoice.
+            </div>
+          </div>
+
+          <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between">
+            <div class="text-xs text-slate-500">Next: review and create the product.</div>
+            <div class="flex items-center gap-2">
+              <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="prevStep()">Back</button>
+              <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800" onclick="nextStep()">Continue</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="step3" class="mt-5 hidden">
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+          <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
+            <div class="min-w-0">
+              <div class="text-base font-semibold">Review</div>
+              <div class="mt-1 text-sm text-slate-500">
+                Confirm product defaults and options. After saving you can activate the product.
+              </div>
+            </div>
+            <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="goToStep(1)">Edit product</button>
+          </div>
+
+          <div class="px-5 py-5 space-y-5">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div class="text-sm font-semibold">Product</div>
+              <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                  <div class="text-xs text-slate-500">Name</div>
+                  <div id="rvName" class="mt-1 font-medium">Membership fee 2026</div>
+                </div>
+                <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                  <div class="text-xs text-slate-500">Tax rate</div>
+                  <div id="rvTax" class="mt-1 font-medium">7.7%</div>
+                </div>
+                <div class="md:col-span-2 rounded-xl border border-slate-200 bg-white px-3 py-2">
+                  <div class="text-xs text-slate-500">Description</div>
+                  <div id="rvDesc" class="mt-1 text-slate-700">Used for standard annual membership billing.</div>
+                </div>
+                <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                  <div class="text-xs text-slate-500">Service period</div>
+                  <div id="rvSP" class="mt-1 font-medium">1 Year</div>
+                </div>
+                <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                  <div class="text-xs text-slate-500">Available in</div>
+                  <div id="rvAvail" class="mt-1 font-medium">Invoice creation, Membership assignment</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200 bg-white p-4">
+              <div class="text-sm font-semibold">Options</div>
+              <div class="mt-3 space-y-2">
+                <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <div class="text-sm font-medium">Standard</div>
+                      <div class="text-xs text-slate-500">Once off — CHF 220.00</div>
+                    </div>
+                    <div class="flex flex-wrap gap-1.5">
+                      <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-600">Initial invoice</span>
+                      <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-600">Fees</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3 text-xs text-slate-500">
+                Initial payment creates a separate initial invoice. Fees are not supported on the initial invoice.
+              </div>
+            </div>
+
+            <div class="rounded-2xl border border-slate-200 bg-white p-4">
+              <div class="text-sm font-semibold">Important</div>
+              <ul class="mt-2 space-y-2 text-sm text-slate-600 list-disc list-inside">
+                <li>Options define prices and payment types. Product stays reusable.</li>
+                <li>Final invoice dates and due dates are set during invoice creation / membership assignment.</li>
+                <li>Tax is configured on the product and applied product-wide.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between">
+            <div class="text-xs text-slate-500">Finish creates the product in Draft status.</div>
+            <div class="flex items-center gap-2">
+              <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="prevStep()">Back</button>
+              <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800">Finish</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <div id="optionModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" onclick="closeOptionModal()">
+      <div class="absolute inset-0 bg-slate-900/40"></div>
+
+      <div class="relative w-full max-w-3xl rounded-2xl bg-white shadow-xl border border-slate-200 overflow-hidden" onclick="event.stopPropagation()">
+        <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-3">
+          <div>
+            <div class="text-base font-semibold">Create option</div>
+            <div class="mt-1 text-sm text-slate-500">
+              Keep your existing option UI; texts clarify initial payment and tax behavior.
+            </div>
+          </div>
+          <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="closeOptionModal()">Close</button>
+        </div>
+
+        <div class="p-5 space-y-5">
+
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-sm font-semibold">Payment type</div>
+                <div class="mt-1 text-xs text-slate-500">Select one option type.</div>
+              </div>
+              <span id="typeBadge" class="text-xs rounded-full bg-white border border-slate-200 px-2 py-0.5 text-slate-600">Installments</span>
+            </div>
+
+            <div class="mt-3 flex flex-wrap gap-2">
+              <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50" onclick="setType('once')">Once off</button>
+              <button type="button" class="px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white" onclick="setType('installments')">Installments</button>
+              <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50" onclick="setType('subscription')">Subscription</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-sm font-medium">Title</label>
+              <input type="text" value="Installments" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+            </div>
+            <div>
+              <label class="text-sm font-medium">Description <span class="text-slate-400 font-normal">(optional)</span></label>
+              <input type="text" value="Split payment plan" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+            </div>
+          </div>
+
+          <div id="typeOnce" class="rounded-2xl border border-slate-200 bg-white p-4 hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-sm font-semibold">Once off</div>
+                <div class="mt-1 text-xs text-slate-500">Charged once. Tax is applied based on the product.</div>
+              </div>
+              <span class="text-xs rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">Tax via product</span>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs text-slate-600">Amount</label>
+                <div class="mt-1 flex gap-2">
+                  <input type="number" value="220.00" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+                  <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"><option>CHF</option><option>EUR</option></select>
+                </div>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+                <div class="text-xs text-slate-500">Preview</div>
+                <div class="mt-1 font-medium">CHF 220.00</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="typeInstallments" class="rounded-2xl border border-slate-200 bg-white p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-sm font-semibold">Installments</div>
+                <div class="mt-1 text-xs text-slate-500">Enter default amounts. Tax is applied based on the product.</div>
+              </div>
+              <span class="text-xs rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">Tax via product</span>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div class="md:col-span-2">
+                <label class="text-xs text-slate-600">Amount per installment</label>
+                <div class="mt-1 flex gap-2">
+                  <input type="number" value="20.00" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+                  <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"><option>CHF</option><option>EUR</option></select>
+                </div>
+                <div class="mt-1 text-xs text-slate-500">No net/gross selection. Tax comes from product.</div>
+              </div>
+              <div>
+                <label class="text-xs text-slate-600">Number of installments</label>
+                <input type="number" value="12" min="2" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+              </div>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs text-slate-600">Billing cycle</label>
+                <select class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                  <option>Monthly</option>
+                  <option>Quarterly</option>
+                  <option>Semi-annual</option>
+                  <option>Yearly</option>
+                </select>
+                <div class="mt-1 text-xs text-slate-500">Billing start date is chosen later (assignment / invoice draft).</div>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+                <div class="text-xs text-slate-500">Preview</div>
+                <div class="mt-1 font-medium">12 × CHF 20.00</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="typeSubscription" class="rounded-2xl border border-slate-200 bg-white p-4 hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-sm font-semibold">Subscription</div>
+                <div class="mt-1 text-xs text-slate-500">Recurring payment. Tax is applied based on the product.</div>
+              </div>
+              <span class="text-xs rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">Tax via product</span>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs text-slate-600">Amount per interval</label>
+                <div class="mt-1 flex gap-2">
+                  <input type="number" value="25.00" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+                  <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"><option>CHF</option><option>EUR</option></select>
+                </div>
+              </div>
+              <div>
+                <label class="text-xs text-slate-600">Interval</label>
+                <select class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                  <option>Monthly</option>
+                  <option>Quarterly</option>
+                  <option>Semi-annual</option>
+                  <option>Yearly</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+              <div class="text-xs text-slate-500">Preview</div>
+              <div class="mt-1 font-medium">CHF 25.00 / month</div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-sm font-semibold">Initial payment <span class="text-slate-400 font-normal">(optional)</span></div>
+                <div class="mt-1 text-xs text-slate-500">
+                  If set, a separate initial invoice is created. It is not combined with the first plan invoice.
+                </div>
+              </div>
+              <span class="text-xs rounded-full bg-white border border-slate-200 px-2 py-0.5 text-slate-600">Enabled</span>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="text-xs text-slate-600">Title <span class="text-slate-400">(optional)</span></label>
+                <input type="text" value="Registration fee" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+              </div>
+              <div>
+                <label class="text-xs text-slate-600">Amount</label>
+                <div class="mt-1 flex gap-2">
+                  <input type="number" value="30.00" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+                  <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"><option>CHF</option><option>EUR</option></select>
+                </div>
+                <div class="mt-1 text-xs text-slate-500">Tax is applied based on the product.</div>
+              </div>
+
+              <div class="md:col-span-2">
+                <label class="text-xs text-slate-600">Fee <span class="text-slate-400">(not supported for initial invoice)</span></label>
+                <div class="mt-1 flex gap-2">
+                  <select disabled class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500">
+                    <option>No fee</option>
+                  </select>
+                  <button disabled class="shrink-0 px-3 py-2 text-sm rounded-xl border border-slate-200 bg-slate-50 text-slate-400">New fee</button>
+                </div>
+                <div class="mt-1 text-xs text-slate-500">Fees can be applied on plan invoices only.</div>
+              </div>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                <div class="text-xs text-slate-500">Preview — Initial invoice</div>
+                <div class="mt-1 flex items-center justify-between">
+                  <span>Registration fee</span><span class="font-medium">CHF 30.00</span>
+                </div>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                <div class="text-xs text-slate-500">Preview — Plan invoice #1</div>
+                <div class="mt-1 flex items-center justify-between">
+                  <span>First plan payment</span><span class="font-medium">Depends on type</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white p-4">
+            <div class="text-sm font-semibold">Fees <span class="text-slate-400 font-normal">(optional)</span></div>
+            <div class="mt-1 text-xs text-slate-500">Applied on plan invoices (installments/subscription).</div>
+            <div class="mt-2 flex gap-2">
+              <select class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300">
+                <option>No fee</option>
+                <option>Admin fee (CHF 5.00)</option>
+                <option>Processing fee (2%)</option>
+              </select>
+              <button type="button" class="shrink-0 px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white hover:bg-slate-50">New fee</button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="px-5 py-4 border-t border-slate-100 flex items-center justify-between">
+          <div class="text-xs text-slate-500">Close to return to the options list.</div>
+          <div class="flex items-center gap-2">
+            <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="closeOptionModal()">Cancel</button>
+            <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800" onclick="closeOptionModal()">Save option</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    let currentStep = 1;
+
+    function goToStep(n) {
+      currentStep = Math.max(1, Math.min(3, n));
+      document.getElementById('step1').classList.toggle('hidden', currentStep !== 1);
+      document.getElementById('step2').classList.toggle('hidden', currentStep !== 2);
+      document.getElementById('step3').classList.toggle('hidden', currentStep !== 3);
+
+      document.getElementById('dot1').className = baseDotClass(currentStep >= 1, currentStep === 1, '1');
+      document.getElementById('dot2').className = baseDotClass(currentStep >= 2, currentStep === 2, '2');
+      document.getElementById('dot3').className = baseDotClass(currentStep >= 3, currentStep === 3, '3');
+
+      document.getElementById('lbl1').className = labelClass(currentStep === 1);
+      document.getElementById('lbl2').className = labelClass(currentStep === 2);
+      document.getElementById('lbl3').className = labelClass(currentStep === 3);
+
+      document.getElementById('stepHint').textContent = `Step ${currentStep} of 3`;
+
+      const nextBtn = document.getElementById('headerNextBtn');
+      nextBtn.textContent = currentStep === 3 ? 'Finish' : 'Next';
+
+      syncBadges();
+      syncReview();
+    }
+
+    function nextStep() {
+      if (currentStep < 3) goToStep(currentStep + 1);
+      else alert('Finish (prototype)');
+    }
+
+    function prevStep() {
+      if (currentStep > 1) goToStep(currentStep - 1);
+    }
+
+    function baseDotClass(isReached, isActive) {
+      if (isActive) return 'h-6 w-6 rounded-full bg-slate-900 text-white text-xs font-semibold flex items-center justify-center';
+      if (isReached) return 'h-6 w-6 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold flex items-center justify-center';
+      return 'h-6 w-6 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold flex items-center justify-center';
+    }
+
+    function labelClass(isActive) {
+      return isActive ? 'text-sm font-medium' : 'text-sm text-slate-600';
+    }
+
+    function syncBadges() {
+      const tax = document.getElementById('pTax').value;
+      document.getElementById('taxBadge').textContent = tax === 'none' ? 'None' : `${tax}%`;
+
+      const d = document.getElementById('spDur').value || '—';
+      const u = document.getElementById('spUnit').value || '';
+      document.getElementById('spBadge').textContent = `${d} ${u}`;
+    }
+
+    function syncReview() {
+      const name = document.getElementById('pName').value || '—';
+      const desc = document.getElementById('pDesc').value || '—';
+      const tax = document.getElementById('pTax').value;
+      const d = document.getElementById('spDur').value || '—';
+      const u = document.getElementById('spUnit').value || '';
+      const a1 = document.getElementById('availInvoice').checked;
+      const a2 = document.getElementById('availMembership').checked;
+
+      document.getElementById('rvName').textContent = name;
+      document.getElementById('rvDesc').textContent = desc;
+      document.getElementById('rvTax').textContent = tax === 'none' ? 'None' : `${tax}%`;
+      document.getElementById('rvSP').textContent = `${d} ${u}`;
+
+      const avail = [];
+      if (a1) avail.push('Invoice creation');
+      if (a2) avail.push('Membership assignment');
+      document.getElementById('rvAvail').textContent = avail.length ? avail.join(', ') : '—';
+    }
+
+    function openOptionModal() {
+      document.getElementById('optionModal').classList.remove('hidden');
+      document.getElementById('optionModal').classList.add('flex');
+    }
+
+    function closeOptionModal() {
+      const m = document.getElementById('optionModal');
+      m.classList.add('hidden');
+      m.classList.remove('flex');
+    }
+
+    function setType(type) {
+      const once = document.getElementById('typeOnce');
+      const inst = document.getElementById('typeInstallments');
+      const sub = document.getElementById('typeSubscription');
+
+      once.classList.toggle('hidden', type !== 'once');
+      inst.classList.toggle('hidden', type !== 'installments');
+      sub.classList.toggle('hidden', type !== 'subscription');
+
+      const badge = document.getElementById('typeBadge');
+      badge.textContent = type === 'once' ? 'Once off' : (type === 'subscription' ? 'Subscription' : 'Installments');
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeOptionModal();
+    });
+
+    goToStep(1);
+  </script>
+</body>
+</html>
