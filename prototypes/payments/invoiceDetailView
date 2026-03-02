@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachBetter – Invoice detail (view/edit)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-900">
+  <div class="max-w-7xl mx-auto px-6 py-8">
+
+    <!-- CALM HEADER -->
+    <header class="bg-white border rounded-xl shadow-sm px-6 py-5">
+      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+        <!-- Left -->
+        <div class="min-w-0">
+          <div class="flex items-center gap-3">
+            <h1 class="text-lg font-semibold text-gray-900 truncate">
+              <span id="hName">Mara Muster</span>
+              <span class="text-gray-300 mx-2">·</span>
+              <span class="text-gray-700 font-medium" id="hInvoiceNo">Invoice #2026-00431</span>
+            </h1>
+          </div>
+
+          <div class="mt-2 flex flex-wrap items-center gap-2">
+            <!-- only 2 badges -->
+            <span id="badgeFlow" class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-gray-100 text-gray-700">
+              Installments
+            </span>
+            <span id="badgeStatus" class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-yellow-50 text-yellow-700">
+              Open
+            </span>
+
+            <span class="text-[11px] text-gray-500 ml-1">
+              Issued <span class="font-medium text-gray-700" id="hIssued">01.03.2026</span>
+              <span class="text-gray-300 mx-2">·</span>
+              Due <span class="font-medium text-gray-700" id="hDue">15.03.2026</span>
+              <span class="text-gray-300 mx-2">·</span>
+              <span id="hContext">Membership 2026</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Right -->
+        <div class="flex items-start gap-4 justify-between lg:justify-end">
+          <div class="text-right">
+            <div class="text-[11px] text-gray-500">Total</div>
+            <div class="text-2xl font-semibold text-gray-900" id="hTotal">CHF 500.00</div>
+            <div class="mt-1 text-[11px] text-gray-500">
+              Paid <span class="font-medium text-gray-700" id="hPaid">CHF 0.00</span>
+              <span class="text-gray-300 mx-2">·</span>
+              Open <span class="font-medium text-gray-700" id="hOpen">CHF 500.00</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col items-end gap-2 shrink-0">
+            <!-- demo toggles -->
+            <div class="flex items-center gap-2">
+              <select id="flowSelect" class="px-3 py-2 text-sm rounded-lg border bg-white" onchange="setFlow(this.value)">
+                <option value="once">Once off</option>
+                <option value="inst" selected>Installments</option>
+                <option value="sub">Subscription</option>
+              </select>
+              <select id="stateSelect" class="px-3 py-2 text-sm rounded-lg border bg-white" onchange="setState(this.value)">
+                <option value="open" selected>Open</option>
+                <option value="partial">Partially paid</option>
+                <option value="paid">Paid</option>
+                <option value="sepa">In SEPA file</option>
+                <option value="refunded">Refunded</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button class="px-3 py-2 text-sm rounded-lg border bg-white hover:bg-gray-50" onclick="toast('Download PDF (dummy)')">Download</button>
+
+              <div class="inline-flex rounded-xl border bg-gray-50 p-1">
+                <button id="btnView" class="px-3 py-2 text-sm rounded-lg bg-white shadow-sm border border-gray-200" onclick="setMode('view')">View</button>
+                <button id="btnEdit" class="px-3 py-2 text-sm rounded-lg text-gray-700 hover:bg-white/60" onclick="setMode('edit')">Edit</button>
+              </div>
+
+              <button id="btnSave" class="hidden px-3 py-2 text-sm rounded-lg bg-blue-600 text-white hover:bg-blue-700" onclick="toast('Saved (dummy)')">Save</button>
+              <button id="btnCancel" class="hidden px-3 py-2 text-sm rounded-lg border bg-white hover:bg-gray-50" onclick="toast('Cancelled changes (dummy)')">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slim alert (only when needed) -->
+      <div id="miniAlert" class="hidden mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3">
+        <div class="text-sm font-semibold text-amber-900" id="miniAlertTitle">Limited editing</div>
+        <div class="text-sm text-amber-800 mt-1" id="miniAlertText">This invoice is included in a generated SEPA file. Editing payment method/items may create a mismatch.</div>
+      </div>
+    </header>
+
+    <!-- BODY -->
+    <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- MAIN -->
+      <main class="lg:col-span-2">
+        <div class="bg-white border rounded-xl shadow-sm overflow-hidden">
+
+          <!-- Group context (minimal) -->
+          <div id="groupWrap" class="hidden px-6 py-5">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <div class="text-xs font-semibold text-gray-800">Connected invoices</div>
+                <div class="text-[11px] text-gray-500 mt-1" id="groupHint">These invoices are connected by a plan/subscription.</div>
+              </div>
+              <button class="text-sm text-gray-600 hover:text-gray-900" onclick="toast('Open plan (dummy)')">Open plan</button>
+            </div>
+
+            <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+              <div>
+                <div class="text-[11px] text-gray-500">Default payment</div>
+                <div class="font-medium text-gray-900" id="gPayDefault">SEPA direct debit</div>
+              </div>
+              <div>
+                <div class="text-[11px] text-gray-500">Schedule</div>
+                <div class="font-medium text-gray-900" id="gSchedule">Monthly · 3 invoices</div>
+              </div>
+              <div>
+                <div class="text-[11px] text-gray-500">Discount scope</div>
+                <div class="font-medium text-gray-900" id="gScope">First invoice only</div>
+              </div>
+            </div>
+
+            <div id="connectedList" class="mt-4 flex flex-col gap-2"></div>
+          </div>
+
+          <div class="border-t"></div>
+
+          <!-- Content sections (lighter in VIEW) -->
+          <div class="px-6 py-6 space-y-10">
+
+            <!-- Recipient & Billing -->
+            <section>
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <div class="text-xs font-semibold text-gray-800">Recipient & billing</div>
+                  <div class="text-[11px] text-gray-500 mt-1">Billing contact is used for PDF and email delivery.</div>
+                </div>
+                <button class="text-sm text-gray-600 hover:text-gray-900" onclick="toast('Open profile (dummy)')">Open profile</button>
+              </div>
+
+              <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div class="space-y-3">
+                  <!-- VIEW: plain rows -->
+                  <div class="cbRow" data-kind="viewRow">
+                    <div class="text-[11px] text-gray-500">Recipient</div>
+                    <div class="text-sm font-medium text-gray-900">Mara Muster</div>
+                    <div class="text-[11px] text-gray-500 mt-0.5">Profile ID: 10293 · Member</div>
+                  </div>
+
+                  <!-- EDIT: inputs -->
+                  <div class="cbField hidden" data-kind="editField">
+                    <label class="text-xs text-gray-500">Recipient email</label>
+                    <input id="recEmail" class="mt-1 w-full border rounded-lg px-3 py-2 text-sm bg-white disabled:bg-gray-50 disabled:text-gray-500" value="mara.muster@example.com">
+                  </div>
+
+                  <div class="cbField hidden" data-kind="editField">
+                    <label class="text-xs text-gray-500">Recipient phone</label>
+                    <input id="recPhone" class="mt-1 w-full border rounded-lg px-3 py-2 text-sm bg-white disabled:bg-gray-50 disabled:text-gray-500" value="+41 79 123 45 67">
+                  </div>
+                </div>
+
+                <div class="space-y-3">
+                  <div class="cbRow" data-kind="viewRow">
+                    <div class="text-[11px] text-gray-500">Billing contact</div>
+                    <div class="text-sm font-medium text-gray-900">Claudia Muster</div>
+                    <div class="text-[11px] text-gray-500 mt-0.5">Relationship: Parent</div>
+                  </div>
+
+                  <div class="cbField hidden" data-kind="editField">
+                    <label class="text-xs text-gray-500">Billing email</label>
+                    <input id="billEmail" class="mt-1 w-full border rounded-lg px-3 py-2 text-sm bg-white disabled:bg-gray-50 disabled:text-gray-500" value="claudia.muster@example.com">
+                  </div>
+
+                  <div class="cbField hidden" data-kind="editField">
+                    <label class="text-xs text-gray-500">Billing address</label>
+                    <textarea id="billAddress" rows="3" class="mt-1 w-full border rounded-xl px-3 py-2 text-sm bg-white disabled:bg-gray-50 disabled:text-gray-500">Musterstrasse 12
+8000 Zürich
+Switzerland</textarea>
+                  </div>
+
+                  <div id="billingWarn" class="hidden rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                    <div class="font-semibold">Billing data incomplete</div>
+                    <div class="mt-1 text-amber-800 text-sm">Missing billing email or address may block delivery.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Payment method (compact) -->
+            <section class="border-t pt-8">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <div class="text-xs font-semibold text-gray-800">Payment method</div>
+                  <div class="text-[11px] text-gray-500 mt-1">Defines how this invoice is collected.</div>
+                </div>
+              </div>
+
+              <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <div class="cbRow" data-kind="viewRow">
+                    <div class="text-[11px] text-gray-500">Method</div>
+                    <div class="text-sm font-medium text-gray-900" id="payMethodView">Bank transfer</div>
+                    <div class="text-[11px] text-gray-500 mt-1" id="payHintView">IBAN shown on PDF. Member pays manually.</div>
+                  </div>
+
+                  <div class="cbField hidden" data-kind="editField">
+                    <label class="text-xs text-gray-500">Method</label>
+                    <select id="payMethod" class="mt-1 w-full border rounded-lg px-3 py-2 text-sm bg-white disabled:bg-gray-50 disabled:text-gray-500" onchange="syncAll()">
+                      <option value="bank" selected>Bank transfer</option>
+                      <option value="sepa">SEPA direct debit</option>
+                      <option value="cash">Cash</option>
+                      <option value="psp">Card / PSP</option>
+                    </select>
+
+                    <div id="applyScopeWrap" class="hidden mt-3">
+                      <label class="text-xs text-gray-500">Apply change to</label>
+                      <select id="applyScope" class="mt-1 w-full border rounded-lg px-3 py-2 text-sm bg-white disabled:bg-gray-50 disabled:text-gray-500">
+                        <option value="this" selected>This invoice only</option>
+                        <option value="future">All future invoices</option>
+                      </select>
+                      <p class="mt-2 text-[11px] text-gray-500">Past invoices are not changed automatically.</p>
+                    </div>
+                  </div>
+
+                  <div id="payLockHint" class="hidden mt-3 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                    <div class="font-semibold">Payment method changes limited</div>
+                    <div class="mt-1 text-amber-800 text-sm">Transactions exist or SEPA file was generated.</div>
+                  </div>
+                </div>
+
+                <div class="cbRow" data-kind="viewRow">
+                  <div class="text-[11px] text-gray-500">Reference</div>
+                  <div class="text-sm font-medium text-gray-900">RF18 0000 0000 0000 0000 0</div>
+                  <div class="text-[11px] text-gray-500 mt-1">Used on bank transfer slips.</div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Line items (kept) -->
+            <section class="border-t pt-8">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <div class="text-xs font-semibold text-gray-800">Line items</div>
+                  <div class="text-[11px] text-gray-500 mt-1">If locked, use corrections (credit note / additional invoice).</div>
+                </div>
+                <button id="btnAddItem" class="hidden px-3 py-2 text-sm rounded-lg border bg-white hover:bg-gray-50" onclick="toast('Add item (dummy)')" data-kind="editField">Add item</button>
+              </div>
+
+              <div class="mt-4 border rounded-xl overflow-hidden">
+                <table class="w-full text-sm">
+                  <thead class="text-xs text-gray-500 bg-gray-50">
+                    <tr>
+                      <th class="text-left px-4 py-2 font-medium">Description</th>
+                      <th class="text-right px-4 py-2 font-medium">Qty</th>
+                      <th class="text-right px-4 py-2 font-medium">Unit</th>
+                      <th class="text-right px-4 py-2 font-medium">Tax</th>
+                      <th class="text-right px-4 py-2 font-medium">Total</th>
+                      <th class="text-right px-4 py-2 font-medium" data-kind="editField"></th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y" id="itemsBody">
+                    <tr>
+                      <td class="px-4 py-3">
+                        <span class="cbText" data-kind="viewRow">Membership fee 2026</span>
+                        <input id="liDesc" class="hidden w-full border rounded-lg px-2 py-1 text-sm bg-white disabled:bg-gray-50 disabled:text-gray-500" value="Membership fee 2026" data-kind="editField">
+                      </td>
+                      <td class="px-4 py-3 text-right">
+                        <span class="cbText" data-kind="viewRow">1</span>
+                        <input id="liQty" class="hidden w-16 border rounded-lg px-2 py-1 text-sm text-right bg-white disabled:bg-gray-50 disabled:text-gray-500" value="1" data-kind="editField">
+                      </td>
+                      <td class="px-4 py-3 text-right">
+                        <span class="cbText" data-kind="viewRow">CHF 460.00</span>
+                        <input id="liUnit" class="hidden w-28 border rounded-lg px-2 py-1 text-sm text-right bg-white disabled:bg-gray-50 disabled:text-gray-500" value="460.00" data-kind="editField">
+                      </td>
+                      <td class="px-4 py-3 text-right">
+                        <span class="cbText" data-kind="viewRow">CHF 40.00</span>
+                        <input id="liTax" class="hidden w-24 border rounded-lg px-2 py-1 text-sm text-right bg-white disabled:bg-gray-50 disabled:text-gray-500" value="40.00" data-kind="editField">
+                      </td>
+                      <td class="px-4 py-3 text-right font-semibold">CHF 500.00</td>
+                      <td class="px-4 py-3 text-right hidden" data-kind="editField">
+                        <button id="btnRemoveItem" class="text-sm text-gray-600 hover:text-gray-900" onclick="toast('Remove item (dummy)')">Remove</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="mt-3 flex items-center justify-end text-sm">
+                <div class="text-gray-600 mr-2">Total</div>
+                <div class="font-semibold text-gray-900" id="itemsTotal">CHF 500.00</div>
+              </div>
+            </section>
+
+            <!-- TRANSACTIONS INTEGRATED -->
+            <section class="border-t pt-8">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <div class="text-xs font-semibold text-gray-800">Payments</div>
+                  <div class="text-[11px] text-gray-500 mt-1">Add new transactions (don’t edit existing ones).</div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="px-3 py-2 text-sm rounded-lg border bg-white hover:bg-gray-50" onclick="toast('Add payment (dummy)')">Add payment</button>
+                  <button class="px-3 py-2 text-sm rounded-lg border bg-white hover:bg-gray-50" onclick="toast('Refund (dummy)')">Refund</button>
+                </div>
+              </div>
+
+              <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+                <div class="border rounded-lg px-3 py-2 bg-white flex items-center justify-between">
+                  <span class="text-gray-600">Paid</span>
+                  <span class="font-semibold text-gray-900" id="pPaid">CHF 0.00</span>
+                </div>
+                <div class="border rounded-lg px-3 py-2 bg-white flex items-center justify-between">
+                  <span class="text-gray-600">Open</span>
+                  <span class="font-semibold text-gray-900" id="pOpen">CHF 500.00</span>
+                </div>
+                <div class="border rounded-lg px-3 py-2 bg-white flex items-center justify-between">
+                  <span class="text-gray-600">Method</span>
+                  <span class="font-medium text-gray-900" id="pMethod">Bank transfer</span>
+                </div>
+              </div>
+
+              <div class="mt-4 border rounded-xl overflow-hidden">
+                <table class="w-full text-sm">
+                  <thead class="text-xs text-gray-500 bg-gray-50">
+                    <tr>
+                      <th class="text-left px-4 py-2 font-medium">Date</th>
+                      <th class="text-left px-4 py-2 font-medium">Type</th>
+                      <th class="text-left px-4 py-2 font-medium">Method</th>
+                      <th class="text-right px-4 py-2 font-medium">Amount</th>
+                      <th class="text-left px-4 py-2 font-medium">Status</th>
+                      <th class="text-right px-4 py-2 font-medium">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y" id="txRows"></tbody>
+                </table>
+              </div>
+
+              <p class="mt-3 text-[11px] text-gray-500" id="mistakeHint">
+                If you made a mistake: create a compensation entry (do not delete/edit existing transactions).
+              </p>
+            </section>
+
+          </div>
+        </div>
+      </main>
+
+      <!-- RIGHT: optional column (now removed) -->
+      <aside class="hidden lg:block">
+        <!-- Intentionally empty: summary removed to reduce noise -->
+        <div class="text-[11px] text-gray-500 px-2 py-2">
+          (No summary card – header already shows totals.)
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 hidden z-[60]">
+    <div class="bg-gray-900 text-white text-sm px-4 py-3 rounded-xl shadow-lg" id="toastMsg">Done</div>
+  </div>
+
+<script>
+  const money = (v) => `CHF ${Number(v).toFixed(2)}`;
+
+  const UI = { mode:'view', flow:'inst', state:'open' };
+
+  const FLOW_META = {
+    once: { badge:'Once off', connected: [], hint:'' },
+    inst: {
+      badge:'Installments',
+      hint:'Installment invoices are connected by a plan. Apply changes to this invoice or to future invoices.',
+      connected: [
+        { id:'INV-1', date:'2026-03-01', amount:200, status:'Open', current:true },
+        { id:'INV-2', date:'2026-04-01', amount:200, status:'Planned', current:false },
+        { id:'INV-3', date:'2026-05-01', amount:200, status:'Planned', current:false },
+      ]
+    },
+    sub: {
+      badge:'Subscription',
+      hint:'Subscription invoices are connected. Change future invoices via subscription settings.',
+      connected: [
+        { id:'INIT', date:'2026-03-01', amount:50, status:'Paid', current:false, label:'Initial invoice' },
+        { id:'SUB-1', date:'2026-03-01', amount:20, status:'Open', current:true, label:'Subscription invoice' },
+        { id:'SUB-2', date:'2026-04-01', amount:20, status:'Planned', current:false, label:'Next invoice' },
+      ]
+    }
+  };
+
+  const STATE_RULES = {
+    open:      { status:'Open', badge:'yellow', total:500, paid:0,   open:500, sepa:false, hasTx:false, edit:'Full',    lock:{ items:false, pay:false, contacts:false } },
+    partial:   { status:'Partially paid', badge:'yellow', total:500, paid:125, open:375, sepa:false, hasTx:true,  edit:'Limited', lock:{ items:true,  pay:true,  contacts:false } },
+    paid:      { status:'Paid', badge:'green', total:500, paid:500, open:0,   sepa:false, hasTx:true,  edit:'Locked',  lock:{ items:true,  pay:true,  contacts:true } },
+    sepa:      { status:'Open (SEPA)', badge:'indigo', total:500, paid:0,   open:500, sepa:true,  hasTx:true,  edit:'Limited', lock:{ items:true,  pay:true,  contacts:false } },
+    refunded:  { status:'Refunded', badge:'gray', total:500, paid:0,   open:0,   sepa:false, hasTx:true, edit:'Locked',  lock:{ items:true,  pay:true,  contacts:true } },
+    cancelled: { status:'Cancelled', badge:'gray', total:500, paid:0,   open:0,   sepa:false, hasTx:false,edit:'Locked',  lock:{ items:true,  pay:true,  contacts:true } },
+  };
+
+  function toast(msg){
+    const t = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    t.classList.remove('hidden');
+    setTimeout(() => t.classList.add('hidden'), 2200);
+  }
+
+  function setMode(m){
+    UI.mode = m;
+    const isEdit = m === 'edit';
+
+    document.getElementById('btnView').className = "px-3 py-2 text-sm rounded-lg " + (!isEdit ? "bg-white shadow-sm border border-gray-200" : "text-gray-700 hover:bg-white/60");
+    document.getElementById('btnEdit').className = "px-3 py-2 text-sm rounded-lg " + (isEdit ? "bg-white shadow-sm border border-gray-200" : "text-gray-700 hover:bg-white/60");
+
+    document.getElementById('btnSave').classList.toggle('hidden', !isEdit);
+    document.getElementById('btnCancel').classList.toggle('hidden', !isEdit);
+
+    // view vs edit content weight
+    document.querySelectorAll('[data-kind="viewRow"]').forEach(el => el.classList.toggle('hidden', isEdit));
+    document.querySelectorAll('[data-kind="editField"]').forEach(el => el.classList.toggle('hidden', !isEdit));
+    document.querySelectorAll('.cbText').forEach(el => el.classList.toggle('hidden', isEdit)); // for item table
+
+    syncAll();
+  }
+
+  function setFlow(f){ UI.flow = f; syncAll(); }
+  function setState(s){ UI.state = s; syncAll(); }
+
+  function syncHeader(){
+    const rule = STATE_RULES[UI.state];
+    const meta = FLOW_META[UI.flow];
+
+    // flow + status badges
+    document.getElementById('badgeFlow').textContent = meta.badge;
+
+    const statusEl = document.getElementById('badgeStatus');
+    statusEl.textContent = rule.status;
+    statusEl.className = "inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium " +
+      (rule.badge === 'yellow' ? "bg-yellow-50 text-yellow-700" :
+       rule.badge === 'green' ? "bg-emerald-50 text-emerald-700" :
+       rule.badge === 'indigo' ? "bg-indigo-50 text-indigo-700" :
+       "bg-gray-100 text-gray-700");
+
+    // amounts
+    document.getElementById('hTotal').textContent = money(rule.total);
+    document.getElementById('hPaid').textContent = money(rule.paid);
+    document.getElementById('hOpen').textContent = money(rule.open);
+
+    // payment strip
+    document.getElementById('pPaid').textContent = money(rule.paid);
+    document.getElementById('pOpen').textContent = money(rule.open);
+  }
+
+  function renderConnected(){
+    const wrap = document.getElementById('groupWrap');
+    const applyScopeWrap = document.getElementById('applyScopeWrap');
+
+    if (UI.flow === 'once'){
+      wrap.classList.add('hidden');
+      applyScopeWrap.classList.add('hidden');
+      return;
+    }
+    wrap.classList.remove('hidden');
+    applyScopeWrap.classList.remove('hidden');
+
+    const meta = FLOW_META[UI.flow];
+    document.getElementById('groupHint').textContent = meta.hint;
+
+    // tiny shared settings placeholders
+    document.getElementById('gPayDefault').textContent = (document.getElementById('payMethod')?.value === 'sepa') ? 'SEPA direct debit' : 'Bank transfer';
+    document.getElementById('gSchedule').textContent = UI.flow === 'inst' ? 'Monthly · 3 invoices' : 'Monthly · ongoing';
+    document.getElementById('gScope').textContent = 'First invoice only';
+
+    const list = document.getElementById('connectedList');
+    list.innerHTML = '';
+    meta.connected.forEach(inv => {
+      const statusCls =
+        inv.status === 'Paid' ? 'bg-emerald-50 text-emerald-700' :
+        inv.status === 'Open' ? 'bg-yellow-50 text-yellow-700' :
+        'bg-gray-100 text-gray-700';
+
+      const row = document.createElement('button');
+      row.className = "w-full text-left flex items-center justify-between gap-3 rounded-lg border px-3 py-2 hover:bg-gray-50 " +
+        (inv.current ? "border-gray-900" : "border-gray-200");
+      row.onclick = () => toast(`Open ${inv.id} (dummy)`);
+      row.innerHTML = `
+        <div class="min-w-0">
+          <div class="flex items-center gap-2">
+            <div class="text-sm font-medium text-gray-900">${inv.label ? inv.label : inv.id}</div>
+            ${inv.current ? `<span class="text-[11px] px-2.5 py-1 rounded-full bg-gray-900 text-white font-medium">Current</span>` : ``}
+          </div>
+          <div class="text-[11px] text-gray-500 mt-0.5">${inv.date}</div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <div class="text-sm font-semibold text-gray-900">${money(inv.amount)}</div>
+          <span class="text-[11px] px-2.5 py-1 rounded-full font-medium ${statusCls}">${inv.status}</span>
+        </div>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function renderTransactions(){
+    const s = UI.state;
+    const txRows = document.getElementById('txRows');
+    txRows.innerHTML = '';
+
+    let tx = [];
+    if (s === 'partial'){
+      tx = [{ date:'2026-03-05', type:'Payment', method:'Bank transfer', amount:+125, status:'Completed' }];
+    } else if (s === 'paid'){
+      tx = [{ date:'2026-03-05', type:'Payment', method:'Bank transfer', amount:+500, status:'Completed' }];
+    } else if (s === 'sepa'){
+      tx = [{ date:'2026-03-01', type:'Collection', method:'SEPA', amount:+500, status:'In file (Generated)' }];
+    } else if (s === 'refunded'){
+      tx = [
+        { date:'2026-03-05', type:'Payment', method:'Bank transfer', amount:+500, status:'Completed' },
+        { date:'2026-03-10', type:'Refund', method:'Bank transfer', amount:-500, status:'Completed' },
+      ];
+    }
+
+    if (!tx.length){
+      txRows.innerHTML = `<tr><td colspan="6" class="px-4 py-6 text-center text-sm text-gray-500">No transactions yet.</td></tr>`;
+      return;
+    }
+
+    tx.forEach(t => {
+      const tr = document.createElement('tr');
+      const amtCls = t.amount < 0 ? 'text-rose-700' : 'text-gray-900';
+      tr.innerHTML = `
+        <td class="px-4 py-3 text-gray-700">${t.date}</td>
+        <td class="px-4 py-3 font-medium text-gray-900">${t.type}</td>
+        <td class="px-4 py-3 text-gray-700">${t.method}</td>
+        <td class="px-4 py-3 text-right font-semibold ${amtCls}">${t.amount < 0 ? '– ' : ''}${money(Math.abs(t.amount))}</td>
+        <td class="px-4 py-3">
+          <span class="text-[11px] px-2.5 py-1 rounded-full bg-gray-100 text-gray-700 font-medium">${t.status}</span>
+        </td>
+        <td class="px-4 py-3 text-right">
+          <button class="text-sm text-gray-600 hover:text-gray-900" onclick="toast('View transaction (dummy)')">View</button>
+          <span class="text-gray-300 mx-2">|</span>
+          <button class="text-sm text-gray-600 hover:text-gray-900" onclick="toast('Create correction (dummy)')">Correct</button>
+        </td>
+      `;
+      txRows.appendChild(tr);
+    });
+  }
+
+  function syncLocksAndAlert(){
+    const rule = STATE_RULES[UI.state];
+    const isEdit = UI.mode === 'edit';
+
+    // mini alert only when relevant
+    const showAlert = rule.sepa || rule.edit !== 'Full';
+    document.getElementById('miniAlert').classList.toggle('hidden', !showAlert);
+
+    if (rule.sepa){
+      document.getElementById('miniAlertTitle').textContent = 'SEPA file generated';
+      document.getElementById('miniAlertText').textContent = 'This invoice is included in a generated SEPA file. Editing payment method/items may create a mismatch.';
+    } else if (rule.edit === 'Limited'){
+      document.getElementById('miniAlertTitle').textContent = 'Limited editing';
+      document.getElementById('miniAlertText').textContent = 'Transactions exist. Amounts/items are locked. Use corrections for changes.';
+    } else if (rule.edit === 'Locked'){
+      document.getElementById('miniAlertTitle').textContent = 'Editing disabled';
+      document.getElementById('miniAlertText').textContent = 'This invoice is paid/cancelled/refunded. Create corrections instead of editing.';
+    }
+
+    // disable fields in edit mode based on locks (light demo)
+    const disable = (id, v) => { const el = document.getElementById(id); if (el) el.disabled = v; };
+
+    const lockedOverall = (rule.edit === 'Locked');
+    const allowEdit = isEdit && !lockedOverall;
+
+    disable('recEmail', !allowEdit || rule.lock.contacts);
+    disable('recPhone', !allowEdit || rule.lock.contacts);
+    disable('billEmail', !allowEdit || rule.lock.contacts);
+    disable('billAddress', !allowEdit || rule.lock.contacts);
+
+    const payLocked = !allowEdit || rule.lock.pay || rule.sepa;
+    disable('payMethod', payLocked);
+    disable('applyScope', payLocked);
+
+    document.getElementById('payLockHint').classList.toggle('hidden', !(rule.lock.pay || rule.sepa || rule.hasTx));
+
+    // update view payment texts
+    const methodMap = { bank:'Bank transfer', sepa:'SEPA direct debit', cash:'Cash', psp:'Card / PSP' };
+    const pm = document.getElementById('payMethod')?.value || 'bank';
+    document.getElementById('payMethodView').textContent = methodMap[pm];
+    document.getElementById('pMethod').textContent = methodMap[pm];
+
+    document.getElementById('payHintView').textContent =
+      pm === 'bank' ? 'IBAN shown on PDF. Member pays manually.' :
+      pm === 'sepa' ? 'Collected via SEPA. Included in next export.' :
+      pm === 'cash' ? 'Cash expected. Record a cash payment when received.' :
+      'Collected via PSP. Status comes from provider.';
+  }
+
+  function syncBillingWarn(){
+    // only in edit mode we show the warning (avoid noise in view)
+    const isEdit = UI.mode === 'edit';
+    const hasBillEmail = (document.getElementById('billEmail')?.value || '').trim().length > 3;
+    const hasAddr = (document.getElementById('billAddress')?.value || '').trim().length > 8;
+    document.getElementById('billingWarn').classList.toggle('hidden', !(isEdit && (!hasBillEmail || !hasAddr)));
+  }
+
+  function syncAll(){
+    syncHeader();
+    renderConnected();
+    renderTransactions();
+    syncLocksAndAlert();
+    syncBillingWarn();
+  }
+
+  function init(){
+    setMode('view');
+    syncAll();
+    document.getElementById('billEmail')?.addEventListener('input', syncBillingWarn);
+    document.getElementById('billAddress')?.addEventListener('input', syncBillingWarn);
+    document.getElementById('payMethod')?.addEventListener('change', syncAll);
+  }
+  init();
+</script>
+</body>
+</html>
