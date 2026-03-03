@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachBetter – DE Beiträge (V1+) – Prototyp Paket</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-50 text-gray-900">
+  <!-- Top header -->
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-start justify-between gap-4">
+      <div class="min-w-0">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-xl bg-gray-900 text-white flex items-center justify-center text-sm font-semibold">CB</div>
+          <div class="min-w-0">
+            <h1 class="text-base font-semibold leading-5 truncate">DE Beiträge (V1+) – Anpassungen</h1>
+            <p class="text-sm text-gray-600 truncate">
+              Club Settings • Products • Options • Assignments • Members • Invoices • Details
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <span id="clubBadge" class="hidden sm:inline-flex items-center gap-2 px-3 py-2 rounded-lg border bg-gray-50 text-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          Club year: <span class="font-medium">01.01–31.12</span>
+        </span>
+        <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50">Export</button>
+        <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700">Generate invoices</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <nav class="max-w-7xl mx-auto px-6 pb-4">
+      <div class="flex flex-wrap gap-2">
+        <button class="tab-btn px-3 py-2 rounded-lg text-sm bg-gray-900 text-white" data-tab="tab-settings">1) Club settings</button>
+        <button class="tab-btn px-3 py-2 rounded-lg text-sm border bg-white hover:bg-gray-50" data-tab="tab-products">2) Products</button>
+        <button class="tab-btn px-3 py-2 rounded-lg text-sm border bg-white hover:bg-gray-50" data-tab="tab-product-edit">3) Product edit</button>
+        <button class="tab-btn px-3 py-2 rounded-lg text-sm border bg-white hover:bg-gray-50" data-tab="tab-assignments">4) Assignments</button>
+        <button class="tab-btn px-3 py-2 rounded-lg text-sm border bg-white hover:bg-gray-50" data-tab="tab-members">5) Members</button>
+        <button class="tab-btn px-3 py-2 rounded-lg text-sm border bg-white hover:bg-gray-50" data-tab="tab-contrib">6) Contributions</button>
+        <button class="tab-btn px-3 py-2 rounded-lg text-sm border bg-white hover:bg-gray-50" data-tab="tab-invoices">7) Invoices</button>
+        <button class="tab-btn px-3 py-2 rounded-lg text-sm border bg-white hover:bg-gray-50" data-tab="tab-invoice-detail">8) Invoice detail</button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-6 space-y-6">
+
+    <!-- =======================
+         TAB 1: CLUB SETTINGS
+    ======================== -->
+    <section id="tab-settings" class="tab space-y-6">
+      <div class="grid grid-cols-12 gap-6">
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+
+          <div class="bg-white border rounded-xl">
+            <div class="p-5 border-b">
+              <h2 class="text-base font-semibold">Club settings – Billing model</h2>
+              <p class="text-sm text-gray-600 mt-1">
+                Damit USA/andere Clubs beim heutigen Modell bleiben, wird pro Club ein Billing Model gewählt.
+              </p>
+            </div>
+
+            <div class="p-5 space-y-4">
+              <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12 md:col-span-6">
+                  <label class="text-xs text-gray-600">Billing model</label>
+                  <div class="mt-1 flex gap-2">
+                    <button id="bmLegacy" class="px-3 py-2 rounded-lg text-sm border bg-gray-900 text-white flex-1">
+                      Legacy (Invoice-first)
+                    </button>
+                    <button id="bmDE" class="px-3 py-2 rounded-lg text-sm border bg-white hover:bg-gray-50 flex-1">
+                      DE Beiträge (Assignment-first)
+                    </button>
+                  </div>
+                  <p class="text-xs text-gray-500 mt-2">
+                    Legacy: wie heute (Products→Orders→Invoices). DE: Assignments erzeugen periodische Invoices.
+                  </p>
+                </div>
+
+                <div class="col-span-12 md:col-span-6">
+                  <label class="text-xs text-gray-600">Club year start date (existing)</label>
+                  <input id="clubYearStart" class="mt-1 w-full px-3 py-2 rounded-lg border text-sm" value="01.01" />
+                  <p class="text-xs text-gray-500 mt-2">
+                    Wird für <span class="font-medium">service_mode = club_year</span> verwendet (Ende = Start - 1 Tag im Folgejahr).
+                  </p>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-xl bg-gray-50 border">
+                <div class="flex items-start gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center">🏛️</div>
+                  <div>
+                    <div class="text-sm font-medium">DE-Regeln (V1+)</div>
+                    <ul class="mt-2 text-sm text-gray-600 list-disc pl-5 space-y-1">
+                      <li>service_mode = club_year oder open</li>
+                      <li>billing_interval = once/monthly/quarterly/yearly</li>
+                      <li>Kein Pro-Rata, keine Teilperioden, Enddatum wird gerundet</li>
+                      <li>Invoice zeigt immer period_start / period_end</li>
+                      <li>Optional auto_renew (Default create_new)</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end gap-2">
+                <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50">Cancel</button>
+                <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700">Save settings</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border rounded-xl">
+            <div class="p-5 border-b">
+              <h3 class="text-sm font-semibold">What changes in DE mode?</h3>
+              <p class="text-sm text-gray-600 mt-1">Nur die Quelle wird erweitert – Invoices/Transactions bleiben wie heute.</p>
+            </div>
+
+            <div class="p-5 grid grid-cols-12 gap-4 text-sm">
+              <div class="col-span-12 md:col-span-6 p-4 rounded-xl border bg-gray-50">
+                <div class="font-medium">Add</div>
+                <ul class="mt-2 list-disc pl-5 text-gray-600 space-y-1">
+                  <li>ContributionAssignment (Beitragszuweisung)</li>
+                  <li>Invoice.period_start / period_end</li>
+                  <li>Link invoice/orderItem → assignment</li>
+                  <li>Neue UI: Assignments & Contribution overview</li>
+                </ul>
+              </div>
+              <div class="col-span-12 md:col-span-6 p-4 rounded-xl border bg-gray-50">
+                <div class="font-medium">Keep</div>
+                <ul class="mt-2 list-disc pl-5 text-gray-600 space-y-1">
+                  <li>OrderItem snapshotting (price/tax/discount)</li>
+                  <li>Invoices & Transactions + SEPA</li>
+                  <li>Nightly/Batch charging pipeline</li>
+                  <li>Manual invoice flows</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-span-12 lg:col-span-4 space-y-6">
+          <div class="bg-white border rounded-xl p-5">
+            <h3 class="text-sm font-semibold">UI behavior</h3>
+            <p class="text-sm text-gray-600 mt-2">
+              In DE mode werden bei Products zusätzliche Felder sichtbar
+              (service_mode, “Wiederkehrend” statt “Subscription” etc.).
+            </p>
+            <div class="mt-4 space-y-2">
+              <div class="p-3 rounded-lg border bg-gray-50 text-sm text-gray-700">
+                <div class="font-medium">Legacy club</div>
+                <div class="text-xs text-gray-600 mt-1">Sieht weiterhin nur Once/Installments/Subscription (wie heute).</div>
+              </div>
+              <div class="p-3 rounded-lg border bg-gray-50 text-sm text-gray-700">
+                <div class="font-medium">DE club</div>
+                <div class="text-xs text-gray-600 mt-1">Zusätzlich: Assignments + period_start/period_end + contribution badges.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border rounded-xl p-5">
+            <h3 class="text-sm font-semibold">Naming</h3>
+            <div class="mt-3 text-sm text-gray-700 space-y-2">
+              <div class="flex items-start justify-between gap-2">
+                <span class="text-gray-600">Subscription (internal)</span>
+                <span class="font-medium">Wiederkehrend (UI)</span>
+              </div>
+              <div class="flex items-start justify-between gap-2">
+                <span class="text-gray-600">ContributionAssignment</span>
+                <span class="font-medium">Beitragszuweisung</span>
+              </div>
+              <div class="flex items-start justify-between gap-2">
+                <span class="text-gray-600">Service mode</span>
+                <span class="font-medium">Service-Rahmen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================
+         TAB 2: PRODUCTS LIST
+    ======================== -->
+    <section id="tab-products" class="tab hidden space-y-6">
+      <div class="bg-white border rounded-xl">
+        <div class="p-5 border-b flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-base font-semibold">Products</h2>
+            <p class="text-sm text-gray-600 mt-1">DE mode ergänzt “Contribution purpose” + service_mode bei Beitrags-Produkten.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50" onclick="openModal('modalCreateProduct')">Create product</button>
+          </div>
+        </div>
+
+        <div class="p-4">
+          <div class="flex flex-wrap gap-2 items-center">
+            <input class="w-full md:w-80 px-3 py-2 rounded-lg border text-sm" placeholder="Search products…" />
+            <select class="px-3 py-2 rounded-lg border text-sm bg-white">
+              <option>All categories</option>
+              <option selected>Beiträge</option>
+              <option>Events</option>
+              <option>Shop</option>
+            </select>
+            <select class="px-3 py-2 rounded-lg border text-sm bg-white">
+              <option>All purposes</option>
+              <option>Legacy / Registration</option>
+              <option selected>Contribution (DE)</option>
+            </select>
+            <div class="ml-auto flex items-center gap-2">
+              <span class="text-xs text-gray-500">Sorted by</span>
+              <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50">Alphabetical</button>
+            </div>
+          </div>
+
+          <div class="mt-4 border rounded-lg overflow-hidden">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 text-gray-600">
+                <tr>
+                  <th class="text-left font-medium px-4 py-3">Product</th>
+                  <th class="text-left font-medium px-4 py-3">Category</th>
+                  <th class="text-left font-medium px-4 py-3">Purpose</th>
+                  <th class="text-left font-medium px-4 py-3">Service mode</th>
+                  <th class="text-left font-medium px-4 py-3">Options</th>
+                  <th class="text-left font-medium px-4 py-3">Status</th>
+                  <th class="px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center">🏛️</div>
+                      <div>
+                        <div class="font-medium">Hauptmitgliedschaft</div>
+                        <div class="text-xs text-gray-500">Jahresbeitrag</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3">Beiträge</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-900 text-white">Contribution (DE)</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">club_year</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">Yearly</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50" onclick="switchTab('tab-product-edit')">Edit</button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center">🏃</div>
+                      <div>
+                        <div class="font-medium">Trainingsbeitrag Fussball</div>
+                        <div class="text-xs text-gray-500">Monatlich / Quartal</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3">Beiträge</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-900 text-white">Contribution (DE)</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-50 text-blue-700 border border-blue-200">open</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">Monthly</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">Quarterly</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50" onclick="switchTab('tab-product-edit')">Edit</button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-lg bg-gray-100 border flex items-center justify-center">🧾</div>
+                      <div>
+                        <div class="font-medium">Summer Camp 2026</div>
+                        <div class="text-xs text-gray-500">Registration product</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3">Events</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">Legacy / Registration</span>
+                  </td>
+                  <td class="px-4 py-3"><span class="text-xs text-gray-500">—</span></td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">Once</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">Installments</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700 border">Inactive</span>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Edit</button>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-4 text-xs text-gray-500">
+            Hinweis: Im DE Mode ist “Purpose=Contribution (DE)” sichtbar. Legacy Produkte bleiben unverändert.
+          </div>
+        </div>
+      </div>
+
+      <!-- Create Product modal -->
+      <div id="modalCreateProduct" class="hidden fixed inset-0 z-50">
+        <div class="absolute inset-0 bg-black/30" onclick="closeModal('modalCreateProduct')"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+          <div class="w-full max-w-lg bg-white rounded-2xl border shadow-xl">
+            <div class="p-5 border-b flex items-start justify-between">
+              <div>
+                <div class="text-sm font-semibold">Create new product</div>
+                <div class="text-sm text-gray-600 mt-1">Wähle Purpose – Contribution (DE) zeigt zusätzliche Felder.</div>
+              </div>
+              <button class="px-2 py-1 rounded-lg border bg-white text-sm" onclick="closeModal('modalCreateProduct')">✕</button>
+            </div>
+
+            <div class="p-5 space-y-4">
+              <div class="grid grid-cols-12 gap-3">
+                <div class="col-span-12">
+                  <label class="text-xs text-gray-600">Title</label>
+                  <input class="mt-1 w-full px-3 py-2 rounded-lg border text-sm" placeholder="e.g. Hauptmitgliedschaft" />
+                </div>
+                <div class="col-span-12 md:col-span-6">
+                  <label class="text-xs text-gray-600">Category</label>
+                  <select class="mt-1 w-full px-3 py-2 rounded-lg border text-sm bg-white">
+                    <option selected>Beiträge</option>
+                    <option>Events</option>
+                    <option>Shop</option>
+                  </select>
+                </div>
+                <div class="col-span-12 md:col-span-6">
+                  <label class="text-xs text-gray-600">Purpose</label>
+                  <select class="mt-1 w-full px-3 py-2 rounded-lg border text-sm bg-white">
+                    <option>Legacy / Registration</option>
+                    <option selected>Contribution (DE)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-xl border bg-gray-50">
+                <div class="text-sm font-medium">Contribution (DE) will enable:</div>
+                <ul class="mt-2 text-sm text-gray-600 list-disc pl-5 space-y-1">
+                  <li>service_mode (club_year/open)</li>
+                  <li>Billing intervals (once/monthly/quarterly/yearly)</li>
+                  <li>Assignments + contribution views</li>
+                </ul>
+              </div>
+
+              <div class="flex justify-end gap-2 pt-1">
+                <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50" onclick="closeModal('modalCreateProduct')">Cancel</button>
+                <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700" onclick="closeModal('modalCreateProduct'); switchTab('tab-product-edit');">
+                  Create
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================
+         TAB 3: PRODUCT EDIT
+    ======================== -->
+    <section id="tab-product-edit" class="tab hidden space-y-6">
+      <div class="grid grid-cols-12 gap-6">
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+
+          <!-- Basics -->
+          <div class="bg-white border rounded-xl">
+            <div class="p-5 border-b flex items-start justify-between">
+              <div>
+                <h2 class="text-base font-semibold">Edit product</h2>
+                <p class="text-sm text-gray-600 mt-1">DE Beiträge: Service-Rahmen + Optionen; Rechnungen entstehen via Assignments.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50">Cancel</button>
+                <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700">Save</button>
+              </div>
+            </div>
+
+            <div class="p-5 grid grid-cols-12 gap-4">
+              <div class="col-span-12 md:col-span-7">
+                <label class="text-xs text-gray-600">Title</label>
+                <input class="mt-1 w-full px-3 py-2 rounded-lg border text-sm" value="Hauptmitgliedschaft" />
+              </div>
+              <div class="col-span-12 md:col-span-5">
+                <label class="text-xs text-gray-600">Purpose</label>
+                <select class="mt-1 w-full px-3 py-2 rounded-lg border text-sm bg-white">
+                  <option>Legacy / Registration</option>
+                  <option selected>Contribution (DE)</option>
+                </select>
+              </div>
+
+              <div class="col-span-12">
+                <label class="text-xs text-gray-600">Description</label>
+                <textarea class="mt-1 w-full px-3 py-2 rounded-lg border text-sm" rows="2">Jahresbeitrag im Vereinsjahr. Ohne Pro-Rata. Kündigung wirkt per Periodenende.</textarea>
+              </div>
+
+              <div class="col-span-12 md:col-span-6">
+                <label class="text-xs text-gray-600">Tax</label>
+                <select class="mt-1 w-full px-3 py-2 rounded-lg border text-sm bg-white">
+                  <option selected>Standard</option>
+                  <option>Reduced</option>
+                </select>
+              </div>
+
+              <div class="col-span-12 md:col-span-6">
+                <label class="text-xs text-gray-600">Status</label>
+                <select class="mt-1 w-full px-3 py-2 rounded-lg border text-sm bg-white">
+                  <option selected>Active</option>
+                  <option>Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Service mode block (DE only) -->
+          <div class="bg-white border rounded-xl">
+            <div class="p-5 border-b">
+              <h3 class="text-sm font-semibold">Service-Rahmen (DE)</h3>
+              <p class="text-sm text-gray-600 mt-1">
+                club_year nutzt Club-Vereinsjahr Startdatum. open hat keine übergeordnete Serviceperiode.
+              </p>
+            </div>
+
+            <div class="p-5 space-y-4">
+              <div class="flex flex-wrap gap-2">
+                <button class="px-3 py-2 rounded-lg text-sm bg-gray-900 text-white">club_year</button>
+                <button class="px-3 py-2 rounded-lg text-sm border bg-white hover:bg-gray-50">open</button>
+              </div>
+
+              <div class="p-4 rounded-xl bg-gray-50 border">
+                <div class="text-sm font-medium">Club year used:</div>
+                <div class="text-sm text-gray-700 mt-1">
+                  Start: <span class="font-medium">01.01</span> → End: <span class="font-medium">31.12</span>
+                  <span class="text-gray-500">(from club settings)</span>
+                </div>
+                <div class="text-xs text-gray-600 mt-2">
+                  Beispiel: Eintritt 15.03.2026 → Service: 15.03.2026 – 31.12.2026
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pricing options -->
+          <div class="bg-white border rounded-xl">
+            <div class="p-5 border-b flex items-start justify-between">
+              <div>
+                <h3 class="text-sm font-semibold">Pricing</h3>
+                <p class="text-sm text-gray-600 mt-1">
+                  Für DE: Once + Wiederkehrend (Monthly/Quarterly/Yearly). Installments optional, aber nicht empfohlen in V1.
+                </p>
+              </div>
+              <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700" onclick="openModal('modalAddOption')">
+                Add pricing option
+              </button>
+            </div>
+
+            <div class="p-4 space-y-3">
+              <div class="p-4 rounded-xl border">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <div class="font-medium">Yearly (club_year)</div>
+                    <div class="text-xs text-gray-600 mt-1">billing_interval: yearly • alignment: calendar • renewal: create_new</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="font-semibold">€ 120.00</div>
+                    <button class="mt-2 px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Edit</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-xl border">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <div class="font-medium">Once (one-off)</div>
+                    <div class="text-xs text-gray-600 mt-1">billing_interval: once • used for fees/corrections</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="font-semibold">€ 20.00</div>
+                    <button class="mt-2 px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Edit</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-xl border bg-amber-50">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <div class="font-medium text-amber-900">Installments (optional)</div>
+                    <div class="text-xs text-amber-900/80 mt-1">
+                      Nicht empfohlen für DE V1. Wenn aktiviert, gelten zusätzliche Regeln (Plan-Logik, Raten-Spezifika).
+                    </div>
+                  </div>
+                  <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Enable</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right column: helper + modal preview -->
+        <div class="col-span-12 lg:col-span-4 space-y-6">
+          <div class="bg-white border rounded-xl p-5">
+            <h3 class="text-sm font-semibold">What’s new vs today</h3>
+            <ul class="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
+              <li>Optionen definieren billing_interval (monthly/quarterly/yearly/once)</li>
+              <li>Assignments wählen eine Option und erzeugen Invoices pro Periode</li>
+              <li>Invoice zeigt period_start/period_end + assignment reference</li>
+            </ul>
+          </div>
+
+          <div class="bg-white border rounded-xl p-5">
+            <h3 class="text-sm font-semibold">Option texts (DE)</h3>
+            <div class="mt-3 space-y-2 text-sm text-gray-700">
+              <div class="p-3 rounded-lg border bg-gray-50">
+                <div class="font-medium">Wiederkehrend (statt Subscription)</div>
+                <div class="text-xs text-gray-600 mt-1">“Charged through the batch process at end of day.”</div>
+              </div>
+              <div class="p-3 rounded-lg border bg-gray-50">
+                <div class="font-medium">Einmalig (Once off)</div>
+                <div class="text-xs text-gray-600 mt-1">Für Aufnahmegebühr, Korrekturrechnung, etc.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add option modal (DE aware) -->
+      <div id="modalAddOption" class="hidden fixed inset-0 z-50">
+        <div class="absolute inset-0 bg-black/30" onclick="closeModal('modalAddOption')"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+          <div class="w-full max-w-xl bg-white rounded-2xl border shadow-xl overflow-hidden">
+            <div class="p-5 border-b flex items-start justify-between">
+              <div>
+                <div class="text-sm font-semibold">Add pricing option</div>
+                <div class="text-sm text-gray-600 mt-1">DE Beiträge: bevorzugt Once + Wiederkehrend.</div>
+              </div>
+              <button class="px-2 py-1 rounded-lg border bg-white text-sm" onclick="closeModal('modalAddOption')">✕</button>
+            </div>
+
+            <div class="p-5 space-y-4">
+              <div class="grid grid-cols-3 gap-2">
+                <button class="p-3 rounded-xl border bg-white hover:bg-gray-50 text-left" onclick="showOptionForm('once')">
+                  <div class="font-medium">Once off</div>
+                  <div class="text-xs text-gray-600 mt-1">one invoice</div>
+                </button>
+                <button class="p-3 rounded-xl border bg-white hover:bg-gray-50 text-left" onclick="showOptionForm('recurring')">
+                  <div class="font-medium">Wiederkehrend</div>
+                  <div class="text-xs text-gray-600 mt-1">monthly/quarterly/yearly</div>
+                </button>
+                <button class="p-3 rounded-xl border bg-amber-50 hover:bg-amber-100 text-left" onclick="showOptionForm('installments')">
+                  <div class="font-medium text-amber-900">Installments</div>
+                  <div class="text-xs text-amber-900/80 mt-1">not recommended V1</div>
+                </button>
+              </div>
+
+              <!-- ONCE -->
+              <div id="optFormOnce" class="hidden border rounded-xl p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="text-sm font-semibold">Once off</div>
+                    <div class="text-xs text-gray-600 mt-1">One invoice. Service period = assignment start–end.</div>
+                  </div>
+                  <span class="text-xs px-2 py-1 rounded-full bg-gray-100 border">billing_interval: once</span>
+                </div>
+
+                <div class="mt-3 grid grid-cols-12 gap-3">
+                  <div class="col-span-12 md:col-span-6">
+                    <label class="text-xs text-gray-600">Title</label>
+                    <input class="mt-1 w-full px-3 py-2 rounded-lg border text-sm" value="Once off" />
+                  </div>
+                  <div class="col-span-12 md:col-span-6">
+                    <label class="text-xs text-gray-600">Price</label>
+                    <div class="mt-1 flex gap-2">
+                      <input class="w-full px-3 py-2 rounded-lg border text-sm" value="20.00" />
+                      <span class="px-3 py-2 rounded-lg border bg-gray-50 text-sm">EUR</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RECURRING -->
+              <div id="optFormRecurring" class="hidden border rounded-xl p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="text-sm font-semibold">Wiederkehrend (Subscription)</div>
+                    <div class="text-xs text-gray-600 mt-1">Charged through batch process at end of day. No pro-rata.</div>
+                  </div>
+                  <span class="text-xs px-2 py-1 rounded-full bg-gray-100 border">billing_interval: monthly/quarterly/yearly</span>
+                </div>
+
+                <div class="mt-3 grid grid-cols-12 gap-3">
+                  <div class="col-span-12 md:col-span-6">
+                    <label class="text-xs text-gray-600">Billing interval</label>
+                    <select class="mt-1 w-full px-3 py-2 rounded-lg border text-sm bg-white">
+                      <option selected>Monthly</option>
+                      <option>Quarterly</option>
+                      <option>Yearly</option>
+                    </select>
+                    <div class="text-xs text-gray-500 mt-2">
+                      Start: billing starts next period after assignment.start_date.
+                    </div>
+                  </div>
+                  <div class="col-span-12 md:col-span-6">
+                    <label class="text-xs text-gray-600">Price per period</label>
+                    <div class="mt-1 flex gap-2">
+                      <input class="w-full px-3 py-2 rounded-lg border text-sm" value="12.00" />
+                      <span class="px-3 py-2 rounded-lg border bg-gray-50 text-sm">EUR</span>
+                    </div>
+                  </div>
+
+                  <div class="col-span-12">
+                    <div class="mt-2 p-3 rounded-lg bg-gray-50 border text-sm text-gray-700">
+                      <div class="font-medium">DE rule reminder</div>
+                      <div class="text-sm text-gray-600 mt-1">
+                        End date rounds to end of current billing period. No partial periods. No automatic backcharging.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- INSTALLMENTS -->
+              <div id="optFormInstallments" class="hidden border rounded-xl p-4 bg-amber-50">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="text-sm font-semibold text-amber-900">Installments</div>
+                    <div class="text-xs text-amber-900/80 mt-1">
+                      Optional. Für DE V1 nicht empfohlen. Kann später sauber modelliert werden.
+                    </div>
+                  </div>
+                  <span class="text-xs px-2 py-1 rounded-full bg-white border">legacy option</span>
+                </div>
+
+                <div class="mt-3 grid grid-cols-12 gap-3">
+                  <div class="col-span-12 md:col-span-6">
+                    <label class="text-xs text-amber-900/80">Number of installments</label>
+                    <input class="mt-1 w-full px-3 py-2 rounded-lg border text-sm" value="4" />
+                  </div>
+                  <div class="col-span-12 md:col-span-6">
+                    <label class="text-xs text-amber-900/80">Total amount</label>
+                    <div class="mt-1 flex gap-2">
+                      <input class="w-full px-3 py-2 rounded-lg border text-sm" value="120.00" />
+                      <span class="px-3 py-2 rounded-lg border bg-white text-sm">EUR</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end gap-2 pt-1">
+                <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50" onclick="closeModal('modalAddOption')">Cancel</button>
+                <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700" onclick="closeModal('modalAddOption')">Save option</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================
+         TAB 4: ASSIGNMENTS
+    ======================== -->
+    <section id="tab-assignments" class="tab hidden space-y-6">
+      <div class="grid grid-cols-12 gap-6">
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+          <div class="bg-white border rounded-xl">
+            <div class="p-5 border-b flex items-start justify-between">
+              <div>
+                <h2 class="text-base font-semibold">Beitragszuweisung erstellen</h2>
+                <p class="text-sm text-gray-600 mt-1">Assignment wählt Produkt+Option. Invoices entstehen pro Billingperiode.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50">Cancel</button>
+                <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700">Create assignment</button>
+              </div>
+            </div>
+
+            <div class="p-5 space-y-6">
+              <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12 md:col-span-6">
+                  <label class="text-xs text-gray-600">Member</label>
+                  <select class="mt-1 w-full px-3 py-2 rounded-lg border text-sm bg-white">
+                    <option selected>elda +1 (#122234m3m21)</option>
+                    <option>Mila Andersson (#122234m3m31)</option>
+                  </select>
+                  <div class="mt-2 text-xs text-gray-500">
+                    Assignment only allowed if membership is active (per eurer Regel).
+                  </div>
+                </div>
+
+                <div class="col-span-12 md:col-span-6">
+                  <label class="text-xs text-gray-600">Product</label>
+                  <select class="mt-1 w-full px-3 py-2 rounded-lg border text-sm bg-white">
+                    <option selected>Hauptmitgliedschaft (Contribution DE)</option>
+                    <option>Trainingsbeitrag Fussball (Contribution DE)</option>
+                  </select>
+                </div>
+
+                <div class="col-span-12 md:col-span-6">
+                  <label class="text-xs text-gray-600">Option</label>
+                  <select class="mt-1 w-full px-3 py-2 rounded-lg border text-sm bg-white">
+                    <option selected>Yearly – €120.00 (club_year)</option>
+                    <option>Once – €20.00</option>
+                  </select>
+                </div>
+
+                <div class="col-span-12 md:col-span-3">
+                  <label class="text-xs text-gray-600">Start date</label>
+                  <input class="mt-1 w-full px-3 py-2 rounded-lg border text-sm" value="15.03.2026" />
+                </div>
+
+                <div class="col-span-12 md:col-span-3">
+                  <label class="text-xs text-gray-600">End date (optional)</label>
+                  <input class="mt-1 w-full px-3 py-2 rounded-lg border text-sm" placeholder="—" />
+                </div>
+              </div>
+
+              <div class="p-4 rounded-xl border bg-gray-50">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="min-w-0">
+                    <div class="text-sm font-medium">Computed preview</div>
+                    <div class="text-sm text-gray-600 mt-1">
+                      Club year: <span class="font-medium text-gray-900">01.01–31.12</span><br/>
+                      Service end (club_year): <span class="font-medium text-gray-900">31.12.2026</span><br/>
+                      Billing start (next period after start): <span class="font-medium text-gray-900">01.04.2026</span><br/>
+                      First invoice period: <span class="font-medium text-gray-900">01.04.2026 – 31.12.2026</span>
+                    </div>
+                    <div class="text-xs text-gray-500 mt-2">
+                      Zeitraum 15.03–31.03 gratis. Kein Pro-Rata.
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xs text-gray-600">Standard price</div>
+                    <div class="text-lg font-semibold">€ 120.00</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12 md:col-span-6 border rounded-xl p-4">
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <div class="text-sm font-semibold">Renewal</div>
+                      <div class="text-xs text-gray-600 mt-1">Typical for club_year.</div>
+                    </div>
+                    <span class="text-xs px-2 py-1 rounded-full bg-gray-100 border">optional</span>
+                  </div>
+
+                  <div class="mt-3 grid grid-cols-2 gap-3">
+                    <label class="flex items-center justify-between gap-3 p-3 rounded-lg border bg-gray-50">
+                      <div>
+                        <div class="text-sm font-medium">Auto renew</div>
+                        <div class="text-xs text-gray-600">at club year end</div>
+                      </div>
+                      <input type="checkbox" checked class="w-4 h-4" />
+                    </label>
+
+                    <label class="block">
+                      <div class="text-xs text-gray-600">Strategy</div>
+                      <select class="mt-1 w-full px-3 py-2 rounded-lg border text-sm bg-white">
+                        <option selected>create_new (recommended)</option>
+                        <option>extend</option>
+                      </select>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-span-12 md:col-span-6 border rounded-xl p-4">
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <div class="text-sm font-semibold">Overrides</div>
+                      <div class="text-xs text-gray-600 mt-1">Rabatt/Preis-Anpassung am Assignment.</div>
+                    </div>
+                    <span class="text-xs px-2 py-1 rounded-full bg-gray-100 border">optional</span>
+                  </div>
+
+                  <div class="mt-3 grid grid-cols-12 gap-3">
+                    <div class="col-span-12 md:col-span-6">
+                      <label class="text-xs text-gray-600">Discount</label>
+                      <div class="mt-1 flex gap-2">
+                        <select class="w-28 px-3 py-2 rounded-lg border text-sm bg-white">
+                          <option selected>%</option>
+                          <option>€</option>
+                        </select>
+                        <input class="flex-1 px-3 py-2 rounded-lg border text-sm" placeholder="e.g. 10" />
+                      </div>
+                    </div>
+                    <div class="col-span-12 md:col-span-6">
+                      <label class="text-xs text-gray-600">Price override</label>
+                      <input class="mt-1 w-full px-3 py-2 rounded-lg border text-sm" placeholder="e.g. 100.00" />
+                    </div>
+                    <div class="col-span-12">
+                      <label class="text-xs text-gray-600">Note</label>
+                      <input class="mt-1 w-full px-3 py-2 rounded-lg border text-sm" value="Family discount approved." />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 rounded-xl bg-gray-50 border text-sm text-gray-700">
+                <div class="font-medium">Backcharging / corrections (V1)</div>
+                <div class="text-sm text-gray-600 mt-1">
+                  Keine automatische Rückrechnung. Stattdessen: Korrekturrechnung (Once-off) mit freiem Betrag.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-span-12 lg:col-span-4 space-y-6">
+          <div class="bg-white border rounded-xl p-5">
+            <h3 class="text-sm font-semibold">Assignment lifecycle</h3>
+            <div class="mt-3 space-y-2 text-sm text-gray-700">
+              <div class="p-3 rounded-lg border bg-gray-50">
+                <div class="font-medium">Active</div>
+                <div class="text-xs text-gray-600 mt-1">Will generate invoices per period.</div>
+              </div>
+              <div class="p-3 rounded-lg border bg-gray-50">
+                <div class="font-medium">Ended</div>
+                <div class="text-xs text-gray-600 mt-1">No further invoices. End rounded to period end.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border rounded-xl p-5">
+            <h3 class="text-sm font-semibold">Minimal DB touches</h3>
+            <ul class="mt-3 text-sm text-gray-600 list-disc pl-5 space-y-1">
+              <li>ContributionAssignments table</li>
+              <li>Invoice.period_start / period_end</li>
+              <li>Link invoice/orderItem ↔ assignment</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================
+         TAB 5: MEMBERS + DRAWER
+    ======================== -->
+    <section id="tab-members" class="tab hidden space-y-6">
+      <div class="bg-white border rounded-xl">
+        <div class="p-5 border-b flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-base font-semibold">Members</h2>
+            <p class="text-sm text-gray-600 mt-1">DE: Drawer zeigt zusätzlich “Beiträge” (Assignments).</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input class="w-64 px-3 py-2 rounded-lg border text-sm" placeholder="Search member…" />
+            <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700">Add member</button>
+          </div>
+        </div>
+
+        <div class="p-4">
+          <div class="border rounded-lg overflow-hidden">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 text-gray-600">
+                <tr>
+                  <th class="text-left font-medium px-4 py-3">Member</th>
+                  <th class="text-left font-medium px-4 py-3">Membership</th>
+                  <th class="text-left font-medium px-4 py-3">Departments</th>
+                  <th class="text-left font-medium px-4 py-3">Start/End</th>
+                  <th class="text-left font-medium px-4 py-3">Beiträge</th>
+                  <th class="px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                <tr class="hover:bg-gray-50 cursor-pointer" onclick="openDrawer()">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-xs font-semibold">E1</div>
+                      <div>
+                        <div class="font-medium">elda +1</div>
+                        <div class="text-xs text-gray-500">Not registered</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="font-medium">#122234m3m21</div>
+                    <div class="text-xs text-emerald-700">Active</div>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">Dept icon</span>
+                  </td>
+                  <td class="px-4 py-3">13.02.26 – 31.05.26</td>
+                  <td class="px-4 py-3">
+                    <div class="flex flex-wrap gap-1">
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">club_year</span>
+                      <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-50 text-blue-700 border border-blue-200">open</span>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50" onclick="event.stopPropagation(); openDrawer();">
+                      Open
+                    </button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-xs font-semibold">MA</div>
+                      <div>
+                        <div class="font-medium">Mila Andersson</div>
+                        <div class="text-xs text-gray-500">mila.andersson@example.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="font-medium">#122234m3m31</div>
+                    <div class="text-xs text-gray-500">Passive</div>
+                  </td>
+                  <td class="px-4 py-3">—</td>
+                  <td class="px-4 py-3">26.02.26</td>
+                  <td class="px-4 py-3"><span class="text-xs text-gray-500">—</span></td>
+                  <td class="px-4 py-3 text-right">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">⋯</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-4 text-xs text-gray-500">
+            Drawer erweitert um Beitrags-Block + “Generate invoice” / “End assignment” Quick Actions.
+          </div>
+        </div>
+      </div>
+
+      <!-- Drawer -->
+      <div id="drawerBackdrop" class="hidden fixed inset-0 bg-black/30 z-40" onclick="closeDrawer()"></div>
+      <aside id="drawer" class="hidden fixed right-0 top-0 h-full w-full sm:w-[520px] bg-white z-50 border-l shadow-xl">
+        <div class="h-full flex flex-col">
+          <div class="p-5 border-b flex items-start justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-sm font-semibold">E1</div>
+              <div>
+                <div class="font-semibold">elda +1</div>
+                <div class="text-sm text-gray-600">Membership #122234m3m21</div>
+              </div>
+            </div>
+            <button class="px-2 py-1 rounded-lg border bg-white text-sm" onclick="closeDrawer()">✕</button>
+          </div>
+
+          <div class="p-5 overflow-y-auto space-y-4">
+            <div class="border rounded-xl p-4">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <div class="text-sm font-semibold">Beiträge</div>
+                  <div class="text-sm text-gray-600 mt-1">Beitragszuweisungen (Assignments)</div>
+                </div>
+                <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700" onclick="switchTab('tab-assignments'); closeDrawer();">
+                  + Zuweisen
+                </button>
+              </div>
+
+              <div class="mt-3 space-y-3">
+                <div class="rounded-xl border p-3">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <div class="font-medium">Hauptmitgliedschaft</div>
+                      <div class="text-xs text-gray-600 mt-1">club_year • yearly • auto_renew: create_new</div>
+                    </div>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
+                  </div>
+                  <div class="mt-2 text-sm text-gray-700">
+                    Start: 15.03.2026 • Service end: 31.12.2026 • Next billing: 01.04.2026
+                  </div>
+                  <div class="mt-2 flex justify-end gap-2">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">End</button>
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Edit</button>
+                    <button class="px-2 py-1 rounded-lg bg-gray-900 text-white text-xs hover:bg-gray-800" onclick="switchTab('tab-invoices'); closeDrawer();">
+                      View invoices
+                    </button>
+                  </div>
+                </div>
+
+                <div class="rounded-xl border p-3">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <div class="font-medium">Trainingsbeitrag Fussball</div>
+                      <div class="text-xs text-gray-600 mt-1">open • monthly</div>
+                    </div>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-50 text-blue-700 border border-blue-200">Scheduled</span>
+                  </div>
+                  <div class="mt-2 text-sm text-gray-700">
+                    Start: 20.03.2026 • Billing start: 01.04.2026 • End: —
+                  </div>
+                  <div class="mt-2 flex justify-end gap-2">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Edit</button>
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Generate invoice</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="border rounded-xl p-4">
+              <div class="text-sm font-semibold">Recent invoices</div>
+              <div class="mt-3 space-y-2 text-sm">
+                <div class="flex items-center justify-between rounded-lg border p-3">
+                  <div>
+                    <div class="font-medium">INV-2026-0401</div>
+                    <div class="text-xs text-gray-600">Contribution • 01.04–31.12</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="font-medium">€ 120.00</div>
+                    <div class="text-xs text-amber-700">Open</div>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between rounded-lg border p-3">
+                  <div>
+                    <div class="font-medium">INV-2026-0412</div>
+                    <div class="text-xs text-gray-600">Contribution • 01.04–30.04</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="font-medium">€ 12.00</div>
+                    <div class="text-xs text-emerald-700">Paid</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3 text-xs text-gray-500">
+                Backcharge → create corrective one-off invoice.
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+
+    <!-- =======================
+         TAB 6: CONTRIBUTIONS OVERVIEW
+    ======================== -->
+    <section id="tab-contrib" class="tab hidden space-y-6">
+      <div class="bg-white border rounded-xl">
+        <div class="p-5 border-b flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-base font-semibold">Contributions overview (Assignments)</h2>
+            <p class="text-sm text-gray-600 mt-1">Ein Assignment = Beitrag eines Members. Daraus entstehen Invoices pro Billingperiode.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <select class="px-3 py-2 rounded-lg border text-sm bg-white">
+              <option>Status: Active</option>
+              <option>Scheduled</option>
+              <option>Ended</option>
+              <option>All</option>
+            </select>
+            <select class="px-3 py-2 rounded-lg border text-sm bg-white">
+              <option>Service: All</option>
+              <option>club_year</option>
+              <option>open</option>
+            </select>
+            <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700" onclick="switchTab('tab-assignments')">Assign</button>
+          </div>
+        </div>
+
+        <div class="p-4">
+          <div class="border rounded-lg overflow-hidden">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 text-gray-600">
+                <tr>
+                  <th class="text-left font-medium px-4 py-3">Assignment</th>
+                  <th class="text-left font-medium px-4 py-3">Member</th>
+                  <th class="text-left font-medium px-4 py-3">Product</th>
+                  <th class="text-left font-medium px-4 py-3">Service/Billing</th>
+                  <th class="text-left font-medium px-4 py-3">Start</th>
+                  <th class="text-left font-medium px-4 py-3">End</th>
+                  <th class="text-left font-medium px-4 py-3">Next invoice</th>
+                  <th class="text-left font-medium px-4 py-3">Status</th>
+                  <th class="px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-3">
+                    <div class="font-medium">A-000045</div>
+                    <div class="text-xs text-gray-500">club_year yearly</div>
+                  </td>
+                  <td class="px-4 py-3">elda +1</td>
+                  <td class="px-4 py-3">Hauptmitgliedschaft</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">club_year</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">yearly</span>
+                  </td>
+                  <td class="px-4 py-3">15.03.2026</td>
+                  <td class="px-4 py-3">31.12.2026</td>
+                  <td class="px-4 py-3">
+                    <div class="font-medium">01.04.2026</div>
+                    <div class="text-xs text-gray-500">01.04–31.12</div>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">Active</span>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50" onclick="switchTab('tab-invoices')">Invoices</button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-3">
+                    <div class="font-medium">A-000129</div>
+                    <div class="text-xs text-gray-500">open monthly</div>
+                  </td>
+                  <td class="px-4 py-3">elda +1</td>
+                  <td class="px-4 py-3">Trainingsbeitrag</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-50 text-blue-700 border border-blue-200">open</span>
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">monthly</span>
+                  </td>
+                  <td class="px-4 py-3">20.03.2026</td>
+                  <td class="px-4 py-3"><span class="text-xs text-gray-500">—</span></td>
+                  <td class="px-4 py-3">
+                    <div class="font-medium">01.04.2026</div>
+                    <div class="text-xs text-gray-500">01.04–30.04</div>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-50 text-blue-700 border border-blue-200">Scheduled</span>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Generate</button>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-4 p-4 rounded-xl border bg-gray-50 text-sm text-gray-700">
+            <div class="font-medium">Rule recap</div>
+            <div class="text-sm text-gray-600 mt-1">
+              Billing starts next period after start_date. End rounds to period end. No pro-rata. Backcharge via corrective one-off.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================
+         TAB 7: INVOICES OVERVIEW
+    ======================== -->
+    <section id="tab-invoices" class="tab hidden space-y-6">
+      <div class="bg-white border rounded-xl">
+        <div class="p-5 border-b flex items-start justify-between gap-4">
+          <div>
+            <h2 class="text-base font-semibold">Invoices & Payments</h2>
+            <p class="text-sm text-gray-600 mt-1">
+              Bestehender Screen – ergänzt um Source (Contribution/Legacy), period_start/period_end, assignment reference.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50">Create manual invoice</button>
+            <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700">Generate from assignments</button>
+          </div>
+        </div>
+
+        <div class="p-4">
+          <div class="flex flex-wrap gap-2 items-center">
+            <input class="px-3 py-2 rounded-lg border text-sm w-64" placeholder="Search by person / invoice id…" />
+            <select class="px-3 py-2 rounded-lg border text-sm bg-white">
+              <option>Source: All</option>
+              <option selected>Contribution</option>
+              <option>Legacy</option>
+            </select>
+            <select class="px-3 py-2 rounded-lg border text-sm bg-white">
+              <option>Status: Open</option>
+              <option>Paid</option>
+              <option>Overdue</option>
+              <option>Cancelled</option>
+            </select>
+            <select class="px-3 py-2 rounded-lg border text-sm bg-white">
+              <option>Payment: All</option>
+              <option>SEPA</option>
+              <option>Bank transfer</option>
+              <option>Cash</option>
+            </select>
+          </div>
+
+          <div class="mt-4 border rounded-lg overflow-hidden">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 text-gray-600">
+                <tr>
+                  <th class="text-left font-medium px-4 py-3">Invoice</th>
+                  <th class="text-left font-medium px-4 py-3">Person</th>
+                  <th class="text-left font-medium px-4 py-3">Source</th>
+                  <th class="text-left font-medium px-4 py-3">Period</th>
+                  <th class="text-left font-medium px-4 py-3">Assignment</th>
+                  <th class="text-left font-medium px-4 py-3">Status</th>
+                  <th class="text-left font-medium px-4 py-3">Amount</th>
+                  <th class="px-4 py-3"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y">
+                <tr class="hover:bg-gray-50 cursor-pointer" onclick="switchTab('tab-invoice-detail')">
+                  <td class="px-4 py-3">
+                    <div class="font-medium">INV-2026-0401</div>
+                    <div class="text-xs text-gray-500">Due 15.04.2026</div>
+                  </td>
+                  <td class="px-4 py-3">elda +1</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-900 text-white">Contribution</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="font-medium">01.04–31.12</div>
+                    <div class="text-xs text-gray-500">2026</div>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">A-000045</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-amber-50 text-amber-700 border border-amber-200">Open</span>
+                  </td>
+                  <td class="px-4 py-3 font-medium">€ 120.00</td>
+                  <td class="px-4 py-3 text-right">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Open</button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-3">
+                    <div class="font-medium">INV-2026-0412</div>
+                    <div class="text-xs text-gray-500">Paid 16.04.2026</div>
+                  </td>
+                  <td class="px-4 py-3">elda +1</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-900 text-white">Contribution</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <div class="font-medium">01.04–30.04</div>
+                    <div class="text-xs text-gray-500">monthly</div>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">A-000129</span>
+                  </td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">Paid</span>
+                  </td>
+                  <td class="px-4 py-3 font-medium">€ 12.00</td>
+                  <td class="px-4 py-3 text-right">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Open</button>
+                  </td>
+                </tr>
+
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-3">
+                    <div class="font-medium">INV-2026-0309</div>
+                    <div class="text-xs text-gray-500">Manual</div>
+                  </td>
+                  <td class="px-4 py-3">Mila Andersson</td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-100 border">Legacy</span>
+                  </td>
+                  <td class="px-4 py-3"><span class="text-xs text-gray-500">—</span></td>
+                  <td class="px-4 py-3"><span class="text-xs text-gray-500">—</span></td>
+                  <td class="px-4 py-3">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-amber-50 text-amber-700 border border-amber-200">Open</span>
+                  </td>
+                  <td class="px-4 py-3 font-medium">€ 35.00</td>
+                  <td class="px-4 py-3 text-right">
+                    <button class="px-2 py-1 rounded-lg border bg-white text-xs hover:bg-gray-50">Open</button>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- =======================
+         TAB 8: INVOICE DETAIL
+    ======================== -->
+    <section id="tab-invoice-detail" class="tab hidden space-y-6">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <h2 class="text-base font-semibold">Invoice detail</h2>
+          <p class="text-sm text-gray-600 mt-1">DE: zeigt zusätzlich Assignment Context + Period block.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50" onclick="switchTab('tab-invoices')">Back</button>
+          <button class="px-3 py-2 rounded-lg bg-emerald-600 text-white text-sm hover:bg-emerald-700">Mark as paid</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-12 gap-6">
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+          <div class="bg-white border rounded-xl">
+            <div class="p-5 border-b flex items-start justify-between">
+              <div>
+                <div class="text-xs text-gray-600">Invoice</div>
+                <div class="text-lg font-semibold">INV-2026-0401</div>
+                <div class="text-sm text-gray-600 mt-1">elda +1 • Due 15.04.2026</div>
+              </div>
+              <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-amber-50 text-amber-700 border border-amber-200">Open</span>
+            </div>
+
+            <div class="p-5 space-y-4">
+              <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12 md:col-span-4 p-4 rounded-xl border bg-gray-50">
+                  <div class="text-xs text-gray-600">Payment method</div>
+                  <div class="mt-1 font-medium">SEPA Direct Debit</div>
+                </div>
+                <div class="col-span-12 md:col-span-4 p-4 rounded-xl border bg-gray-50">
+                  <div class="text-xs text-gray-600">Source</div>
+                  <div class="mt-1">
+                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-gray-900 text-white">Contribution</span>
+                  </div>
+                </div>
+                <div class="col-span-12 md:col-span-4 p-4 rounded-xl border bg-gray-50">
+                  <div class="text-xs text-gray-600">Period</div>
+                  <div class="mt-1 font-medium">01.04.2026 – 31.12.2026</div>
+                  <div class="text-xs text-gray-500 mt-1">yearly</div>
+                </div>
+              </div>
+
+              <div class="border rounded-xl overflow-hidden">
+                <div class="px-4 py-3 bg-gray-50 text-sm font-medium">Items</div>
+                <div class="p-4 text-sm">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <div class="font-medium">Hauptmitgliedschaft – Jahresbeitrag</div>
+                      <div class="text-xs text-gray-600">Tax included</div>
+                    </div>
+                    <div class="font-semibold">€ 120.00</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end gap-2">
+                <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50">PDF</button>
+                <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50">Send reminder</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border rounded-xl">
+            <div class="p-5 border-b">
+              <h3 class="text-sm font-semibold">Transactions</h3>
+              <p class="text-sm text-gray-600 mt-1">Unverändert (wie heute): SEPA batch, payment status, refund flags.</p>
+            </div>
+            <div class="p-4">
+              <div class="border rounded-lg p-4 text-sm flex items-start justify-between gap-4">
+                <div>
+                  <div class="font-medium">TRX-88421</div>
+                  <div class="text-xs text-gray-600 mt-1">SEPA Batch #24 • pending collection</div>
+                </div>
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-amber-50 text-amber-700 border border-amber-200">Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Assignment context -->
+        <div class="col-span-12 lg:col-span-4 space-y-6">
+          <div class="bg-white border rounded-xl p-5">
+            <h3 class="text-sm font-semibold">Assignment context</h3>
+            <p class="text-sm text-gray-600 mt-1">Damit man versteht “warum existiert diese Rechnung?”.</p>
+
+            <div class="mt-4 space-y-3 text-sm">
+              <div class="p-4 rounded-xl border bg-gray-50">
+                <div class="text-xs text-gray-600">Assignment</div>
+                <div class="mt-1 font-medium">A-000045</div>
+                <div class="text-xs text-gray-600 mt-1">club_year • yearly • auto_renew=create_new</div>
+              </div>
+
+              <div class="p-4 rounded-xl border">
+                <div class="text-xs text-gray-600">Assignment period</div>
+                <div class="mt-1 font-medium">15.03.2026 – 31.12.2026</div>
+                <div class="text-xs text-gray-500 mt-1">Billing start: 01.04.2026</div>
+              </div>
+
+              <div class="p-4 rounded-xl border bg-gray-50">
+                <div class="text-xs text-gray-600">Club year</div>
+                <div class="mt-1 font-medium">01.01 – 31.12</div>
+              </div>
+
+              <div class="pt-2 flex gap-2">
+                <button class="flex-1 px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50">Open assignment</button>
+                <button class="px-3 py-2 rounded-lg border bg-white text-sm hover:bg-gray-50">End</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white border rounded-xl p-5">
+            <h3 class="text-sm font-semibold">Corrections (V1)</h3>
+            <p class="text-sm text-gray-600 mt-2">
+              No automatic recalculation. Create a corrective one-off invoice with a free amount.
+            </p>
+            <button class="mt-3 w-full px-3 py-2 rounded-lg bg-gray-900 text-white text-sm hover:bg-gray-800">
+              + Create corrective invoice
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // --- Tabs ---
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabs = document.querySelectorAll('.tab');
+
+    function switchTab(id) {
+      tabs.forEach(t => t.classList.toggle('hidden', t.id !== id));
+      tabBtns.forEach(b => {
+        const active = b.getAttribute('data-tab') === id;
+        b.classList.toggle('bg-gray-900', active);
+        b.classList.toggle('text-white', active);
+        b.classList.toggle('border', !active);
+        b.classList.toggle('bg-white', !active);
+        b.classList.toggle('hover:bg-gray-50', !active);
+      });
+      closeDrawer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    tabBtns.forEach(b => b.addEventListener('click', () => switchTab(b.getAttribute('data-tab'))));
+
+    // --- Modals ---
+    function openModal(id){ document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id){ document.getElementById(id).classList.add('hidden'); }
+
+    // --- Option modal forms ---
+    function showOptionForm(which){
+      document.getElementById('optFormOnce').classList.add('hidden');
+      document.getElementById('optFormRecurring').classList.add('hidden');
+      document.getElementById('optFormInstallments').classList.add('hidden');
+      if(which === 'once') document.getElementById('optFormOnce').classList.remove('hidden');
+      if(which === 'recurring') document.getElementById('optFormRecurring').classList.remove('hidden');
+      if(which === 'installments') document.getElementById('optFormInstallments').classList.remove('hidden');
+    }
+
+    // --- Drawer ---
+    function openDrawer(){
+      document.getElementById('drawer').classList.remove('hidden');
+      document.getElementById('drawerBackdrop').classList.remove('hidden');
+    }
+    function closeDrawer(){
+      const d = document.getElementById('drawer');
+      const b = document.getElementById('drawerBackdrop');
+      if(d) d.classList.add('hidden');
+      if(b) b.classList.add('hidden');
+    }
+
+    // --- Billing model toggle demo + club year badge ---
+    const bmLegacy = document.getElementById('bmLegacy');
+    const bmDE = document.getElementById('bmDE');
+    const clubYearStart = document.getElementById('clubYearStart');
+    const clubBadge = document.getElementById('clubBadge');
+
+    function setBillingModel(model){
+      const isLegacy = model === 'legacy';
+      bmLegacy.className = 'px-3 py-2 rounded-lg text-sm border flex-1 ' + (isLegacy ? 'bg-gray-900 text-white' : 'bg-white hover:bg-gray-50');
+      bmDE.className = 'px-3 py-2 rounded-lg text-sm border flex-1 ' + (!isLegacy ? 'bg-gray-900 text-white' : 'bg-white hover:bg-gray-50');
+      // show club year badge always (since you said you already have club year start), but you could hide in legacy if desired
+      clubBadge.classList.remove('hidden');
+    }
+    if(bmLegacy && bmDE){
+      bmLegacy.addEventListener('click', () => setBillingModel('legacy'));
+      bmDE.addEventListener('click', () => setBillingModel('de'));
+    }
+
+    function updateClubBadge(){
+      const start = (clubYearStart?.value || '01.01').trim();
+      // naive display only; real end calc is backend logic
+      let end = '31.12';
+      if(start === '01.07') end = '30.06';
+      clubBadge.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-500"></span> Club year: <span class="font-medium">' + start + '–' + end + '</span>';
+    }
+    if(clubYearStart){
+      clubYearStart.addEventListener('input', updateClubBadge);
+      updateClubBadge();
+    }
+    setBillingModel('legacy');
+  </script>
+</body>
+</html>
