@@ -1,21 +1,77 @@
+
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8" />
   <title>CoachBetter Prototypes</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Arial; margin: 24px; line-height: 1.45; }
+    h1 { margin: 0 0 12px; }
+    h2 { margin: 18px 0 8px; font-size: 16px; }
+    ul { padding-left: 18px; margin: 0; }
+    li { margin: 10px 0; }
+    .row { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+    .badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid #ddd; }
+    .draft { background: #fff7cc; }
+    .review { background: #e8f1ff; }
+    .ready { background: #e9fbe9; }
+    .note { color: #666; font-size: 13px; }
+    .meta { color: #999; font-size: 12px; margin-left: 6px; }
+    a { text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
 </head>
 <body>
 
   <h1>CoachBetter Prototypes</h1>
+  <div class="note">
+    Status meanings: <span class="badge draft">Draft</span>
+    <span class="badge review">Review</span>
+    <span class="badge ready">Ready</span>
+    <span class="meta">— last updated: 2026-02-3</span>
+  </div>
 
   <h2>Payments</h2>
   <ul>
-    <li><a href="prototypes/payments/manual-invoice.html">Manual Invoice</a></li>
-    <li><a href="prototypes/payments/payeManual.html">Pay Manually</a></li>
-     <li><a href="prototypes/payments/invoiceDetailView.html">Invoice detail View - In Work</a></li>    
-     <li><a href="prototypes/payments/productWizard.html">ProductWizard</a></li> 
-     <li><a href="prototypes/payments/contributionAssignement1.html">DFB Contribution Assignement</a></li> 
-  </ul>
+    <li>
+      <div class="row">
+        <a href="prototypes/payments/manual-invoice.html">Manual Invoice</a>
+        <span class="badge ready">Ready</span>
+        <span class="note">Main flow ok. More a target view. First implementation step only for manual invoices.</span>
+      </div>
+    </li>
 
+    <li>
+      <div class="row">
+        <a href="prototypes/payments/payeManual.html">Pay Manually</a>
+        <span class="badge review">Ready</span>
+        <span class="note">Header need redesing but today we do not see anyinvoice info on this which is not so nice</span>
+      </div>
+    </li>
+
+    <li>
+      <div class="row">
+        <a href="prototypes/payments/invoiceDetailView.html">Invoice detail view</a>
+        <span class="badge draft">Draft</span>
+        <span class="note">This is in work not ready to check.</span>
+      </div>
+    </li>
+
+    <li>
+      <div class="row">
+        <a href="prototypes/payments/productWizard.html">Product Wizard</a>
+        <span class="badge draft">Draft</span>
+        <span class="note">This is not ready yet.</span>
+      </div>
+    </li>
+    <li>
+      <div class="row">
+        <a href="prototypes/payments/contributionAssignement1.html">DFB Contribution Assignement</a>
+        <span class="badge draft">Draft</span>
+        <span class="note">This is not ready yet.</span>
+      </div>
+    </li>    
+  </ul>
 
 </body>
 </html>
