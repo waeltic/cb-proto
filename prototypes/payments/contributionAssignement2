@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CoachBetter – Contribution / Fee Assignment Walkthrough (Fixed period, all payment types)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .cb-scroll::-webkit-scrollbar { height: 10px; width: 10px; }
+    .cb-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
+    .cb-scroll::-webkit-scrollbar-track { background: transparent; }
+  </style>
+</head>
+
+<body class="bg-slate-50 text-slate-900">
+  <!-- Top bar -->
+  <div class="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div class="mx-auto max-w-6xl px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <button class="h-9 w-9 rounded-full border border-slate-200 bg-white hover:bg-slate-50 grid place-items-center">
+          <span class="text-lg leading-none">←</span>
+        </button>
+        <div>
+          <div class="text-sm font-semibold">Assign contribution / fee</div>
+          <div class="text-xs text-slate-500">Walkthrough · Fixed period (Calendar year) · once-off / installments / subscription</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm hover:bg-slate-50">Cancel</button>
+        <button id="btnSaveTop" class="rounded-full bg-emerald-500 px-4 py-2 text-sm text-white hover:bg-emerald-600">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="mx-auto max-w-6xl px-4 py-6">
+    <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
+      <!-- Stepper -->
+      <div class="border-b border-slate-200 bg-slate-50">
+        <div class="px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="text-sm font-semibold">Fee assignment</div>
+            <div class="text-xs text-slate-500">Person → Contribution → Dates → Payment option → Invoice preview → Confirm</div>
+          </div>
+          <div class="text-xs text-slate-600 rounded-full border border-slate-200 bg-white px-3 py-1">
+            Membership is NOT coupled – assignment has its own start/end dates
+          </div>
+        </div>
+
+        <div class="px-4 sm:px-6 pb-4">
+          <div class="grid grid-cols-1 sm:grid-cols-6 gap-2">
+            <button data-step="1" class="stepBtn rounded-xl border border-slate-300 bg-white px-3 py-2 text-left hover:bg-slate-50">
+              <div class="flex items-start gap-2">
+                <div class="dot mt-0.5 h-5 w-5 rounded-full bg-slate-900 text-white text-xs grid place-items-center">1</div>
+                <div>
+                  <div class="text-sm font-semibold">Person</div>
+                  <div class="text-xs text-slate-500">Who pays</div>
+                </div>
+              </div>
+            </button>
+
+            <button data-step="2" class="stepBtn rounded-xl border border-slate-200 bg-white px-3 py-2 text-left hover:bg-slate-50">
+              <div class="flex items-start gap-2">
+                <div class="dot mt-0.5 h-5 w-5 rounded-full bg-slate-200 text-slate-700 text-xs grid place-items-center">2</div>
+                <div>
+                  <div class="text-sm font-semibold">Contribution</div>
+                  <div class="text-xs text-slate-500">Product + service</div>
+                </div>
+              </div>
+            </button>
+
+            <button data-step="3" class="stepBtn rounded-xl border border-slate-200 bg-white px-3 py-2 text-left hover:bg-slate-50">
+              <div class="flex items-start gap-2">
+                <div class="dot mt-0.5 h-5 w-5 rounded-full bg-slate-200 text-slate-700 text-xs grid place-items-center">3</div>
+                <div>
+                  <div class="text-sm font-semibold">Dates</div>
+                  <div class="text-xs text-slate-500">Start/end</div>
+                </div>
+              </div>
+            </button>
+
+            <button data-step="4" class="stepBtn rounded-xl border border-slate-200 bg-white px-3 py-2 text-left hover:bg-slate-50">
+              <div class="flex items-start gap-2">
+                <div class="dot mt-0.5 h-5 w-5 rounded-full bg-slate-200 text-slate-700 text-xs grid place-items-center">4</div>
+                <div>
+                  <div class="text-sm font-semibold">Payment</div>
+                  <div class="text-xs text-slate-500">Option + start</div>
+                </div>
+              </div>
+            </button>
+
+            <button data-step="5" class="stepBtn rounded-xl border border-slate-200 bg-white px-3 py-2 text-left hover:bg-slate-50">
+              <div class="flex items-start gap-2">
+                <div class="dot mt-0.5 h-5 w-5 rounded-full bg-slate-200 text-slate-700 text-xs grid place-items-center">5</div>
+                <div>
+                  <div class="text-sm font-semibold">Invoices</div>
+                  <div class="text-xs text-slate-500">Preview</div>
+                </div>
+              </div>
+            </button>
+
+            <button data-step="6" class="stepBtn rounded-xl border border-slate-200 bg-white px-3 py-2 text-left hover:bg-slate-50">
+              <div class="flex items-start gap-2">
+                <div class="dot mt-0.5 h-5 w-5 rounded-full bg-slate-200 text-slate-700 text-xs grid place-items-center">6</div>
+                <div>
+                  <div class="text-sm font-semibold">Confirm</div>
+                  <div class="text-xs text-slate-500">Create</div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12">
+        <!-- Main -->
+        <section class="lg:col-span-8 p-4 sm:p-6 space-y-6">
+          <!-- STEP 1 -->
+          <div id="step-1" class="stepPanel">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-lg font-semibold">Select person</div>
+                <div class="mt-1 text-sm text-slate-500">Assign a contribution/fee to a club person (independent from membership).</div>
+              </div>
+              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">Existing concept</span>
+            </div>
+
+            <div class="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <label class="text-sm font-medium">Search person</label>
+                <input class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm" placeholder="Type name…" value="Max Muster"/>
+                <div class="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <div class="text-sm font-semibold">Max Muster</div>
+                  <div class="text-xs text-slate-500">Club person · Member ID: 12345 · Email: max@example.com</div>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="text-sm font-medium">Billing contact</div>
+                <div class="mt-2 text-sm text-slate-700">Default: Person</div>
+                <div class="mt-2 rounded-xl border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600">
+                  Later: allow selecting billing contact (parents/emails), same as your invoice recipient concept.
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+              <button class="nextBtn rounded-full bg-slate-900 px-5 py-2 text-sm text-white hover:bg-slate-800" data-next="2">Next</button>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div id="step-2" class="stepPanel hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-lg font-semibold">Select contribution</div>
+                <div class="mt-1 text-sm text-slate-500">Fixed period example: Calendar year (service umbrella).</div>
+              </div>
+              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">DE-ready</span>
+            </div>
+
+            <div class="mt-5 grid grid-cols-1 gap-4">
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <label class="text-sm font-medium">Contribution (product)</label>
+                <select id="productSelect" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
+                  <option selected>Mitgliedsbeitrag (Template)</option>
+                  <option>Abteilung Fussball Beitrag (Template)</option>
+                  <option>Spenden-Abo</option>
+                </select>
+
+                <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <div class="text-xs text-slate-500">Service description</div>
+                      <div class="mt-1 text-sm font-semibold" id="serviceLabel">Calendar year (fixed) – 2026</div>
+                      <div class="mt-1 text-xs text-slate-600">Proration: ON · Auto renew annually: ON</div>
+                    </div>
+                    <span class="rounded-full border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600">from product</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="text-sm font-medium">Select service year</div>
+                <div class="mt-1 text-sm text-slate-600">
+                  In a fixed-period template, you pick the <span class="font-medium">year instance</span> for this assignment.
+                </div>
+                <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                  <div>
+                    <label class="text-sm font-medium">Year</label>
+                    <select id="serviceYear" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
+                      <option>2025</option>
+                      <option selected>2026</option>
+                      <option>2027</option>
+                    </select>
+                  </div>
+                  <div class="sm:col-span-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-600">
+                    Service period will be: <span class="font-medium" id="servicePeriodText">01.01.2026 – 31.12.2026</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between">
+              <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="1">Back</button>
+              <button class="nextBtn rounded-full bg-slate-900 px-5 py-2 text-sm text-white hover:bg-slate-800" data-next="3">Next</button>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div id="step-3" class="stepPanel hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-lg font-semibold">Assignment dates (independent from membership)</div>
+                <div class="mt-1 text-sm text-slate-500">
+                  This is the key change for your system: fee assignment has its own start/end dates.
+                </div>
+              </div>
+              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">New entity</span>
+            </div>
+
+            <div class="mt-5 grid grid-cols-1 gap-4">
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="text-sm font-medium">Assignment start date*</label>
+                    <input id="assignStart" type="date" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm" value="2026-05-20">
+                    <div class="mt-1 text-xs text-slate-500">
+                      Example: joins late (20.05.2026)
+                    </div>
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium">Assignment end date (optional)</label>
+                    <input id="assignEnd" type="date" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm" value="">
+                    <div class="mt-1 text-xs text-slate-500">
+                      Set when leaving early. If empty: until service period end.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <div class="text-sm font-medium">How late join / early leave is handled</div>
+                  <div class="mt-1 text-sm text-slate-600">
+                    Use <span class="font-medium">proration</span> rules to compute the chargeable portion inside the service period.
+                    MVP: monthly proration based on assignment start/end month.
+                  </div>
+                  <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="rounded-xl border border-slate-200 bg-white p-3">
+                      <div class="text-xs text-slate-500">Service period</div>
+                      <div class="mt-1 text-sm font-semibold" id="boxService">01.01.2026 – 31.12.2026</div>
+                    </div>
+                    <div class="rounded-xl border border-slate-200 bg-white p-3">
+                      <div class="text-xs text-slate-500">Assignment active in</div>
+                      <div class="mt-1 text-sm font-semibold" id="boxActive">May – Dec 2026</div>
+                      <div class="mt-1 text-xs text-slate-500" id="boxMonths">8/12 months</div>
+                    </div>
+                    <div class="rounded-xl border border-slate-200 bg-white p-3">
+                      <div class="text-xs text-slate-500">Proration factor</div>
+                      <div class="mt-1 text-sm font-semibold" id="boxFactor">0.6667</div>
+                      <div class="mt-1 text-xs text-slate-500">Used in invoice amounts</div>
+                    </div>
+                  </div>
+                </div>
+
+                <label class="mt-4 flex items-start gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+                  <input id="enableProration" type="checkbox" class="mt-1 h-4 w-4" checked>
+                  <div>
+                    <div class="text-sm font-medium">Apply proration (recommended)</div>
+                    <div class="text-xs text-slate-500">
+                      If OFF, full year is charged even when joining late/leaving early.
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="text-sm font-medium">Early leave example</div>
+                <div class="mt-1 text-sm text-slate-600">Try setting end date to 2026-09-10 to see reduced months.</div>
+                <div class="mt-3 flex gap-2 flex-wrap">
+                  <button class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm hover:bg-slate-50" onclick="document.getElementById('assignEnd').value='2026-09-10'; recalc();">Set end: 10.09.2026</button>
+                  <button class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm hover:bg-slate-50" onclick="document.getElementById('assignEnd').value=''; recalc();">Clear end date</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between">
+              <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="2">Back</button>
+              <button class="nextBtn rounded-full bg-slate-900 px-5 py-2 text-sm text-white hover:bg-slate-800" data-next="4">Next</button>
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div id="step-4" class="stepPanel hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-lg font-semibold">Payment option</div>
+                <div class="mt-1 text-sm text-slate-500">Pick once-off / installments / subscription (behind the contribution).</div>
+              </div>
+              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">Existing options</span>
+            </div>
+
+            <div class="mt-5 grid grid-cols-1 gap-4">
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <label class="text-sm font-medium">Payment type</label>
+                <div class="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <button class="payType rounded-2xl border border-slate-200 bg-white p-4 text-left hover:bg-slate-50" data-type="once">
+                    <div class="h-10 w-10 rounded-xl bg-slate-50 border border-slate-200 grid place-items-center">💳</div>
+                    <div class="mt-3 font-semibold">Once-off</div>
+                    <div class="mt-1 text-xs text-slate-500">One invoice</div>
+                  </button>
+                  <button class="payType rounded-2xl border border-slate-200 bg-white p-4 text-left hover:bg-slate-50" data-type="inst">
+                    <div class="h-10 w-10 rounded-xl bg-slate-50 border border-slate-200 grid place-items-center">📦</div>
+                    <div class="mt-3 font-semibold">Installments</div>
+                    <div class="mt-1 text-xs text-slate-500">Multiple invoices</div>
+                  </button>
+                  <button class="payType rounded-2xl border border-slate-200 bg-white p-4 text-left hover:bg-slate-50" data-type="sub">
+                    <div class="h-10 w-10 rounded-xl bg-slate-50 border border-slate-200 grid place-items-center">🔁</div>
+                    <div class="mt-3 font-semibold">Subscription</div>
+                    <div class="mt-1 text-xs text-slate-500">Until cancelled</div>
+                  </button>
+                </div>
+
+                <div class="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <div class="text-sm font-medium">Billing start</div>
+                      <div class="text-xs text-slate-600">
+                        Assignment has its own start date. Billing start can be <span class="font-medium">defaulted</span> from the option and overridden here.
+                      </div>
+                    </div>
+                    <span class="rounded-full border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600">Override</span>
+                  </div>
+
+                  <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label class="text-sm font-medium">First charge rule</label>
+                      <select id="billRule" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
+                        <option>Same day as assignment start</option>
+                        <option selected>1st of next month</option>
+                        <option>Service period start (01.01.YYYY)</option>
+                        <option>Specific date</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="text-sm font-medium">Specific date</label>
+                      <input id="billDate" type="date" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm" value="2026-06-01">
+                    </div>
+                  </div>
+
+                  <div class="mt-3 text-xs text-slate-600">
+                    For fixed-period contributions in DE: most clubs use installments with first charge “next month 1st”.
+                  </div>
+                </div>
+
+                <div class="mt-4 flex justify-end">
+                  <button class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm hover:bg-slate-50" onclick="openModal('modal-optionDetails')">
+                    Edit selected option (existing popup)
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between">
+              <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="3">Back</button>
+              <button class="nextBtn rounded-full bg-slate-900 px-5 py-2 text-sm text-white hover:bg-slate-800" data-next="5">Next</button>
+            </div>
+          </div>
+
+          <!-- STEP 5 -->
+          <div id="step-5" class="stepPanel hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-lg font-semibold">Invoice preview</div>
+                <div class="mt-1 text-sm text-slate-500">
+                  What is on the invoice? Always show both: <span class="font-medium">Service period</span> + <span class="font-medium">Billing period / installment</span>.
+                </div>
+              </div>
+              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">Key outcome</span>
+            </div>
+
+            <div class="mt-5 space-y-4">
+              <!-- Invoice header preview -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <div class="text-sm font-semibold">Invoice (preview)</div>
+                    <div class="mt-1 text-xs text-slate-500">This shows the minimum fields you need to add to invoices/line items.</div>
+                  </div>
+                  <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600" id="invStatus">Status: open</span>
+                </div>
+
+                <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <div class="text-xs text-slate-500">Recipient</div>
+                    <div class="mt-1 text-sm font-semibold">Max Muster</div>
+                    <div class="mt-1 text-xs text-slate-500">Member ID: 12345</div>
+                  </div>
+
+                  <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <div class="text-xs text-slate-500">Service</div>
+                    <div class="mt-1 text-sm font-semibold" id="invService">Mitgliedschaft 2026</div>
+                    <div class="mt-1 text-xs text-slate-600" id="invServiceRange">01.01.2026 – 31.12.2026</div>
+                  </div>
+
+                  <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <div class="text-xs text-slate-500">Billing</div>
+                    <div class="mt-1 text-sm font-semibold" id="invBillingTitle">Installment 1/8</div>
+                    <div class="mt-1 text-xs text-slate-600" id="invBillingRange">Period: Jun 2026</div>
+                  </div>
+                </div>
+
+                <div class="mt-4 rounded-xl border border-slate-200 bg-white overflow-hidden">
+                  <div class="px-4 py-3 border-b border-slate-100 text-sm font-semibold">Line items</div>
+                  <div class="px-4 py-3 text-sm">
+                    <div class="flex items-start justify-between gap-3">
+                      <div>
+                        <div class="font-medium" id="liTitle">Mitgliedsbeitrag 2026</div>
+                        <div class="text-xs text-slate-500" id="liMeta">
+                          Service: 01.01.2026–31.12.2026 · Assignment active: May–Dec (8/12)
+                        </div>
+                      </div>
+                      <div class="text-right">
+                        <div class="font-semibold" id="liAmount">CHF 80.00</div>
+                        <div class="text-xs text-slate-500" id="liCalc">Proration 8/12 applied</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="mt-4 flex items-center justify-between">
+                  <div class="text-xs text-slate-500">Tax and fees follow your existing rules (product/club level).</div>
+                  <div class="text-sm font-semibold" id="invTotal">Total: CHF 80.00</div>
+                </div>
+              </div>
+
+              <!-- Generated invoice list preview -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <div class="text-sm font-semibold">Invoices to create</div>
+                    <div class="text-xs text-slate-500" id="genHint">Based on payment type + assignment dates.</div>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm hover:bg-slate-50" onclick="simulatePaid()">Mark first as paid (demo)</button>
+                    <button class="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm hover:bg-slate-50" onclick="recalc()">Recalculate</button>
+                  </div>
+                </div>
+
+                <div class="mt-4 overflow-auto cb-scroll">
+                  <table class="min-w-full text-sm">
+                    <thead class="text-xs text-slate-500">
+                      <tr class="border-b border-slate-200">
+                        <th class="py-2 pr-3 text-left font-medium">Invoice</th>
+                        <th class="py-2 pr-3 text-left font-medium">Service</th>
+                        <th class="py-2 pr-3 text-left font-medium">Billing period</th>
+                        <th class="py-2 pr-3 text-left font-medium">Due</th>
+                        <th class="py-2 pr-3 text-right font-medium">Amount</th>
+                        <th class="py-2 text-right font-medium">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="invoiceRows" class="divide-y divide-slate-100"></tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div class="text-sm font-semibold">What happens if someone leaves early?</div>
+                <div class="mt-1 text-sm text-slate-600">
+                  If invoices already exist, you need a policy:
+                  <ul class="list-disc pl-5 mt-2 space-y-1">
+                    <li><span class="font-medium">Not yet issued:</span> regenerate schedule with reduced months.</li>
+                    <li><span class="font-medium">Issued but unpaid:</span> cancel/open-credit or replace with corrected invoices.</li>
+                    <li><span class="font-medium">Paid:</span> create a credit note / refund workflow (you already have refund concept).</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 flex items-center justify-between">
+              <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="4">Back</button>
+              <button class="nextBtn rounded-full bg-slate-900 px-5 py-2 text-sm text-white hover:bg-slate-800" data-next="6">Next</button>
+            </div>
+          </div>
+
+          <!-- STEP 6 -->
+          <div id="step-6" class="stepPanel hidden">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <div class="text-lg font-semibold">Confirm assignment</div>
+                <div class="mt-1 text-sm text-slate-500">This is what you create in the database.</div>
+              </div>
+              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">Implementation</span>
+            </div>
+
+            <div class="mt-5 space-y-4">
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="text-sm font-semibold">Entity you need: FeeAssignment (or ContributionAssignment)</div>
+                <div class="mt-2 text-sm text-slate-700">
+                  Minimum fields (matches your “not coupled to membership” requirement):
+                </div>
+                <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                  <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <div class="text-xs text-slate-500">Links</div>
+                    <div class="mt-1 font-mono text-xs">
+                      club_person_id<br/>
+                      product_id (contribution template)<br/>
+                      payment_option_id (once/inst/sub)<br/>
+                      service_year (or service_period_start/end)<br/>
+                      billing_contact_id (optional)
+                    </div>
+                  </div>
+                  <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                    <div class="text-xs text-slate-500">Dates</div>
+                    <div class="mt-1 font-mono text-xs">
+                      assignment_start_date<br/>
+                      assignment_end_date (optional)<br/>
+                      first_charge_rule / date (optional override)<br/>
+                      proration_applied (bool) + proration_method
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-3 rounded-xl border border-slate-200 bg-white p-3 text-xs text-slate-600">
+                  You can generate invoices from this entity (now or later). For MVP, allow “create invoices now” or “save only”.
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="text-sm font-semibold">What needs to be on invoices (minimal)</div>
+                <div class="mt-2 text-sm text-slate-700">
+                  Add/ensure these fields to represent “Januar paid” and service umbrella:
+                  <ul class="list-disc pl-5 mt-2 space-y-1">
+                    <li><span class="font-medium">Service period:</span> start/end (or year) shown on invoice/line item.</li>
+                    <li><span class="font-medium">Billing period / installment:</span> installment_index/total and/or billing_period_label (e.g., “Jun 2026”).</li>
+                    <li><span class="font-medium">Link back:</span> fee_assignment_id on invoice or order item.</li>
+                    <li><span class="font-medium">Proration info:</span> factor or months included (for auditability).</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between gap-2 pt-2">
+                <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="5">Back</button>
+                <button id="btnCreate" class="rounded-full bg-emerald-500 px-6 py-2 text-sm text-white hover:bg-emerald-600">Create assignment</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: sticky summary -->
+        <aside class="lg:col-span-4 border-t lg:border-t-0 lg:border-l border-slate-200 bg-slate-50 p-4 sm:p-6">
+          <div class="text-sm font-semibold">Live summary</div>
+
+          <div class="mt-4 space-y-3">
+            <div class="rounded-xl border border-slate-200 bg-white p-4">
+              <div class="text-xs text-slate-500">Person</div>
+              <div class="mt-1 font-semibold">Max Muster</div>
+              <div class="mt-1 text-xs text-slate-600">Member ID: 12345</div>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-white p-4">
+              <div class="text-xs text-slate-500">Contribution</div>
+              <div class="mt-1 font-semibold">Mitgliedsbeitrag (Template)</div>
+              <div class="mt-1 text-xs text-slate-600" id="sumService">Service: 2026 (01.01–31.12)</div>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-white p-4">
+              <div class="text-xs text-slate-500">Assignment dates</div>
+              <div class="mt-1 text-sm text-slate-700" id="sumDates">Start: 20.05.2026 · End: —</div>
+              <div class="mt-1 text-xs text-slate-600" id="sumProration">Proration: ON · Months: 8/12</div>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-white p-4">
+              <div class="text-xs text-slate-500">Payment</div>
+              <div class="mt-1 text-sm text-slate-700" id="sumPay">Installments · First charge: 01.06.2026</div>
+              <div class="mt-1 text-xs text-slate-500">Can be overridden per assignment</div>
+            </div>
+
+            <div class="rounded-xl border border-slate-200 bg-slate-900 p-4 text-white">
+              <div class="text-sm font-semibold">Key idea</div>
+              <div class="mt-2 text-sm text-slate-200">
+                Membership ≠ fee. A fee assignment binds person + contribution + dates + payment option.
+              </div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- ===== Option details popup (reuse your existing popups) ===== -->
+  <div id="backdrop" class="fixed inset-0 z-50 hidden bg-black/40">
+    <div class="absolute inset-0" onclick="closeAll()"></div>
+  </div>
+
+  <div id="modal-optionDetails" class="fixed inset-0 z-[60] hidden">
+    <div class="flex min-h-full items-center justify-center p-4">
+      <div class="w-full max-w-5xl rounded-2xl bg-white shadow-xl border border-slate-200 overflow-hidden">
+        <div class="px-6 py-4 flex items-center justify-between border-b border-slate-100">
+          <div class="font-semibold">coachbetter</div>
+          <button class="h-9 w-9 rounded-full hover:bg-slate-100" onclick="closeAll()">✕</button>
+        </div>
+
+        <div class="px-6 py-5 grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <div class="text-lg font-semibold">Option details (existing popup)</div>
+            <p class="mt-1 text-sm text-slate-500">
+              This is just a placeholder to show that you keep the same popups.
+              Only small addition: default billing start rule/date.
+            </p>
+
+            <div class="mt-5 space-y-4">
+              <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div class="text-sm font-semibold">Billing start (default)</div>
+                <div class="mt-1 text-xs text-slate-600">Prefills assignment/registration, can be overridden.</div>
+
+                <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label class="text-sm font-medium">Default rule</label>
+                    <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
+                      <option>Same day</option>
+                      <option selected>1st of next month</option>
+                      <option>Service period start</option>
+                      <option>Specific date</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-sm font-medium">Default date</label>
+                    <input type="date" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm" value="2026-06-01"/>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-xl border border-slate-200 bg-white p-4 text-sm text-slate-700">
+                Here would be your existing fields (price, cycle, fees, initial payment, etc.).
+              </div>
+            </div>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white p-5">
+            <div class="text-sm font-semibold">Preview</div>
+            <div class="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm text-slate-700">
+              Keep your existing preview.
+            </div>
+          </div>
+        </div>
+
+        <div class="px-6 py-4 border-t border-slate-100 flex items-center justify-between gap-3">
+          <button class="rounded-full border border-slate-200 bg-white px-6 py-2 text-sm hover:bg-slate-50" onclick="closeAll()">Close</button>
+          <button class="rounded-full bg-emerald-500 px-10 py-2 text-sm text-white hover:bg-emerald-600" onclick="closeAll()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ---------- Wizard navigation ----------
+    const stepBtns = [...document.querySelectorAll(".stepBtn")];
+    const stepPanels = [...document.querySelectorAll(".stepPanel")];
+
+    function setStep(n) {
+      stepPanels.forEach(p => p.classList.add("hidden"));
+      const panel = document.getElementById(`step-${n}`);
+      if (panel) panel.classList.remove("hidden");
+
+      stepBtns.forEach(btn => {
+        const isActive = btn.dataset.step === String(n);
+        btn.classList.toggle("border-slate-300", isActive);
+        btn.classList.toggle("border-slate-200", !isActive);
+        const dot = btn.querySelector(".dot");
+        if (dot) {
+          dot.classList.toggle("bg-slate-900", isActive);
+          dot.classList.toggle("text-white", isActive);
+          dot.classList.toggle("bg-slate-200", !isActive);
+          dot.classList.toggle("text-slate-700", !isActive);
+        }
+      });
+
+      // ensure preview stays in sync when arriving at invoices step
+      if (String(n) === "5") recalc();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    stepBtns.forEach(btn => btn.addEventListener("click", () => setStep(btn.dataset.step)));
+    document.querySelectorAll(".nextBtn").forEach(b => b.addEventListener("click", () => setStep(b.dataset.next)));
+    document.querySelectorAll(".prevBtn").forEach(b => b.addEventListener("click", () => setStep(b.dataset.prev)));
+    setStep(1);
+
+    // ---------- Modal helpers ----------
+    const backdrop = document.getElementById('backdrop');
+    function openModal(id){
+      backdrop.classList.remove('hidden');
+      document.getElementById(id).classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+    function closeAll(){
+      backdrop.classList.add('hidden');
+      document.querySelectorAll('[id^="modal-"]').forEach(m => m.classList.add('hidden'));
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    // ---------- Service year -> service period text ----------
+    const serviceYear = document.getElementById('serviceYear');
+    const servicePeriodText = document.getElementById('servicePeriodText');
+    const boxService = document.getElementById('boxService');
+    const sumService = document.getElementById('sumService');
+    const invServiceRange = document.getElementById('invServiceRange');
+
+    function updateServicePeriod() {
+      const y = serviceYear.value;
+      const txt = `01.01.${y} – 31.12.${y}`;
+      servicePeriodText.textContent = txt;
+      boxService.textContent = txt;
+      sumService.textContent = `Service: ${y} (01.01–31.12)`;
+      invServiceRange.textContent = txt;
+      recalc();
+    }
+    serviceYear.addEventListener('change', updateServicePeriod);
+
+    // ---------- Payment type selection ----------
+    let payType = "inst"; // default
+    const payBtns = [...document.querySelectorAll(".payType")];
+    const sumPay = document.getElementById('sumPay');
+
+    function setPayType(t){
+      payType = t;
+      payBtns.forEach(b => {
+        const active = b.dataset.type === t;
+        b.classList.toggle("border-slate-900", active);
+        b.classList.toggle("ring-2", active);
+        b.classList.toggle("ring-slate-200", active);
+      });
+      recalc();
+    }
+    payBtns.forEach(b => b.addEventListener('click', () => setPayType(b.dataset.type)));
+    setPayType("inst");
+
+    // ---------- Assignment date / proration calc ----------
+    const assignStart = document.getElementById('assignStart');
+    const assignEnd = document.getElementById('assignEnd');
+    const enableProration = document.getElementById('enableProration');
+
+    const boxActive = document.getElementById('boxActive');
+    const boxMonths = document.getElementById('boxMonths');
+    const boxFactor = document.getElementById('boxFactor');
+
+    const sumDates = document.getElementById('sumDates');
+    const sumProration = document.getElementById('sumProration');
+
+    function monthName(i){
+      return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i];
+    }
+
+    function clampToService(dateStr, year){
+      // service is calendar year
+      const s = new Date(`${year}-01-01T00:00:00`);
+      const e = new Date(`${year}-12-31T00:00:00`);
+      const d = new Date(`${dateStr}T00:00:00`);
+      if (d < s) return s;
+      if (d > e) return e;
+      return d;
+    }
+
+    function countProrationMonths(startDate, endDate, year){
+      // MVP monthly proration:
+      // - include month of start
+      // - include month of end
+      // Both clamped to service year
+      const s = clampToService(startDate, year);
+      const e = endDate ? clampToService(endDate, year) : new Date(`${year}-12-31T00:00:00`);
+      const sm = s.getMonth();
+      const em = e.getMonth();
+      const months = (em - sm) + 1;
+      return { months: Math.max(0, months), sm, em };
+    }
+
+    // ---------- Invoice preview generation ----------
+    const invoiceRows = document.getElementById('invoiceRows');
+    const invBillingTitle = document.getElementById('invBillingTitle');
+    const invBillingRange = document.getElementById('invBillingRange');
+    const liMeta = document.getElementById('liMeta');
+    const liAmount = document.getElementById('liAmount');
+    const liCalc = document.getElementById('liCalc');
+    const invTotal = document.getElementById('invTotal');
+    const invStatus = document.getElementById('invStatus');
+    const genHint = document.getElementById('genHint');
+
+    let paidFirst = false;
+
+    function money(n){
+      return `CHF ${n.toFixed(2)}`;
+    }
+
+    function recalc(){
+      const y = Number(serviceYear.value);
+      const start = assignStart.value;
+      const end = assignEnd.value;
+
+      // summary dates
+      sumDates.textContent = `Start: ${start ? start.split('-').reverse().join('.') : '—'} · End: ${end ? end.split('-').reverse().join('.') : '—'}`;
+
+      // monthly proration months inside service period
+      const pr = countProrationMonths(start, end, y);
+      const months = pr.months;
+      const factor = months / 12;
+
+      const activeLabel = months === 0 ? "—" : `${monthName(pr.sm)} – ${monthName(pr.em)} ${y}`;
+      boxActive.textContent = activeLabel;
+      boxMonths.textContent = `${months}/12 months`;
+      boxFactor.textContent = factor.toFixed(4);
+
+      const prOn = enableProration.checked;
+      sumProration.textContent = `Proration: ${prOn ? 'ON' : 'OFF'} · Months: ${months}/12`;
+
+      // Billing start preview (simplified)
+      const billRule = document.getElementById('billRule').value;
+      const billDate = document.getElementById('billDate').value;
+      let firstCharge = billDate;
+      if (billRule.includes("Same day")) firstCharge = start;
+      if (billRule.includes("1st of next month")) {
+        const d = new Date(`${start}T00:00:00`);
+        d.setMonth(d.getMonth() + 1);
+        d.setDate(1);
+        firstCharge = d.toISOString().slice(0,10);
+      }
+      if (billRule.includes("Service period start")) firstCharge = `${y}-01-01`;
+      sumPay.textContent =
+        (payType === "once" ? "Once-off" : payType === "inst" ? "Installments" : "Subscription") +
+        ` · First charge: ${firstCharge ? firstCharge.split('-').reverse().join('.') : '—'}`;
+
+      // Amount logic (demo numbers)
+      // Base annual = 120
+      const annual = 120;
+      const effectiveAnnual = prOn ? annual * factor : annual;
+
+      // Build invoices list
+      invoiceRows.innerHTML = "";
+      const rows = [];
+
+      if (payType === "once"){
+        // one invoice for effectiveAnnual
+        rows.push({
+          inv: "INV-0001",
+          service: `Membership ${y}`,
+          billing: "Once-off",
+          due: firstCharge,
+          amount: effectiveAnnual,
+          status: paidFirst ? "paid" : "open"
+        });
+        genHint.textContent = "Once-off: one invoice for the (prorated) annual amount.";
+        invBillingTitle.textContent = "Once-off";
+        invBillingRange.textContent = `Due: ${firstCharge}`;
+      }
+
+      if (payType === "inst"){
+        // installments across active months (MVP):
+        // if proration ON: create invoices for active months only
+        // else: create 12 invoices
+        const count = prOn ? months : 12;
+        const startMonth = prOn ? pr.sm : 0;
+        const per = count > 0 ? (effectiveAnnual / count) : 0;
+
+        for (let i=0;i<count;i++){
+          const m = startMonth + i;
+          const ym = y;
+          const label = `${monthName(m)} ${ym}`;
+          // due date: 1st of that month (simplified)
+          const due = `${ym}-${String(m+1).padStart(2,'0')}-01`;
+          rows.push({
+            inv: `INV-${String(i+1).padStart(4,'0')}`,
+            service: `Membership ${y}`,
+            billing: `Installment ${i+1}/${count} · ${label}`,
+            due,
+            amount: per,
+            status: (paidFirst && i===0) ? "paid" : "open"
+          });
+        }
+        genHint.textContent = prOn
+          ? "Installments with proration: invoices only for the active months inside the year."
+          : "Installments without proration: 12 invoices for the full year.";
+        invBillingTitle.textContent = count ? `Installment 1/${count}` : "Installments";
+        invBillingRange.textContent = count ? `Period: ${monthName(startMonth)} ${y}` : "—";
+      }
+
+      if (payType === "sub"){
+        // For fixed-period + subscription:
+        // we show as monthly charges until period end (or until assignment end)
+        // similar to installments, but conceptually "subscription instance"
+        const count = prOn ? months : 12;
+        const startMonth = prOn ? pr.sm : 0;
+        const per = count > 0 ? (effectiveAnnual / count) : 0;
+
+        for (let i=0;i<count;i++){
+          const m = startMonth + i;
+          const label = `${monthName(m)} ${y}`;
+          const due = `${y}-${String(m+1).padStart(2,'0')}-01`;
+          rows.push({
+            inv: `INV-${String(i+1).padStart(4,'0')}`,
+            service: `Membership ${y}`,
+            billing: `Subscription charge · ${label}`,
+            due,
+            amount: per,
+            status: (paidFirst && i===0) ? "paid" : "open"
+          });
+        }
+        genHint.textContent =
+          "Subscription behind a fixed-period contribution: monthly charges until service period end (or assignment end). " +
+          "If you want true never-ending subscriptions, use Rolling service mode instead.";
+        invBillingTitle.textContent = count ? `Subscription charge · ${monthName(startMonth)} ${y}` : "Subscription";
+        invBillingRange.textContent = count ? `Period: ${monthName(startMonth)} ${y}` : "—";
+      }
+
+      // Render rows
+      rows.forEach(r => {
+        const statusBadge = r.status === "paid"
+          ? `<span class="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-2 py-1 text-xs text-emerald-700">paid</span>`
+          : `<span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-1 text-xs text-slate-600">open</span>`;
+        const dueNice = r.due ? r.due.split('-').reverse().join('.') : "—";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="py-2 pr-3 font-medium">${r.inv}</td>
+          <td class="py-2 pr-3 text-slate-700">${r.service}</td>
+          <td class="py-2 pr-3 text-slate-700">${r.billing}</td>
+          <td class="py-2 pr-3 text-slate-700">${dueNice}</td>
+          <td class="py-2 pr-3 text-right font-medium">${money(r.amount)}</td>
+          <td class="py-2 text-right">${statusBadge}</td>
+        `;
+        invoiceRows.appendChild(tr);
+      });
+
+      // Show first invoice details in header preview
+      const first = rows[0] || null;
+      if (first){
+        liMeta.textContent = `Service: 01.01.${y}–31.12.${y} · Assignment active: ${activeLabel} (${months}/12)`;
+        liAmount.textContent = money(first.amount);
+        liCalc.textContent = prOn ? `Proration ${months}/12 applied` : "No proration applied";
+        invTotal.textContent = `Total: ${money(first.amount)}`;
+        invStatus.textContent = `Status: ${first.status}`;
+      } else {
+        liMeta.textContent = "—";
+        liAmount.textContent = money(0);
+        liCalc.textContent = "—";
+        invTotal.textContent = `Total: ${money(0)}`;
+        invStatus.textContent = "Status: —";
+      }
+    }
+
+    assignStart.addEventListener('change', () => { recalc(); });
+    assignEnd.addEventListener('change', () => { recalc(); });
+    enableProration.addEventListener('change', () => { recalc(); });
+
+    document.getElementById('billRule').addEventListener('change', recalc);
+    document.getElementById('billDate').addEventListener('change', recalc);
+
+    function simulatePaid(){
+      paidFirst = !paidFirst;
+      recalc();
+    }
+
+    // init
+    updateServicePeriod();
+    recalc();
+
+    // Save demo
+    document.getElementById('btnCreate').addEventListener('click', () => alert('Prototype: create FeeAssignment + (optional) invoices'));
+    document.getElementById('btnSaveTop').addEventListener('click', () => alert('Prototype: save'));
+  </script>
+</body>
+</html>
