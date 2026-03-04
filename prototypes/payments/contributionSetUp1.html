@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CoachBetter – Product Create Wizard (Service Mode + Existing Options)</title>
+  <title>CoachBetter – Product Create Wizard (Lean)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .cb-scroll::-webkit-scrollbar { height: 10px; width: 10px; }
@@ -22,7 +22,7 @@
         </button>
         <div>
           <div class="text-sm font-semibold">Create product</div>
-          <div class="text-xs text-slate-500">Wizard · uses existing fields & option popups</div>
+          <div class="text-xs text-slate-500">Wizard · existing fields & option popups</div>
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -33,29 +33,27 @@
   </div>
 
   <main class="mx-auto max-w-6xl px-4 py-6">
-    <!-- Wizard shell -->
     <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
       <!-- Stepper -->
       <div class="border-b border-slate-200 bg-slate-50">
         <div class="px-4 sm:px-6 py-4 flex flex-wrap items-center justify-between gap-3">
           <div>
             <div class="text-sm font-semibold">Product setup</div>
-            <div class="text-xs text-slate-500">Basics → Service description → Pricing options → Registration → Review</div>
+            <div class="text-xs text-slate-500">Basics + Service → Pricing options → Review</div>
           </div>
-
           <div class="text-xs text-slate-600 rounded-full border border-slate-200 bg-white px-3 py-1">
-            Billing start remains in Registration / Assignment (defaults can be set in options)
+            Billing start remains in Registration / Assignment (option defaults can prefill)
           </div>
         </div>
 
         <div class="px-4 sm:px-6 pb-4">
-          <div class="grid grid-cols-1 sm:grid-cols-5 gap-2">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
             <button data-step="1" class="stepBtn rounded-xl border border-slate-300 bg-white px-3 py-2 text-left hover:bg-slate-50">
               <div class="flex items-start gap-2">
                 <div class="mt-0.5 h-5 w-5 rounded-full bg-slate-900 text-white text-xs grid place-items-center">1</div>
                 <div>
-                  <div class="text-sm font-semibold">Basics</div>
-                  <div class="text-xs text-slate-500">Title, category, tax</div>
+                  <div class="text-sm font-semibold">Basics + Service</div>
+                  <div class="text-xs text-slate-500">Title, tax, service</div>
                 </div>
               </div>
             </button>
@@ -64,8 +62,8 @@
               <div class="flex items-start gap-2">
                 <div class="mt-0.5 h-5 w-5 rounded-full bg-slate-200 text-slate-700 text-xs grid place-items-center">2</div>
                 <div>
-                  <div class="text-sm font-semibold">Service</div>
-                  <div class="text-xs text-slate-500">Mode + renew</div>
+                  <div class="text-sm font-semibold">Pricing</div>
+                  <div class="text-xs text-slate-500">Option popups</div>
                 </div>
               </div>
             </button>
@@ -73,26 +71,6 @@
             <button data-step="3" class="stepBtn rounded-xl border border-slate-200 bg-white px-3 py-2 text-left hover:bg-slate-50">
               <div class="flex items-start gap-2">
                 <div class="mt-0.5 h-5 w-5 rounded-full bg-slate-200 text-slate-700 text-xs grid place-items-center">3</div>
-                <div>
-                  <div class="text-sm font-semibold">Pricing</div>
-                  <div class="text-xs text-slate-500">Option popups</div>
-                </div>
-              </div>
-            </button>
-
-            <button data-step="4" class="stepBtn rounded-xl border border-slate-200 bg-white px-3 py-2 text-left hover:bg-slate-50">
-              <div class="flex items-start gap-2">
-                <div class="mt-0.5 h-5 w-5 rounded-full bg-slate-200 text-slate-700 text-xs grid place-items-center">4</div>
-                <div>
-                  <div class="text-sm font-semibold">Registration</div>
-                  <div class="text-xs text-slate-500">Link later</div>
-                </div>
-              </div>
-            </button>
-
-            <button data-step="5" class="stepBtn rounded-xl border border-slate-200 bg-white px-3 py-2 text-left hover:bg-slate-50">
-              <div class="flex items-start gap-2">
-                <div class="mt-0.5 h-5 w-5 rounded-full bg-slate-200 text-slate-700 text-xs grid place-items-center">5</div>
                 <div>
                   <div class="text-sm font-semibold">Review</div>
                   <div class="text-xs text-slate-500">Ready to save</div>
@@ -107,17 +85,19 @@
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
         <!-- Main -->
         <section class="lg:col-span-8 p-4 sm:p-6">
-          <!-- STEP 1: Basics (same fields you already have) -->
+
+          <!-- STEP 1: Basics + Service (merged, lean) -->
           <div id="step-1" class="stepPanel">
             <div class="flex items-start justify-between gap-3">
               <div>
-                <div class="text-lg font-semibold">Basics</div>
-                <div class="mt-1 text-sm text-slate-500">Description of the product - visible to everyone</div>
+                <div class="text-lg font-semibold">Basics + Service</div>
+                <div class="mt-1 text-sm text-slate-500">Keep creation lean: define what it is + what period it covers.</div>
               </div>
-              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">Existing</span>
+              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">Lean</span>
             </div>
 
             <div class="mt-5 grid grid-cols-1 md:grid-cols-2 gap-5">
+              <!-- Basics -->
               <div>
                 <label class="text-sm font-medium">Title*</label>
                 <input id="pTitle" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-200"
@@ -158,197 +138,102 @@
                 </div>
               </div>
 
-              <div class="md:col-span-2 flex items-center justify-between gap-2 pt-2">
-                <div class="text-xs text-slate-500">Next: define service description (DE-ready)</div>
+              <!-- Service (compact card) -->
+              <div class="md:col-span-2">
+                <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <div class="text-sm font-semibold">Service description (Leistungszeitraum)</div>
+                      <div class="text-xs text-slate-600">
+                        Defines what is being paid for. Billing cycle is configured per pricing option.
+                      </div>
+                    </div>
+                    <span class="rounded-full bg-white px-2 py-1 text-xs text-slate-600 border border-slate-200">Small</span>
+                  </div>
+
+                  <!-- Segmented mode -->
+                  <div class="mt-3 inline-flex rounded-xl border border-slate-200 bg-white p-1">
+                    <button type="button" id="segFixed" class="segBtn rounded-lg px-3 py-1.5 text-sm font-medium bg-slate-900 text-white">Fixed</button>
+                    <button type="button" id="segRolling" class="segBtn rounded-lg px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Rolling</button>
+                    <button type="button" id="segNone" class="segBtn rounded-lg px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">None</button>
+                  </div>
+
+                  <input id="modeFixed" type="radio" name="serviceMode" class="hidden" checked>
+                  <input id="modeRolling" type="radio" name="serviceMode" class="hidden">
+                  <input id="modeNone" type="radio" name="serviceMode" class="hidden">
+
+                  <!-- Compact config rows -->
+                  <div class="mt-3 grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+                    <div class="sm:col-span-2">
+                      <label class="text-sm font-medium">Period type</label>
+                      <select id="fixedType" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
+                        <option selected>Calendar year</option>
+                        <option>Club year (club start date)</option>
+                        <option>Custom</option>
+                      </select>
+                    </div>
+
+                    <div id="yearWrap">
+                      <label class="text-sm font-medium">Year</label>
+                      <select id="fixedYear" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
+                        <option>2025</option>
+                        <option selected>2026</option>
+                        <option>2027</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div id="customDates" class="mt-3 hidden">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div>
+                        <label class="text-sm font-medium">Start date</label>
+                        <input id="customStart" type="date" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm" value="2026-01-01">
+                      </div>
+                      <div>
+                        <label class="text-sm font-medium">End date</label>
+                        <input id="customEnd" type="date" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm" value="2026-12-31">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Fixed toggles (only show for Fixed) -->
+                  <div id="fixedToggles" class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+                      <div>
+                        <div class="text-sm font-medium">Proration</div>
+                        <div class="text-xs text-slate-500">Optional (MVP: monthly)</div>
+                      </div>
+                      <input id="proration" type="checkbox" class="h-4 w-4" checked>
+                    </label>
+
+                    <label class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
+                      <div>
+                        <div class="text-sm font-medium">Auto renew</div>
+                        <div class="text-xs text-slate-500">Creates next year</div>
+                      </div>
+                      <input id="renewAnnually" type="checkbox" class="h-4 w-4" checked>
+                    </label>
+                  </div>
+
+                  <!-- Rolling/None helper text -->
+                  <div id="rollingHint" class="mt-3 hidden rounded-xl border border-slate-200 bg-white px-4 py-3 text-xs text-slate-600">
+                    Rolling service follows billing cycle (good for true subscriptions). “Auto renew” is handled by the subscription itself.
+                  </div>
+                  <div id="noneHint" class="mt-3 hidden rounded-xl border border-slate-200 bg-white px-4 py-3 text-xs text-slate-600">
+                    No service period (material, donations, one-time fees without a period).
+                  </div>
+                </div>
+              </div>
+
+              <div class="md:col-span-2 flex items-center justify-between gap-2 pt-1">
+                <div class="text-xs text-slate-500">Next: create pricing options</div>
                 <button class="nextBtn rounded-full bg-slate-900 px-5 py-2 text-sm text-white hover:bg-slate-800" data-next="2">Next</button>
               </div>
             </div>
           </div>
 
-          <!-- STEP 2: Service description (the model we discussed) -->
+          <!-- STEP 2: Pricing (unchanged) -->
           <div id="step-2" class="stepPanel hidden">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <div class="text-lg font-semibold">Service description (Leistungszeitraum)</div>
-                <div class="mt-1 text-sm text-slate-500">
-                  Defines <span class="font-medium text-slate-700">what</span> is being paid for. Billing (monthly/…) is separate.
-                  “Auto renew annually” is for fixed periods (DE).
-                </div>
-              </div>
-              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">New (small)</span>
-            </div>
-
-            <div class="mt-5 space-y-4">
-              <!-- Mode cards -->
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <label class="cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-50">
-                  <div class="flex items-start gap-3">
-                    <input id="modeFixed" type="radio" name="serviceMode" class="mt-1 h-4 w-4" checked>
-                    <div class="min-w-0">
-                      <div class="text-sm font-semibold">Fixed period</div>
-                      <div class="text-xs text-slate-500">Kalenderjahr / Clubjahr / Custom</div>
-                    </div>
-                  </div>
-                </label>
-
-                <label class="cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-50">
-                  <div class="flex items-start gap-3">
-                    <input id="modeRolling" type="radio" name="serviceMode" class="mt-1 h-4 w-4">
-                    <div class="min-w-0">
-                      <div class="text-sm font-semibold">Rolling</div>
-                      <div class="text-xs text-slate-500">Service follows billing cycle</div>
-                    </div>
-                  </div>
-                </label>
-
-                <label class="cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 hover:bg-slate-50">
-                  <div class="flex items-start gap-3">
-                    <input id="modeNone" type="radio" name="serviceMode" class="mt-1 h-4 w-4">
-                    <div class="min-w-0">
-                      <div class="text-sm font-semibold">None</div>
-                      <div class="text-xs text-slate-500">No service logic</div>
-                    </div>
-                  </div>
-                </label>
-              </div>
-
-              <!-- Fixed block -->
-              <div id="fixedBlock" class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div class="flex items-start justify-between gap-3">
-                  <div>
-                    <div class="text-sm font-semibold">Fixed period settings</div>
-                    <div class="text-xs text-slate-600">Recommended for German club contributions (year container).</div>
-                  </div>
-                  <span class="rounded-full bg-white px-2 py-1 text-xs text-slate-600 border border-slate-200">Recommended</span>
-                </div>
-
-                <div class="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div class="sm:col-span-2">
-                    <label class="text-sm font-medium">Period type</label>
-                    <select id="fixedType" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
-                      <option selected>Calendar year</option>
-                      <option>Club year (club start date)</option>
-                      <option>Custom</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="text-sm font-medium">Year</label>
-                    <select id="fixedYear" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
-                      <option>2025</option>
-                      <option selected>2026</option>
-                      <option>2027</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div id="customDates" class="mt-3 hidden">
-                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label class="text-sm font-medium">Start date</label>
-                      <input id="customStart" type="date" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm" value="2026-01-01">
-                    </div>
-                    <div>
-                      <label class="text-sm font-medium">End date</label>
-                      <input id="customEnd" type="date" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm" value="2026-12-31">
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mt-3 grid grid-cols-1 gap-3">
-                  <label class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
-                    <input id="proration" type="checkbox" class="mt-1 h-4 w-4" checked>
-                    <div>
-                      <div class="text-sm font-medium">Proration (optional)</div>
-                      <div class="text-xs text-slate-500">Charge proportionally when joining during the period (MVP: monthly).</div>
-                    </div>
-                  </label>
-
-                  <label class="flex items-start gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3">
-                    <input id="renewAnnually" type="checkbox" class="mt-1 h-4 w-4" checked>
-                    <div class="flex-1">
-                      <div class="flex items-center justify-between gap-2">
-                        <div class="text-sm font-medium">Auto renew annually</div>
-                        <span class="rounded-full bg-emerald-50 px-2 py-1 text-xs text-emerald-700 border border-emerald-200">DE key</span>
-                      </div>
-                      <div class="text-xs text-slate-500">
-                        Creates the next service period (e.g., 2027) for active memberships and can reuse billing plan.
-                      </div>
-                      <div id="renewAdvanced" class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                          <label class="text-sm font-medium">Renewal timing</label>
-                          <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
-                            <option selected>On period end</option>
-                            <option>30 days before end</option>
-                            <option>On period start</option>
-                          </select>
-                        </div>
-                        <div>
-                          <label class="text-sm font-medium">Renew only if</label>
-                          <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
-                            <option selected>Membership active</option>
-                            <option>Not cancelled</option>
-                            <option>Always</option>
-                          </select>
-                        </div>
-                      </div>
-                    </div>
-                  </label>
-                </div>
-
-                <div class="mt-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-xs text-slate-600">
-                  Important: Invoices show “Jan paid” via invoice status (installment index / period label), not via service period.
-                </div>
-              </div>
-
-              <!-- Rolling block -->
-              <div id="rollingBlock" class="hidden rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div class="flex items-start justify-between gap-3">
-                  <div>
-                    <div class="text-sm font-semibold">Rolling settings</div>
-                    <div class="text-xs text-slate-600">Service follows billing cycle (good for true subscriptions).</div>
-                  </div>
-                  <span class="rounded-full bg-white px-2 py-1 text-xs text-slate-600 border border-slate-200">Subscription-like</span>
-                </div>
-
-                <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label class="text-sm font-medium">Service follows</label>
-                    <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
-                      <option selected>Billing cycle</option>
-                      <option>Invoice period label</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="text-sm font-medium">Renewal</label>
-                    <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm">
-                      <option selected>Managed by subscription</option>
-                      <option>Manual</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div class="mt-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-xs text-slate-600">
-                  “Auto renew annually” is typically not used here because there is no yearly container.
-                </div>
-              </div>
-
-              <!-- None block -->
-              <div id="noneBlock" class="hidden rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                <div class="text-sm font-semibold">None</div>
-                <div class="mt-1 text-sm text-slate-600">
-                  No service logic – good for material, donations, one-time fees without a service period.
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between gap-2 pt-2">
-                <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="1">Back</button>
-                <button class="nextBtn rounded-full bg-slate-900 px-5 py-2 text-sm text-white hover:bg-slate-800" data-next="3">Next</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- STEP 3: Pricing (same list + same popups, minimal additions = default billing start) -->
-          <div id="step-3" class="stepPanel hidden">
             <div class="flex items-start justify-between gap-3">
               <div>
                 <div class="text-lg font-semibold">Pricing</div>
@@ -360,7 +245,6 @@
             </div>
 
             <div class="mt-5 space-y-3">
-              <!-- Pricing rows (same style) -->
               <div class="rounded-2xl border border-slate-200 bg-white px-4 py-4 flex items-start justify-between gap-3">
                 <div class="flex items-start gap-3">
                   <div class="h-10 w-10 rounded-xl bg-slate-50 border border-slate-200 grid place-items-center">
@@ -427,47 +311,14 @@
               </div>
 
               <div class="flex items-center justify-between gap-2 pt-2">
-                <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="2">Back</button>
-                <button class="nextBtn rounded-full bg-slate-900 px-5 py-2 text-sm text-white hover:bg-slate-800" data-next="4">Next</button>
+                <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="1">Back</button>
+                <button class="nextBtn rounded-full bg-slate-900 px-5 py-2 text-sm text-white hover:bg-slate-800" data-next="3">Next</button>
               </div>
             </div>
           </div>
 
-          <!-- STEP 4: Registration (keep as today; just explain defaults/override) -->
-          <div id="step-4" class="stepPanel hidden">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <div class="text-lg font-semibold">Registration</div>
-                <div class="mt-1 text-sm text-slate-500">This product is linked with following registrations</div>
-              </div>
-              <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-600">Existing</span>
-            </div>
-
-            <div class="mt-5 space-y-4">
-              <div class="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
-                Product is not linked to registration yet
-              </div>
-
-              <div class="rounded-xl border border-slate-200 bg-white p-4">
-                <div class="text-sm font-semibold">How billing start works (no big change)</div>
-                <div class="mt-1 text-sm text-slate-600">
-                  <ul class="list-disc pl-5 space-y-1">
-                    <li>Start / first charge date is still set in the registration flow (and later manual assignment).</li>
-                    <li>Each pricing option may define a <span class="font-medium text-slate-700">default</span> “billing start rule” to prefill registration.</li>
-                    <li>Admins can override it per member/order/invoice.</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="flex items-center justify-between gap-2 pt-2">
-                <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="3">Back</button>
-                <button class="nextBtn rounded-full bg-slate-900 px-5 py-2 text-sm text-white hover:bg-slate-800" data-next="5">Next</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- STEP 5: Review (implementation notes for devs + save) -->
-          <div id="step-5" class="stepPanel hidden">
+          <!-- STEP 3: Review -->
+          <div id="step-3" class="stepPanel hidden">
             <div class="flex items-start justify-between gap-3">
               <div>
                 <div class="text-lg font-semibold">Review & save</div>
@@ -507,7 +358,7 @@
                       <span class="font-mono text-xs">service_year</span>,
                       <span class="font-mono text-xs">service_start_date</span>/<span class="font-mono text-xs">service_end_date</span> (if custom),
                       <span class="font-mono text-xs">proration_enabled</span>,
-                      <span class="font-mono text-xs">auto_renew_annually</span> (+ optional renew rule fields).
+                      <span class="font-mono text-xs">auto_renew_annually</span>.
                     </div>
                   </div>
 
@@ -517,29 +368,28 @@
                       Add fields to payment option (ProductPaymentOptions):<br/>
                       <span class="font-mono text-xs">default_billing_start_rule</span> (same_day|next_month_first|service_start|specific_date),
                       <span class="font-mono text-xs">default_billing_start_date</span> (optional).
-                      Registration can prefill, admin can override.
                     </div>
                   </div>
 
                   <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
                     <div class="font-medium">Invoices “Jan paid” display</div>
                     <div class="text-sm text-slate-600">
-                      Keep invoice status logic. Add labeling via <span class="font-mono text-xs">installment_index</span>/<span class="font-mono text-xs">installment_total</span> or a simple
-                      <span class="font-mono text-xs">period_label</span> for clean UI/PDF.
+                      Keep invoice status logic. Add labeling via <span class="font-mono text-xs">installment_index</span>/<span class="font-mono text-xs">installment_total</span>
+                      or a simple <span class="font-mono text-xs">period_label</span>.
                     </div>
                   </div>
                 </div>
               </div>
 
               <div class="flex items-center justify-between gap-2 pt-2">
-                <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="4">Back</button>
+                <button class="prevBtn rounded-full border border-slate-200 bg-white px-5 py-2 text-sm hover:bg-slate-50" data-prev="2">Back</button>
                 <button id="saveBtn" class="rounded-full bg-emerald-500 px-6 py-2 text-sm text-white hover:bg-emerald-600">Save product</button>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- Right: Sticky summary (live) -->
+        <!-- Right: Sticky summary -->
         <aside class="lg:col-span-4 border-t lg:border-t-0 lg:border-l border-slate-200 bg-slate-50 p-4 sm:p-6">
           <div class="text-sm font-semibold">Live summary</div>
 
@@ -588,7 +438,7 @@
     </div>
   </main>
 
-  <!-- ===================== MODALS (same as your setup) ===================== -->
+  <!-- ===================== MODALS (unchanged from your proposal) ===================== -->
   <div id="backdrop" class="fixed inset-0 z-50 hidden bg-black/40">
     <div class="absolute inset-0" onclick="closeAll()"></div>
   </div>
@@ -727,7 +577,7 @@
     </div>
   </div>
 
-  <!-- Installments (same as before, with default billing start block) -->
+  <!-- Installments -->
   <div id="modal-installments" class="fixed inset-0 z-[60] hidden">
     <div class="flex min-h-full items-center justify-center p-4">
       <div class="w-full max-w-6xl rounded-2xl bg-white shadow-xl border border-slate-200 overflow-hidden">
@@ -779,7 +629,6 @@
                 </select>
               </div>
 
-              <!-- Default start (new but small) -->
               <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
                 <div class="flex items-start justify-between gap-3">
                   <div>
@@ -808,7 +657,6 @@
                 </div>
               </div>
 
-              <!-- Additional charges (same section) -->
               <div class="rounded-2xl border border-slate-200 bg-white overflow-hidden">
                 <div class="px-4 py-3 flex items-center justify-between">
                   <div>
@@ -896,7 +744,7 @@
     </div>
   </div>
 
-  <!-- Subscription (same popup + default billing start) -->
+  <!-- Subscription -->
   <div id="modal-subscription" class="fixed inset-0 z-[60] hidden">
     <div class="flex min-h-full items-center justify-center p-4">
       <div class="w-full max-w-6xl rounded-2xl bg-white shadow-xl border border-slate-200 overflow-hidden">
@@ -1068,47 +916,94 @@
       document.body.classList.remove('overflow-hidden');
     }
 
-    // --------- Service mode logic (step 2) ----------
+    // --------- Segmented service mode ----------
     const modeFixed = document.getElementById('modeFixed');
     const modeRolling = document.getElementById('modeRolling');
     const modeNone = document.getElementById('modeNone');
 
-    const fixedBlock = document.getElementById('fixedBlock');
-    const rollingBlock = document.getElementById('rollingBlock');
-    const noneBlock = document.getElementById('noneBlock');
+    const segFixed = document.getElementById('segFixed');
+    const segRolling = document.getElementById('segRolling');
+    const segNone = document.getElementById('segNone');
 
     const fixedType = document.getElementById('fixedType');
     const fixedYear = document.getElementById('fixedYear');
+    const yearWrap = document.getElementById('yearWrap');
     const customDates = document.getElementById('customDates');
     const customStart = document.getElementById('customStart');
     const customEnd = document.getElementById('customEnd');
 
     const proration = document.getElementById('proration');
     const renewAnnually = document.getElementById('renewAnnually');
-    const renewAdvanced = document.getElementById('renewAdvanced');
 
-    function refreshServiceUI(){
+    const fixedToggles = document.getElementById('fixedToggles');
+    const rollingHint = document.getElementById('rollingHint');
+    const noneHint = document.getElementById('noneHint');
+
+    function styleSeg(activeBtn){
+      [segFixed, segRolling, segNone].forEach(b => {
+        const active = b === activeBtn;
+        b.classList.toggle("bg-slate-900", active);
+        b.classList.toggle("text-white", active);
+        b.classList.toggle("text-slate-700", !active);
+        b.classList.toggle("hover:bg-slate-50", !active);
+      });
+    }
+
+    function setMode(mode){
+      modeFixed.checked = mode === 'fixed';
+      modeRolling.checked = mode === 'rolling';
+      modeNone.checked = mode === 'none';
+
+      styleSeg(mode === 'fixed' ? segFixed : mode === 'rolling' ? segRolling : segNone);
+
       const isFixed = modeFixed.checked;
       const isRolling = modeRolling.checked;
       const isNone = modeNone.checked;
 
-      fixedBlock.classList.toggle('hidden', !isFixed);
-      rollingBlock.classList.toggle('hidden', !isRolling);
-      noneBlock.classList.toggle('hidden', !isNone);
+      // Show/hide compact config
+      fixedType.closest('div').parentElement.classList.toggle('opacity-50', !isFixed);
+      fixedType.disabled = !isFixed;
+      fixedYear.disabled = !isFixed;
+      customStart.disabled = !isFixed;
+      customEnd.disabled = !isFixed;
 
-      customDates.classList.toggle('hidden', fixedType.value !== 'Custom');
-      renewAdvanced.classList.toggle('hidden', !renewAnnually.checked);
+      fixedToggles.classList.toggle('hidden', !isFixed);
+      rollingHint.classList.toggle('hidden', !isRolling);
+      noneHint.classList.toggle('hidden', !isNone);
+
+      // if not fixed -> hide custom + year
+      if (!isFixed) {
+        customDates.classList.add('hidden');
+        yearWrap.classList.remove('hidden');
+      } else {
+        customDates.classList.toggle('hidden', fixedType.value !== 'Custom');
+        yearWrap.classList.toggle('hidden', fixedType.value === 'Custom');
+      }
 
       refreshLiveSummary();
       refreshReview();
     }
 
-    [modeFixed, modeRolling, modeNone, fixedType, fixedYear, proration, renewAnnually, customStart, customEnd]
+    segFixed.addEventListener('click', () => setMode('fixed'));
+    segRolling.addEventListener('click', () => setMode('rolling'));
+    segNone.addEventListener('click', () => setMode('none'));
+
+    function refreshServiceUI(){
+      // only matters when fixed
+      if (modeFixed.checked) {
+        customDates.classList.toggle('hidden', fixedType.value !== 'Custom');
+        yearWrap.classList.toggle('hidden', fixedType.value === 'Custom');
+      }
+      refreshLiveSummary();
+      refreshReview();
+    }
+
+    [fixedType, fixedYear, proration, renewAnnually, customStart, customEnd]
       .forEach(el => el.addEventListener('change', refreshServiceUI));
 
-    refreshServiceUI();
+    setMode('fixed');
 
-    // --------- Live summary (right panel) ----------
+    // --------- Live summary ----------
     const pTitle = document.getElementById('pTitle');
     const pCategory = document.getElementById('pCategory');
     const pTax = document.getElementById('pTax');
@@ -1127,11 +1022,10 @@
         return { line1: "Rolling: follows billing cycle", line2: "Auto renew: via subscription · Proration: n/a" };
       }
 
-      // fixed
-      const year = fixedYear.value;
       const type = fixedType.value;
-      let line1 = `Fixed: ${type} ${type === 'Custom' ? '' : year}`.trim();
-      if (type === 'Calendar year') line1 = `Fixed: Calendar year ${year}`;
+      const year = fixedYear.value;
+
+      let line1 = `Fixed: Calendar year ${year}`;
       if (type === 'Club year (club start date)') line1 = `Fixed: Club year ${year}`;
       if (type === 'Custom') line1 = `Fixed: Custom (${customStart.value} – ${customEnd.value})`;
 
@@ -1144,7 +1038,6 @@
       sumTitle.textContent = pTitle.value || "—";
       sumCat.textContent = `Category: ${pCategory.value || "—"}`;
       sumTax.textContent = pTax.value || "—";
-
       const s = getServiceSummary();
       sumService.textContent = s.line1;
       sumService2.textContent = s.line2;
@@ -1164,7 +1057,6 @@
       if (!revTitle) return;
       revTitle.textContent = pTitle.value || "—";
       revCat.textContent = `Category: ${pCategory.value || "—"}`;
-
       const s = getServiceSummary();
       revService.textContent = s.line1;
       revRenew.textContent = s.line2;
