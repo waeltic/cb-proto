@@ -1,946 +1,1159 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <title>CB – Product Setup Wizard (Clean: Product + Service + Options)</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<title>CB – Product Setup Wizard</title>
+<style>
+  .cb-scroll::-webkit-scrollbar{height:10px;width:10px}
+  .cb-scroll::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:999px}
+  .cb-scroll::-webkit-scrollbar-track{background:transparent}
+</style>
 </head>
 
 <body class="bg-slate-50 text-slate-900">
-  <div class="min-h-screen">
+<div class="min-h-screen">
 
-    <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
-      <div class="mx-auto max-w-5xl px-4 py-3 flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="h-9 w-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-semibold">cb</div>
-          <div class="leading-tight">
-            <div class="text-sm font-semibold">Product setup</div>
-            <div class="text-xs text-slate-500">Wizard</div>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50">Cancel</button>
-          <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50">Save draft</button>
-          <button type="button" id="headerNextBtn" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800" onclick="nextStep()">Next</button>
-        </div>
-      </div>
-    </header>
-
-    <main class="mx-auto max-w-5xl px-4 py-5">
-
-      <!-- Stepper -->
-      <div class="rounded-2xl border border-slate-200 bg-white shadow-sm px-4 py-3">
-        <div class="flex items-center justify-between gap-3">
-          <div class="flex items-center gap-3">
-            <div class="flex items-center gap-2">
-              <span id="dot1" class="h-6 w-6 rounded-full bg-slate-900 text-white text-xs font-semibold flex items-center justify-center">1</span>
-              <span id="lbl1" class="text-sm font-medium">Product</span>
-            </div>
-            <span class="text-slate-300">›</span>
-            <div class="flex items-center gap-2">
-              <span id="dot2" class="h-6 w-6 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold flex items-center justify-center">2</span>
-              <span id="lbl2" class="text-sm text-slate-600">Options</span>
-            </div>
-            <span class="text-slate-300">›</span>
-            <div class="flex items-center gap-2">
-              <span id="dot3" class="h-6 w-6 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold flex items-center justify-center">3</span>
-              <span id="lbl3" class="text-sm text-slate-600">Review</span>
-            </div>
-          </div>
-
-          <div class="text-xs text-slate-500">
-            <span id="stepHint">Step 1 of 3</span>
-          </div>
+  <!-- Top bar -->
+  <header class="sticky top-0 z-30 border-b border-slate-200 bg-white/90 backdrop-blur">
+    <div class="mx-auto max-w-5xl px-4 py-3 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="h-9 w-9 rounded-xl bg-slate-900 text-white flex items-center justify-center font-semibold">cb</div>
+        <div class="leading-tight">
+          <div class="text-sm font-semibold">Product setup</div>
+          <div class="text-xs text-slate-500">Wizard</div>
         </div>
       </div>
 
-      <!-- STEP 1 -->
-      <section id="step1" class="mt-5">
-        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-          <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
-            <div class="min-w-0">
-              <div class="text-base font-semibold">Product</div>
-              <div class="mt-1 text-sm text-slate-500">
-                A product is a reusable invoice template. Prices are defined on options.
-              </div>
+      <div class="flex items-center gap-2">
+        <span class="hidden sm:inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs">
+          <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
+          Status
+          <select id="pStatus" class="bg-transparent font-medium text-slate-700 outline-none">
+            <option selected>Draft</option>
+            <option>Active</option>
+            <option>Inactive</option>
+          </select>
+        </span>
 
-              <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 py-0.5">
-                  <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
-                  Status: <span class="font-medium text-slate-700">Draft</span>
-                </span>
-                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 py-0.5">
-                  <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
-                  Tax is product-wide
-                </span>
-              </div>
-            </div>
+        <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50">Cancel</button>
+        <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50">Save draft</button>
+        <button type="button" id="headerNextBtn" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800" onclick="nextStep()">Next</button>
+      </div>
+    </div>
+  </header>
 
-            <!-- Compact image upload -->
-            <div class="flex items-start gap-3">
-              <div class="relative">
-                <img id="pImgPreview"
-                     src=""
-                     alt="Product image"
-                     class="hidden h-12 w-12 rounded-xl border border-slate-200 bg-slate-100 object-cover" />
-                <div id="pImgPlaceholder" class="h-12 w-12 rounded-xl border border-slate-200 bg-slate-100 grid place-items-center text-xs text-slate-500">
-                  img
-                </div>
-                <input id="pImgInput" type="file" accept="image/*" class="hidden" onchange="onProductImageChange(event)">
-              </div>
+  <main class="mx-auto max-w-5xl px-4 py-5">
+
+    <!-- Stepper -->
+    <div class="rounded-2xl border border-slate-200 bg-white shadow-sm px-4 py-3">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 flex-wrap">
+          <div class="flex items-center gap-2">
+            <span id="dot1" class="h-6 w-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center">1</span>
+            <span id="lbl1" class="text-sm font-medium">Product</span>
+          </div>
+          <span class="text-slate-300">›</span>
+          <div class="flex items-center gap-2">
+            <span id="dot2" class="h-6 w-6 rounded-full bg-slate-100 text-slate-700 text-xs flex items-center justify-center">2</span>
+            <span id="lbl2" class="text-sm text-slate-600">Options</span>
+          </div>
+          <span class="text-slate-300">›</span>
+          <div class="flex items-center gap-2">
+            <span id="dot3" class="h-6 w-6 rounded-full bg-slate-100 text-slate-700 text-xs flex items-center justify-center">3</span>
+            <span id="lbl3" class="text-sm text-slate-600">Review</span>
+          </div>
+        </div>
+
+        <div class="text-xs text-slate-500">
+          <span id="stepHint">Step 1 of 3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layout -->
+    <div class="mt-5 grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <!-- Main -->
+      <div class="lg:col-span-8 space-y-5">
+
+        <!-- STEP 1: PRODUCT -->
+        <section id="step1">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
               <div class="min-w-0">
-                <div class="text-xs font-medium text-slate-700">Image</div>
-                <div class="mt-1 flex flex-wrap gap-2">
-                  <button type="button"
-                          class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 bg-white hover:bg-slate-50"
-                          onclick="document.getElementById('pImgInput').click()">
-                    Upload
-                  </button>
-                  <button id="pImgRemoveBtn"
-                          type="button"
+                <div class="text-base font-semibold">Product</div>
+                <div class="mt-1 text-sm text-slate-500">Reusable billing template</div>
+              </div>
+
+              <!-- Compact image upload -->
+              <div class="flex items-center gap-3">
+                <div class="relative">
+                  <img id="imgPreview" class="hidden h-12 w-12 rounded-xl border border-slate-200 object-cover" alt="Product"/>
+                  <div id="imgPlaceholder" class="h-12 w-12 rounded-xl border border-slate-200 bg-slate-100 grid place-items-center text-xs text-slate-500">img</div>
+                  <input id="imgInput" type="file" class="hidden" accept="image/*" onchange="uploadImg(event)">
+                </div>
+                <div class="flex flex-col gap-1">
+                  <button type="button" class="px-2.5 py-1 text-xs rounded-lg border border-slate-200 bg-white hover:bg-slate-50"
+                          onclick="document.getElementById('imgInput').click()">Upload</button>
+                  <button id="imgRemoveBtn" type="button"
                           class="hidden px-2.5 py-1 text-xs rounded-lg border border-slate-200 bg-white hover:bg-slate-50"
-                          onclick="removeProductImage()">
-                    Remove
-                  </button>
+                          onclick="removeImg()">Remove</button>
                 </div>
-                <div class="mt-1 text-[11px] text-slate-500">Optional · square recommended</div>
               </div>
             </div>
-          </div>
 
-          <div class="px-5 py-5 space-y-5">
+            <div class="px-5 py-5 space-y-6">
 
-            <!-- Basics -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="md:col-span-2">
+              <div>
                 <label class="text-sm font-medium">Name</label>
-                <input id="pName" type="text" value="Membership fee 2026"
-                       class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"/>
-              </div>
-
-              <div class="md:col-span-2">
-                <label class="text-sm font-medium">Description <span class="text-slate-400 font-normal">(optional)</span></label>
-                <textarea id="pDesc" rows="2"
-                          class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300">Used for standard annual membership billing.</textarea>
-                <div class="mt-1 text-xs text-slate-500">Internal note only.</div>
-              </div>
-            </div>
-
-            <!-- Category + Tax -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="text-sm font-medium">Category <span class="text-slate-400 font-normal">(filter only)</span></label>
-                <div class="mt-2 flex flex-wrap gap-2">
-                  <button type="button" class="px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white">Membership</button>
-                  <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">Course</button>
-                  <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">Event</button>
-                  <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50">Other</button>
-                </div>
-                <div class="mt-1 text-xs text-slate-500">Used for filtering and reporting only.</div>
+                <input id="pName" class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
+                       placeholder="e.g. Membership fee 2026" value="Membership fee 2026"/>
               </div>
 
               <div>
-                <label class="text-sm font-medium">Tax rate</label>
-                <select id="pTax" class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300">
-                  <option value="none">No tax rate</option>
-                  <option value="0">0%</option>
-                  <option value="7.7" selected>7.7%</option>
-                  <option value="19">19%</option>
-                  <option value="20">20%</option>
-                </select>
-                <div class="mt-1 text-xs text-slate-500">Applied to all invoices created from this product.</div>
-              </div>
-            </div>
-
-            <!-- Available in -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="md:col-span-2">
-                <div class="text-sm font-medium">Available in</div>
-                <div class="mt-1 text-xs text-slate-500">Controls where the product can be selected.</div>
+                <label class="text-sm font-medium">Description</label>
+                <textarea id="pDesc" rows="2" class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300"
+                          placeholder="Optional">Used for standard annual membership billing.</textarea>
               </div>
 
-              <label class="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700">
-                <input id="availInvoice" type="checkbox" checked class="mt-1 h-4 w-4"/>
-                <span class="min-w-0">
-                  <span class="font-medium">Invoice creation</span>
-                  <span class="block text-xs text-slate-500 mt-0.5">Selectable in manual invoice creation.</span>
-                </span>
-              </label>
-
-              <label class="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-2 text-sm text-slate-700">
-                <input id="availMembership" type="checkbox" checked class="mt-1 h-4 w-4"/>
-                <span class="min-w-0">
-                  <span class="font-medium">Membership fee assignment</span>
-                  <span class="block text-xs text-slate-500 mt-0.5">Shown in membership fee assignment flow.</span>
-                </span>
-              </label>
-            </div>
-
-            <!-- Service (newer 3-mode, compact) -->
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div class="flex items-start justify-between gap-3">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <div class="text-sm font-semibold">Service description (Leistungszeitraum)</div>
-                  <div class="mt-1 text-xs text-slate-500">
-                    Describes what the payment covers. Billing/first charge is configured in options and assignment.
+                  <label class="text-sm font-medium">Category</label>
+                  <div class="mt-2 flex flex-wrap gap-2">
+                    <button type="button" class="px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white">Membership</button>
+                    <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white hover:bg-slate-50">Course</button>
+                    <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white hover:bg-slate-50">Event</button>
+                    <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white hover:bg-slate-50">Other</button>
                   </div>
                 </div>
-                <span class="text-xs rounded-full bg-white border border-slate-200 px-2 py-0.5 text-slate-600">Lean</span>
+
+                <div>
+                  <label class="text-sm font-medium">Tax rate</label>
+                  <select id="pTax" class="mt-2 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300 bg-white">
+                    <option value="none">No tax</option>
+                    <option value="7.7" selected>7.7%</option>
+                    <option value="19">19%</option>
+                    <option value="20">20%</option>
+                  </select>
+                </div>
               </div>
 
-              <!-- Segmented mode -->
-              <div class="mt-3 inline-flex rounded-xl border border-slate-200 bg-white p-1">
-                <button type="button" id="segFixed" class="segBtn rounded-lg px-3 py-1.5 text-sm font-medium bg-slate-900 text-white">Fixed</button>
-                <button type="button" id="segRolling" class="segBtn rounded-lg px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Rolling</button>
-                <button type="button" id="segNone" class="segBtn rounded-lg px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50">None</button>
+              <!-- Usage -->
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="text-sm font-semibold">Usage</div>
+                    <div class="mt-1 text-sm text-slate-600">Membership contribution</div>
+                  </div>
+                  <label class="inline-flex items-center cursor-pointer select-none">
+                    <input id="isContribution" type="checkbox" class="sr-only peer" checked onchange="syncSummary()">
+                    <div class="w-10 h-6 bg-slate-200 rounded-full peer-checked:bg-slate-900 relative transition">
+                      <div class="absolute top-1 left-1 h-4 w-4 bg-white rounded-full transition peer-checked:translate-x-4"></div>
+                    </div>
+                  </label>
+                </div>
               </div>
 
-              <input id="modeFixed" type="radio" name="serviceMode" class="hidden" checked>
-              <input id="modeRolling" type="radio" name="serviceMode" class="hidden">
-              <input id="modeNone" type="radio" name="serviceMode" class="hidden">
+              <!-- Scope -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="text-sm font-semibold">Scope</div>
 
-              <!-- Fixed config -->
-              <div id="fixedConfig" class="mt-3">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
-                  <div class="md:col-span-2">
+                <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <label class="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-2 text-sm">
+                    <input id="scopeClub" name="scope" type="radio" class="mt-1 h-4 w-4" checked onchange="toggleDeptScope(); syncSummary()">
+                    <span>
+                      <span class="font-medium">Club</span>
+                      <span class="block text-xs text-slate-500 mt-0.5">Available across the whole club</span>
+                    </span>
+                  </label>
+
+                  <label class="flex items-start gap-3 rounded-xl border border-slate-200 px-3 py-2 text-sm">
+                    <input id="scopeDept" name="scope" type="radio" class="mt-1 h-4 w-4" onchange="toggleDeptScope(); syncSummary()">
+                    <span>
+                      <span class="font-medium">Department</span>
+                      <span class="block text-xs text-slate-500 mt-0.5">Only for a specific department</span>
+                    </span>
+                  </label>
+                </div>
+
+                <div id="deptPicker" class="mt-3 hidden">
+                  <label class="text-sm font-medium">Department</label>
+                  <select id="pDept" class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" onchange="syncSummary()">
+                    <option value="">Select department</option>
+                    <option>Football</option>
+                    <option>Tennis</option>
+                    <option>Gymnastics</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Service (lean) -->
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="text-sm font-semibold">Service description</div>
+                    <div class="mt-1 text-sm text-slate-600">
+                      This is what the customer pays for. Invoice dates are set later.
+                    </div>
+                  </div>
+                  <span class="hidden sm:inline-flex text-xs rounded-full border border-slate-200 bg-white px-2 py-1 text-slate-600">
+                    Hint: shown on invoice PDF
+                  </span>
+                </div>
+
+                <div class="mt-3 inline-flex rounded-xl border border-slate-200 bg-white p-1">
+                  <button type="button" onclick="setMode('fixed')" id="segFixed"
+                          class="rounded-lg px-3 py-1.5 text-sm bg-slate-900 text-white">Fixed</button>
+                  <button type="button" onclick="setMode('rolling')" id="segRolling"
+                          class="rounded-lg px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">Rolling</button>
+                  <button type="button" onclick="setMode('none')" id="segNone"
+                          class="rounded-lg px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">None</button>
+                </div>
+
+                <div id="fixedConfig" class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
                     <label class="text-xs text-slate-600">Period type</label>
-                    <select id="fixedType" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                    <select id="fixedType" class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" onchange="syncSummary()">
                       <option selected>Calendar year</option>
-                      <option>Club year (club start date)</option>
+                      <option>Club year</option>
                       <option>Custom</option>
                     </select>
                   </div>
-                  <div id="yearWrap">
+                  <div>
                     <label class="text-xs text-slate-600">Year</label>
-                    <select id="fixedYear" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                    <select id="fixedYear" class="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" onchange="syncSummary()">
                       <option>2025</option>
                       <option selected>2026</option>
                       <option>2027</option>
                     </select>
                   </div>
-                </div>
-
-                <div id="customDates" class="mt-3 hidden grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div>
-                    <label class="text-xs text-slate-600">Start date</label>
-                    <input id="customStart" type="date" value="2026-01-01" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
-                  </div>
-                  <div>
-                    <label class="text-xs text-slate-600">End date</label>
-                    <input id="customEnd" type="date" value="2026-12-31" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
-                  </div>
-                </div>
-
-                <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <label class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2">
-                    <div class="min-w-0">
-                      <div class="text-sm font-medium">Proration</div>
-                      <div class="text-xs text-slate-500">Optional (MVP: monthly)</div>
-                    </div>
-                    <input id="proration" type="checkbox" class="h-4 w-4" checked>
-                  </label>
-
-                  <label class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2">
-                    <div class="min-w-0">
-                      <div class="text-sm font-medium">Auto renew annually</div>
-                      <div class="text-xs text-slate-500">Creates next year</div>
-                    </div>
-                    <input id="renewAnnually" type="checkbox" class="h-4 w-4" checked>
-                  </label>
-                </div>
-              </div>
-
-              <!-- Rolling hint -->
-              <div id="rollingHint" class="mt-3 hidden rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600">
-                Rolling: service follows the billing cycle (good for true subscriptions).
-              </div>
-
-              <!-- None hint -->
-              <div id="noneHint" class="mt-3 hidden rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600">
-                None: no service period (material, donations, ad-hoc fees).
-              </div>
-            </div>
-
-            <!-- Meta settings (unchanged) -->
-            <details class="group">
-              <summary class="list-none cursor-pointer flex items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                  <span class="text-sm font-medium">Meta settings</span>
-                  <span class="text-xs text-slate-400">(optional)</span>
-                </div>
-                <span class="text-xs text-slate-500 group-open:hidden">Show</span>
-                <span class="text-xs text-slate-500 hidden group-open:inline">Hide</span>
-              </summary>
-
-              <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <div class="flex items-center justify-between">
-                    <div class="text-sm font-medium">Scope</div>
-                    <span class="text-xs text-slate-400">Filter / warning</span>
-                  </div>
-                  <div class="mt-1 text-xs text-slate-500">
-                    Used for filtering and warnings only. Department scope does not block assignment.
-                  </div>
-
-                  <div class="mt-2 flex flex-wrap gap-4 text-sm text-slate-700">
-                    <label class="flex items-center gap-2">
-                      <input type="checkbox" checked class="h-4 w-4"/>
-                      Club
+                  <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2">
+                      <span class="text-sm font-medium">Proration</span>
+                      <input id="proration" type="checkbox" class="h-4 w-4" checked onchange="syncSummary()">
                     </label>
-                    <label class="flex items-center gap-2">
-                      <input type="checkbox" class="h-4 w-4"/>
-                      Department
+                    <label class="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2">
+                      <span class="text-sm font-medium">Auto renew annually</span>
+                      <input id="autoRenew" type="checkbox" class="h-4 w-4" checked onchange="syncSummary()">
                     </label>
                   </div>
-
-                  <select class="mt-2 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700">
-                    <option>Select department…</option>
-                    <option>Football</option>
-                    <option>Tennis</option>
-                    <option>Gymnastics</option>
-                  </select>
-                  <div class="mt-1 text-xs text-slate-500">Only relevant if Department is selected.</div>
                 </div>
 
-                <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
-                  <div class="flex items-center justify-between">
-                    <div class="text-sm font-medium">Status</div>
-                    <span class="text-xs text-slate-400">Create mode</span>
-                  </div>
-                  <div class="mt-1 text-xs text-slate-500">Status can be changed after saving (edit mode).</div>
-                  <select disabled class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-600">
-                    <option>Draft</option>
-                    <option>Active</option>
-                    <option>Inactive</option>
-                  </select>
+                <div id="rollingHint" class="hidden mt-3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600">
+                  Service follows billing cycle (good for true subscriptions).
+                </div>
+
+                <div id="noneHint" class="hidden mt-3 rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-600">
+                  No service period.
                 </div>
               </div>
-            </details>
 
-          </div>
+            </div>
 
-          <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between">
-            <div class="text-xs text-slate-500">Next: add pricing options (one-off, installments, subscription).</div>
-            <div class="flex items-center gap-2">
-              <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="goToStep(1)">Stay</button>
-              <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800" onclick="goToStep(2)">Continue</button>
+            <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between">
+              <div class="text-xs text-slate-500">Next: define pricing options</div>
+              <button type="button" onclick="goToStep(2)"
+                      class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800">
+                Continue
+              </button>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <!-- STEP 2 -->
-      <section id="step2" class="mt-5 hidden">
-        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-          <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
-            <div class="min-w-0">
-              <div class="text-base font-semibold">Options</div>
-              <div class="mt-1 text-sm text-slate-500">
-                Each option defines a pricing variant and payment type. Dates are finalized when invoices are created.
+        <!-- STEP 2: OPTIONS -->
+        <section id="step2" class="hidden">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <div class="text-base font-semibold">Options</div>
+                <div class="mt-1 text-sm text-slate-500">Pricing variants and payment types</div>
               </div>
-              <div class="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
-                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 py-0.5">
-                  <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
-                  Product tax: <span id="taxBadge" class="font-medium text-slate-700">7.7%</span>
-                </span>
-                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-2 py-0.5">
-                  <span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>
-                  Service: <span id="spBadge" class="font-medium text-slate-700">Fixed · Calendar year 2026</span>
-                </span>
+              <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50"
+                      onclick="openOptionModal()">
+                Add option
+              </button>
+            </div>
+
+            <div class="px-5 py-4">
+              <div class="overflow-hidden rounded-xl border border-slate-200">
+                <table class="w-full text-sm">
+                  <thead class="bg-slate-50 text-slate-600">
+                    <tr>
+                      <th class="text-left font-medium px-3 py-2">Option</th>
+                      <th class="text-left font-medium px-3 py-2">Type</th>
+                      <th class="text-left font-medium px-3 py-2">Price</th>
+                      <th class="text-left font-medium px-3 py-2">Indicators</th>
+                      <th class="text-right font-medium px-3 py-2">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="optionsTbody" class="divide-y divide-slate-100">
+                    <!-- rows inserted by JS -->
+                  </tbody>
+                </table>
               </div>
-            </div>
 
-            <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="openOptionModal()">
-              Add option
-            </button>
-          </div>
-
-          <div class="px-5 py-4">
-            <div class="overflow-hidden rounded-xl border border-slate-200">
-              <table class="w-full text-sm">
-                <thead class="bg-slate-50 text-slate-600">
-                  <tr>
-                    <th class="text-left font-medium px-3 py-2">Option</th>
-                    <th class="text-left font-medium px-3 py-2">Type</th>
-                    <th class="text-left font-medium px-3 py-2">Default</th>
-                    <th class="text-left font-medium px-3 py-2">Indicators</th>
-                    <th class="text-right font-medium px-3 py-2">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="optionsTbody" class="divide-y divide-slate-100">
-                  <tr class="hover:bg-slate-50/50">
-                    <td class="px-3 py-2">
-                      <div class="font-medium">Standard</div>
-                      <div class="text-xs text-slate-500">Default membership fee</div>
-                    </td>
-                    <td class="px-3 py-2">
-                      <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700">Once off</span>
-                    </td>
-                    <td class="px-3 py-2">
-                      <div>CHF 220.00</div>
-                      <div class="text-xs text-slate-500">Tax via product</div>
-                    </td>
-                    <td class="px-3 py-2">
-                      <div class="flex flex-wrap gap-1.5">
-                        <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-600">Initial invoice</span>
-                        <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-600">Fees</span>
-                      </div>
-                    </td>
-                    <td class="px-3 py-2 text-right">
-                      <button type="button" class="text-sm text-slate-700 hover:text-slate-900" onclick="openOptionModal()">Edit</button>
-                      <span class="mx-2 text-slate-300">·</span>
-                      <button type="button" class="text-sm text-slate-500 hover:text-slate-700">Remove</button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div class="mt-3 text-xs text-slate-500">
-              Initial payment always creates a separate initial invoice and is not combined with the first plan invoice.
-            </div>
-          </div>
-
-          <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between">
-            <div class="text-xs text-slate-500">Next: review and create the product.</div>
-            <div class="flex items-center gap-2">
-              <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="prevStep()">Back</button>
-              <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800" onclick="nextStep()">Continue</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- STEP 3 -->
-      <section id="step3" class="mt-5 hidden">
-        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-          <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
-            <div class="min-w-0">
-              <div class="text-base font-semibold">Review</div>
-              <div class="mt-1 text-sm text-slate-500">
-                Confirm product defaults and options. After saving you can activate the product.
-              </div>
-            </div>
-            <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="goToStep(1)">Edit product</button>
-          </div>
-
-          <div class="px-5 py-5 space-y-5">
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div class="text-sm font-semibold">Product</div>
-              <div class="mt-2 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
-                  <div class="text-xs text-slate-500">Name</div>
-                  <div id="rvName" class="mt-1 font-medium">Membership fee 2026</div>
-                </div>
-                <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
-                  <div class="text-xs text-slate-500">Tax rate</div>
-                  <div id="rvTax" class="mt-1 font-medium">7.7%</div>
-                </div>
-                <div class="md:col-span-2 rounded-xl border border-slate-200 bg-white px-3 py-2">
-                  <div class="text-xs text-slate-500">Description</div>
-                  <div id="rvDesc" class="mt-1 text-slate-700">Used for standard annual membership billing.</div>
-                </div>
-                <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
-                  <div class="text-xs text-slate-500">Service</div>
-                  <div id="rvSP" class="mt-1 font-medium">Fixed · Calendar year 2026</div>
-                  <div id="rvSP2" class="mt-1 text-xs text-slate-500">Auto renew: ON · Proration: ON</div>
-                </div>
-                <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
-                  <div class="text-xs text-slate-500">Available in</div>
-                  <div id="rvAvail" class="mt-1 font-medium">Invoice creation, Membership assignment</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="rounded-2xl border border-slate-200 bg-white p-4">
-              <div class="text-sm font-semibold">Options</div>
-              <div class="mt-3 space-y-2">
-                <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-                  <div class="flex items-start justify-between gap-3">
-                    <div>
-                      <div class="text-sm font-medium">Standard</div>
-                      <div class="text-xs text-slate-500">Once off — CHF 220.00</div>
-                    </div>
-                    <div class="flex flex-wrap gap-1.5">
-                      <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-600">Initial invoice</span>
-                      <span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-600">Fees</span>
-                    </div>
-                  </div>
-                </div>
+              <div id="emptyOptions" class="mt-4 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600 hidden">
+                No options yet. Add at least one option to continue.
               </div>
 
               <div class="mt-3 text-xs text-slate-500">
-                Initial payment creates a separate initial invoice. Fees are not supported on the initial invoice.
+                Initial payments create a separate initial invoice and are not combined with the first plan invoice.
               </div>
             </div>
 
-            <div class="rounded-2xl border border-slate-200 bg-white p-4">
-              <div class="text-sm font-semibold">Important</div>
-              <ul class="mt-2 space-y-2 text-sm text-slate-600 list-disc list-inside">
-                <li>Options define prices and payment types. Product stays reusable.</li>
-                <li>Final invoice dates and due dates are set during invoice creation / membership assignment.</li>
-                <li>Tax is configured on the product and applied product-wide.</li>
-              </ul>
+            <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between">
+              <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50"
+                      onclick="prevStep()">
+                Back
+              </button>
+              <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800"
+                      onclick="nextStep()">
+                Continue
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 3: REVIEW -->
+        <section id="step3" class="hidden">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <div class="text-base font-semibold">Review</div>
+                <div class="mt-1 text-sm text-slate-500">Check defaults and options</div>
+              </div>
+              <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50"
+                      onclick="goToStep(1)">
+                Edit product
+              </button>
+            </div>
+
+            <div class="px-5 py-5 space-y-5">
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div class="text-sm font-semibold">Product</div>
+                <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                  <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                    <div class="text-xs text-slate-500">Name</div>
+                    <div id="rvName" class="mt-1 font-medium">—</div>
+                  </div>
+                  <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                    <div class="text-xs text-slate-500">Tax</div>
+                    <div id="rvTax" class="mt-1 font-medium">—</div>
+                  </div>
+                  <div class="md:col-span-2 rounded-xl border border-slate-200 bg-white px-3 py-2">
+                    <div class="text-xs text-slate-500">Description</div>
+                    <div id="rvDesc" class="mt-1 text-slate-700">—</div>
+                  </div>
+                  <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                    <div class="text-xs text-slate-500">Usage</div>
+                    <div id="rvUsage" class="mt-1 font-medium">—</div>
+                  </div>
+                  <div class="rounded-xl border border-slate-200 bg-white px-3 py-2">
+                    <div class="text-xs text-slate-500">Scope</div>
+                    <div id="rvScope" class="mt-1 font-medium">—</div>
+                  </div>
+                  <div class="md:col-span-2 rounded-xl border border-slate-200 bg-white px-3 py-2">
+                    <div class="text-xs text-slate-500">Service description</div>
+                    <div id="rvService" class="mt-1 font-medium">—</div>
+                    <div id="rvService2" class="mt-1 text-xs text-slate-600">—</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="flex items-center justify-between gap-3">
+                  <div class="text-sm font-semibold">Options</div>
+                  <span id="rvOptionCount" class="text-xs rounded-full border border-slate-200 bg-slate-50 px-2 py-1 text-slate-600">0</span>
+                </div>
+
+                <div id="rvOptions" class="mt-3 space-y-2">
+                  <!-- inserted by JS -->
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-slate-200 bg-white p-4">
+                <div class="text-sm font-semibold">Summary</div>
+                <div class="mt-2 text-sm text-slate-600 space-y-1">
+                  <div class="flex items-center justify-between">
+                    <span>Product status</span><span id="rvStatus" class="font-medium text-slate-900">—</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span>Default tax</span><span id="rvTax2" class="font-medium text-slate-900">—</span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span>Pricing options</span><span id="rvOptionsSummary" class="font-medium text-slate-900">—</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between">
+              <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50"
+                      onclick="prevStep()">
+                Back
+              </button>
+              <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800"
+                      onclick="alert('Finish (prototype)')">
+                Finish
+              </button>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right: compact live summary -->
+      <aside class="lg:col-span-4">
+        <div class="sticky top-20 space-y-4">
+          <div class="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
+            <div class="text-sm font-semibold">Live summary</div>
+
+            <div class="mt-3 space-y-3">
+              <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <div class="text-xs text-slate-500">Product</div>
+                <div id="sumName" class="mt-1 font-semibold">—</div>
+                <div id="sumScope" class="mt-1 text-xs text-slate-600">—</div>
+              </div>
+
+              <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <div class="text-xs text-slate-500">Service description</div>
+                <div id="sumService" class="mt-1 font-semibold">—</div>
+                <div id="sumService2" class="mt-1 text-xs text-slate-600">—</div>
+              </div>
+
+              <div class="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <div class="text-xs text-slate-500">Options</div>
+                <div id="sumOptions" class="mt-1 text-sm text-slate-700">0 options</div>
+                <button type="button" class="mt-3 w-full px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white hover:bg-slate-50"
+                        onclick="openOptionModal()">
+                  Add option
+                </button>
+              </div>
             </div>
           </div>
 
-          <div class="px-5 py-3 border-t border-slate-100 flex items-center justify-between">
-            <div class="text-xs text-slate-500">Finish creates the product in Draft status.</div>
-            <div class="flex items-center gap-2">
-              <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="prevStep()">Back</button>
-              <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800">Finish</button>
+          <div class="rounded-2xl border border-slate-200 bg-slate-900 p-4 text-white">
+            <div class="text-sm font-semibold">Hint</div>
+            <div class="mt-2 text-sm text-slate-200">
+              Service description is for the invoice label (“what is paid for”). Billing dates and due dates are set later.
             </div>
           </div>
         </div>
-      </section>
+      </aside>
+    </div>
 
-    </main>
+  </main>
 
-    <!-- OPTION MODAL (unchanged from your provided file) -->
-    <div id="optionModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" onclick="closeOptionModal()">
-      <div class="absolute inset-0 bg-slate-900/40"></div>
+  <!-- OPTION MODAL -->
+  <div id="optionModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4" onclick="closeOptionModal()">
+    <div class="absolute inset-0 bg-slate-900/40"></div>
 
-      <div class="relative w-full max-w-3xl rounded-2xl bg-white shadow-xl border border-slate-200 overflow-hidden" onclick="event.stopPropagation()">
-        <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-3">
+    <div class="relative w-full max-w-3xl rounded-2xl bg-white shadow-xl border border-slate-200 overflow-hidden"
+         onclick="event.stopPropagation()">
+
+      <div class="px-5 py-4 border-b border-slate-100 flex items-start justify-between gap-3">
+        <div>
+          <div id="optModalTitle" class="text-base font-semibold">Create option</div>
+          <div class="mt-1 text-sm text-slate-500">Pricing variant and payment type</div>
+        </div>
+        <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50"
+                onclick="closeOptionModal()">Close</button>
+      </div>
+
+      <div class="p-5 space-y-5 max-h-[70vh] overflow-auto cb-scroll">
+
+        <!-- Payment type -->
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="text-sm font-semibold">Payment type</div>
+            </div>
+            <span id="typeBadge" class="text-xs rounded-full bg-white border border-slate-200 px-2 py-0.5 text-slate-600">Installments</span>
+          </div>
+
+          <div class="mt-3 flex flex-wrap gap-2">
+            <button type="button" id="btnTypeOnce" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white hover:bg-slate-50"
+                    onclick="setType('once')">Once off</button>
+            <button type="button" id="btnTypeInst" class="px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white"
+                    onclick="setType('installments')">Installments</button>
+            <button type="button" id="btnTypeSub" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white hover:bg-slate-50"
+                    onclick="setType('subscription')">Subscription</button>
+          </div>
+        </div>
+
+        <!-- Basics -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <div class="text-base font-semibold">Create option</div>
-            <div class="mt-1 text-sm text-slate-500">
-              Keep your existing option UI; texts clarify initial payment and tax behavior.
-            </div>
+            <label class="text-sm font-medium">Title</label>
+            <input id="oTitle" type="text" value="Installments" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
           </div>
-          <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="closeOptionModal()">Close</button>
+          <div>
+            <label class="text-sm font-medium">Description</label>
+            <input id="oDesc" type="text" value="Split payment plan" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+          </div>
         </div>
 
-        <div class="p-5 space-y-5">
-          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <div class="text-sm font-semibold">Payment type</div>
-                <div class="mt-1 text-xs text-slate-500">Select one option type.</div>
-              </div>
-              <span id="typeBadge" class="text-xs rounded-full bg-white border border-slate-200 px-2 py-0.5 text-slate-600">Installments</span>
-            </div>
-
-            <div class="mt-3 flex flex-wrap gap-2">
-              <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50" onclick="setType('once')">Once off</button>
-              <button type="button" class="px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white" onclick="setType('installments')">Installments</button>
-              <button type="button" class="px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white text-slate-700 hover:bg-slate-50" onclick="setType('subscription')">Subscription</button>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Once -->
+        <div id="typeOnce" class="rounded-2xl border border-slate-200 bg-white p-4 hidden">
+          <div class="flex items-start justify-between gap-3">
             <div>
-              <label class="text-sm font-medium">Title</label>
-              <input type="text" value="Installments" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+              <div class="text-sm font-semibold">Once off</div>
             </div>
+            <span class="text-xs rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">Tax via product</span>
+          </div>
+
+          <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
             <div>
-              <label class="text-sm font-medium">Description <span class="text-slate-400 font-normal">(optional)</span></label>
-              <input type="text" value="Split payment plan" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
-            </div>
-          </div>
-
-          <div id="typeOnce" class="rounded-2xl border border-slate-200 bg-white p-4 hidden">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <div class="text-sm font-semibold">Once off</div>
-                <div class="mt-1 text-xs text-slate-500">Charged once. Tax is applied based on the product.</div>
-              </div>
-              <span class="text-xs rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">Tax via product</span>
-            </div>
-
-            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <label class="text-xs text-slate-600">Amount</label>
-                <div class="mt-1 flex gap-2">
-                  <input type="number" value="220.00" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
-                  <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"><option>CHF</option><option>EUR</option></select>
-                </div>
-              </div>
-              <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
-                <div class="text-xs text-slate-500">Preview</div>
-                <div class="mt-1 font-medium">CHF 220.00</div>
-              </div>
-            </div>
-          </div>
-
-          <div id="typeInstallments" class="rounded-2xl border border-slate-200 bg-white p-4">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <div class="text-sm font-semibold">Installments</div>
-                <div class="mt-1 text-xs text-slate-500">Enter default amounts. Tax is applied based on the product.</div>
-              </div>
-              <span class="text-xs rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">Tax via product</span>
-            </div>
-
-            <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
-              <div class="md:col-span-2">
-                <label class="text-xs text-slate-600">Amount per installment</label>
-                <div class="mt-1 flex gap-2">
-                  <input type="number" value="20.00" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
-                  <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"><option>CHF</option><option>EUR</option></select>
-                </div>
-                <div class="mt-1 text-xs text-slate-500">No net/gross selection. Tax comes from product.</div>
-              </div>
-              <div>
-                <label class="text-xs text-slate-600">Number of installments</label>
-                <input type="number" value="12" min="2" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
-              </div>
-            </div>
-
-            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <label class="text-xs text-slate-600">Billing cycle</label>
-                <select class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
-                  <option>Monthly</option>
-                  <option>Quarterly</option>
-                  <option>Semi-annual</option>
-                  <option>Yearly</option>
-                </select>
-                <div class="mt-1 text-xs text-slate-500">Billing start date is chosen later (assignment / invoice draft).</div>
-              </div>
-              <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
-                <div class="text-xs text-slate-500">Preview</div>
-                <div class="mt-1 font-medium">12 × CHF 20.00</div>
-              </div>
-            </div>
-          </div>
-
-          <div id="typeSubscription" class="rounded-2xl border border-slate-200 bg-white p-4 hidden">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <div class="text-sm font-semibold">Subscription</div>
-                <div class="mt-1 text-xs text-slate-500">Recurring payment. Tax is applied based on the product.</div>
-              </div>
-              <span class="text-xs rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">Tax via product</span>
-            </div>
-
-            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <label class="text-xs text-slate-600">Amount per interval</label>
-                <div class="mt-1 flex gap-2">
-                  <input type="number" value="25.00" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
-                  <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"><option>CHF</option><option>EUR</option></select>
-                </div>
-              </div>
-              <div>
-                <label class="text-xs text-slate-600">Interval</label>
-                <select class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
-                  <option>Monthly</option>
-                  <option>Quarterly</option>
-                  <option>Semi-annual</option>
-                  <option>Yearly</option>
+              <label class="text-xs text-slate-600">Amount</label>
+              <div class="mt-1 flex gap-2">
+                <input id="onceAmount" type="number" value="220" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+                <select id="currency1" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                  <option selected>CHF</option><option>EUR</option><option>USD</option>
                 </select>
               </div>
             </div>
-
-            <div class="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
               <div class="text-xs text-slate-500">Preview</div>
-              <div class="mt-1 font-medium">CHF 25.00 / month</div>
+              <div id="oncePreview" class="mt-1 font-medium">CHF 220.00</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Installments -->
+        <div id="typeInstallments" class="rounded-2xl border border-slate-200 bg-white p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="text-sm font-semibold">Installments</div>
+            </div>
+            <span class="text-xs rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">Tax via product</span>
+          </div>
+
+          <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="md:col-span-2">
+              <label class="text-xs text-slate-600">Amount per installment</label>
+              <div class="mt-1 flex gap-2">
+                <input id="instAmount" type="number" value="20" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+                <select id="currency2" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                  <option selected>CHF</option><option>EUR</option><option>USD</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="text-xs text-slate-600">Number of installments</label>
+              <input id="instCount" type="number" value="12" min="2" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
             </div>
           </div>
 
-          <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <div class="flex items-start justify-between gap-3">
-              <div>
-                <div class="text-sm font-semibold">Initial payment <span class="text-slate-400 font-normal">(optional)</span></div>
-                <div class="mt-1 text-xs text-slate-500">
-                  If set, a separate initial invoice is created. It is not combined with the first plan invoice.
-                </div>
-              </div>
-              <span class="text-xs rounded-full bg-white border border-slate-200 px-2 py-0.5 text-slate-600">Enabled</span>
-            </div>
-
-            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div>
-                <label class="text-xs text-slate-600">Title <span class="text-slate-400">(optional)</span></label>
-                <input type="text" value="Registration fee" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
-              </div>
-              <div>
-                <label class="text-xs text-slate-600">Amount</label>
-                <div class="mt-1 flex gap-2">
-                  <input type="number" value="30.00" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
-                  <select class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"><option>CHF</option><option>EUR</option></select>
-                </div>
-                <div class="mt-1 text-xs text-slate-500">Tax is applied based on the product.</div>
-              </div>
-
-              <div class="md:col-span-2">
-                <label class="text-xs text-slate-600">Fee <span class="text-slate-400">(not supported for initial invoice)</span></label>
-                <div class="mt-1 flex gap-2">
-                  <select disabled class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500">
-                    <option>No fee</option>
-                  </select>
-                  <button disabled class="shrink-0 px-3 py-2 text-sm rounded-xl border border-slate-200 bg-slate-50 text-slate-400">New fee</button>
-                </div>
-                <div class="mt-1 text-xs text-slate-500">Fees can be applied on plan invoices only.</div>
+          <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs text-slate-600">Billing cycle</label>
+              <select id="instCycle" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                <option selected>Monthly</option>
+                <option>Quarterly</option>
+                <option>Semi-annual</option>
+                <option>Yearly</option>
+              </select>
+              <div class="mt-1 text-xs text-slate-500">
+                Billing start is chosen later (assignment / invoice draft).
               </div>
             </div>
+            <div class="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+              <div class="text-xs text-slate-500">Preview</div>
+              <div id="instPreview" class="mt-1 font-medium">12 × CHF 20.00</div>
+            </div>
+          </div>
+        </div>
 
-            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+        <!-- Subscription -->
+        <div id="typeSubscription" class="rounded-2xl border border-slate-200 bg-white p-4 hidden">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="text-sm font-semibold">Subscription</div>
+            </div>
+            <span class="text-xs rounded-full bg-slate-100 px-2 py-0.5 text-slate-600">Tax via product</span>
+          </div>
+
+          <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs text-slate-600">Amount per interval</label>
+              <div class="mt-1 flex gap-2">
+                <input id="subAmount" type="number" value="25" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+                <select id="currency3" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                  <option selected>CHF</option><option>EUR</option><option>USD</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="text-xs text-slate-600">Interval</label>
+              <select id="subCycle" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                <option selected>Monthly</option>
+                <option>Quarterly</option>
+                <option>Semi-annual</option>
+                <option>Yearly</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mt-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm">
+            <div class="text-xs text-slate-500">Preview</div>
+            <div id="subPreview" class="mt-1 font-medium">CHF 25.00 / month</div>
+          </div>
+        </div>
+
+        <!-- Initial payment -->
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="text-sm font-semibold">Initial payment</div>
+              <div class="mt-1 text-xs text-slate-500">Creates a separate initial invoice</div>
+            </div>
+            <label class="inline-flex items-center cursor-pointer select-none">
+              <input id="initEnabled" type="checkbox" class="sr-only peer" checked onchange="toggleInitial(); refreshPreviews()">
+              <div class="w-10 h-6 bg-slate-200 rounded-full peer-checked:bg-slate-900 relative transition">
+                <div class="absolute top-1 left-1 h-4 w-4 bg-white rounded-full transition peer-checked:translate-x-4"></div>
+              </div>
+            </label>
+          </div>
+
+          <div id="initBlock" class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs text-slate-600">Title</label>
+              <input id="initTitle" type="text" value="Registration fee" class="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+            </div>
+            <div>
+              <label class="text-xs text-slate-600">Amount</label>
+              <div class="mt-1 flex gap-2">
+                <input id="initAmount" type="number" value="30" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm"/>
+                <select id="currencyInit" class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+                  <option selected>CHF</option><option>EUR</option><option>USD</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-3">
               <div class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
                 <div class="text-xs text-slate-500">Preview — Initial invoice</div>
                 <div class="mt-1 flex items-center justify-between">
-                  <span>Registration fee</span><span class="font-medium">CHF 30.00</span>
+                  <span id="initPrevTitle">Registration fee</span><span id="initPrevAmount" class="font-medium">CHF 30.00</span>
                 </div>
               </div>
               <div class="rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
-                <div class="text-xs text-slate-500">Preview — Plan invoice #1</div>
-                <div class="mt-1 flex items-center justify-between">
-                  <span>First plan payment</span><span class="font-medium">Depends on type</span>
-                </div>
+                <div class="text-xs text-slate-500">Preview — Plan invoices</div>
+                <div class="mt-1 text-slate-700">Based on payment type</div>
               </div>
             </div>
           </div>
+        </div>
 
-          <div class="rounded-2xl border border-slate-200 bg-white p-4">
-            <div class="text-sm font-semibold">Fees <span class="text-slate-400 font-normal">(optional)</span></div>
-            <div class="mt-1 text-xs text-slate-500">Applied on plan invoices (installments/subscription).</div>
-            <div class="mt-2 flex gap-2">
-              <select class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-slate-300">
-                <option>No fee</option>
-                <option>Admin fee (CHF 5.00)</option>
-                <option>Processing fee (2%)</option>
-              </select>
-              <button type="button" class="shrink-0 px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white hover:bg-slate-50">New fee</button>
-            </div>
+        <!-- Fees -->
+        <div class="rounded-2xl border border-slate-200 bg-white p-4">
+          <div class="text-sm font-semibold">Fees</div>
+          <div class="mt-2 flex gap-2">
+            <select id="feeSelect" class="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm">
+              <option selected>No fee</option>
+              <option>Admin fee (CHF 5.00)</option>
+              <option>Processing fee (2%)</option>
+            </select>
+            <button type="button" class="shrink-0 px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white hover:bg-slate-50">New fee</button>
           </div>
         </div>
 
-        <div class="px-5 py-4 border-t border-slate-100 flex items-center justify-between">
-          <div class="text-xs text-slate-500">Close to return to the options list.</div>
-          <div class="flex items-center gap-2">
-            <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50" onclick="closeOptionModal()">Cancel</button>
-            <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800" onclick="closeOptionModal()">Save option</button>
-          </div>
+      </div>
+
+      <div class="px-5 py-4 border-t border-slate-100 flex items-center justify-between">
+        <div class="text-xs text-slate-500">Close to return to the options list.</div>
+        <div class="flex items-center gap-2">
+          <button type="button" class="px-3 py-1.5 text-sm rounded-lg border border-slate-200 bg-white hover:bg-slate-50"
+                  onclick="closeOptionModal()">Cancel</button>
+          <button type="button" class="px-3.5 py-1.5 text-sm rounded-lg bg-slate-900 text-white hover:bg-slate-800"
+                  onclick="saveOption()">Save option</button>
         </div>
       </div>
     </div>
-
   </div>
 
-  <script>
-    let currentStep = 1;
+<script>
+  // ---------- state ----------
+  let currentStep = 1;
+  let serviceMode = 'fixed';
+  let editIndex = -1;
 
-    // --- Wizard navigation ---
-    function goToStep(n) {
-      currentStep = Math.max(1, Math.min(3, n));
-      document.getElementById('step1').classList.toggle('hidden', currentStep !== 1);
-      document.getElementById('step2').classList.toggle('hidden', currentStep !== 2);
-      document.getElementById('step3').classList.toggle('hidden', currentStep !== 3);
-
-      document.getElementById('dot1').className = baseDotClass(currentStep === 1);
-      document.getElementById('dot2').className = baseDotClass(currentStep === 2);
-      document.getElementById('dot3').className = baseDotClass(currentStep === 3);
-
-      document.getElementById('lbl1').className = labelClass(currentStep === 1);
-      document.getElementById('lbl2').className = labelClass(currentStep === 2);
-      document.getElementById('lbl3').className = labelClass(currentStep === 3);
-
-      document.getElementById('stepHint').textContent = `Step ${currentStep} of 3`;
-
-      const nextBtn = document.getElementById('headerNextBtn');
-      nextBtn.textContent = currentStep === 3 ? 'Finish' : 'Next';
-
-      syncBadges();
-      syncReview();
+  const options = [
+    {
+      title: "Standard",
+      desc: "Default membership fee",
+      type: "once",
+      currency: "CHF",
+      onceAmount: 220,
+      instAmount: 20,
+      instCount: 12,
+      instCycle: "Monthly",
+      subAmount: 25,
+      subCycle: "Monthly",
+      initialEnabled: true,
+      initialTitle: "Registration fee",
+      initialAmount: 30,
+      fee: "Admin fee (CHF 5.00)"
     }
+  ];
 
-    function nextStep() {
-      if (currentStep < 3) goToStep(currentStep + 1);
-      else alert('Finish (prototype)');
+  // ---------- wizard ----------
+  function goToStep(n) {
+    currentStep = Math.max(1, Math.min(3, n));
+    document.getElementById('step1').classList.toggle('hidden', currentStep !== 1);
+    document.getElementById('step2').classList.toggle('hidden', currentStep !== 2);
+    document.getElementById('step3').classList.toggle('hidden', currentStep !== 3);
+
+    setDot(1, currentStep === 1);
+    setDot(2, currentStep === 2);
+    setDot(3, currentStep === 3);
+
+    document.getElementById('lbl1').className = lblClass(currentStep === 1);
+    document.getElementById('lbl2').className = lblClass(currentStep === 2);
+    document.getElementById('lbl3').className = lblClass(currentStep === 3);
+
+    document.getElementById('stepHint').textContent = `Step ${currentStep} of 3`;
+    document.getElementById('headerNextBtn').textContent = currentStep === 3 ? 'Finish' : 'Next';
+
+    renderOptionsTable();
+    syncSummary();
+    syncReview();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  function nextStep() {
+    if (currentStep === 2 && options.length === 0) {
+      document.getElementById('emptyOptions').classList.remove('hidden');
+      return;
     }
-    function prevStep() {
-      if (currentStep > 1) goToStep(currentStep - 1);
-    }
-    function baseDotClass(isActive) {
-      return isActive
-        ? 'h-6 w-6 rounded-full bg-slate-900 text-white text-xs font-semibold flex items-center justify-center'
-        : 'h-6 w-6 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold flex items-center justify-center';
-    }
-    function labelClass(isActive) {
-      return isActive ? 'text-sm font-medium' : 'text-sm text-slate-600';
-    }
+    if (currentStep < 3) goToStep(currentStep + 1);
+    else alert('Finish (prototype)');
+  }
 
-    // --- Product image upload (compact) ---
-    function onProductImageChange(e) {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
-      const url = URL.createObjectURL(file);
+  function prevStep() { if (currentStep > 1) goToStep(currentStep - 1); }
 
-      const img = document.getElementById('pImgPreview');
-      const ph = document.getElementById('pImgPlaceholder');
-      const rm = document.getElementById('pImgRemoveBtn');
+  function setDot(n, active){
+    const el = document.getElementById('dot'+n);
+    el.className = active
+      ? 'h-6 w-6 rounded-full bg-slate-900 text-white text-xs flex items-center justify-center'
+      : 'h-6 w-6 rounded-full bg-slate-100 text-slate-700 text-xs flex items-center justify-center';
+  }
+  function lblClass(active){ return active ? 'text-sm font-medium' : 'text-sm text-slate-600'; }
 
-      img.src = url;
-      img.classList.remove('hidden');
-      ph.classList.add('hidden');
-      rm.classList.remove('hidden');
-    }
+  // ---------- image upload ----------
+  function uploadImg(e){
+    const file = e.target.files && e.target.files[0];
+    if(!file) return;
+    const url = URL.createObjectURL(file);
 
-    function removeProductImage() {
-      const input = document.getElementById('pImgInput');
-      const img = document.getElementById('pImgPreview');
-      const ph = document.getElementById('pImgPlaceholder');
-      const rm = document.getElementById('pImgRemoveBtn');
+    const img = document.getElementById('imgPreview');
+    const ph  = document.getElementById('imgPlaceholder');
+    const rm  = document.getElementById('imgRemoveBtn');
 
-      input.value = '';
-      img.src = '';
-      img.classList.add('hidden');
-      ph.classList.remove('hidden');
-      rm.classList.add('hidden');
-    }
+    img.src = url;
+    img.classList.remove('hidden');
+    ph.classList.add('hidden');
+    rm.classList.remove('hidden');
+  }
+  function removeImg(){
+    const input = document.getElementById('imgInput');
+    const img = document.getElementById('imgPreview');
+    const ph  = document.getElementById('imgPlaceholder');
+    const rm  = document.getElementById('imgRemoveBtn');
 
-    // --- Service mode (3-mode compact) ---
-    const modeFixed = () => document.getElementById('modeFixed').checked;
-    const modeRolling = () => document.getElementById('modeRolling').checked;
-    const modeNone = () => document.getElementById('modeNone').checked;
+    input.value='';
+    img.src='';
+    img.classList.add('hidden');
+    ph.classList.remove('hidden');
+    rm.classList.add('hidden');
+  }
 
-    function styleSeg(activeId) {
-      ['segFixed','segRolling','segNone'].forEach(id => {
-        const b = document.getElementById(id);
-        const active = id === activeId;
-        b.classList.toggle('bg-slate-900', active);
-        b.classList.toggle('text-white', active);
-        b.classList.toggle('text-slate-700', !active);
-        b.classList.toggle('hover:bg-slate-50', !active);
-      });
-    }
+  // ---------- scope ----------
+  function toggleDeptScope(){
+    const dept = document.getElementById('scopeDept').checked;
+    document.getElementById('deptPicker').classList.toggle('hidden', !dept);
+    if(!dept) document.getElementById('pDept').value = '';
+  }
 
-    function setServiceMode(mode) {
-      document.getElementById('modeFixed').checked = mode === 'fixed';
-      document.getElementById('modeRolling').checked = mode === 'rolling';
-      document.getElementById('modeNone').checked = mode === 'none';
+  // ---------- service ----------
+  function setMode(mode){
+    serviceMode = mode;
 
-      styleSeg(mode === 'fixed' ? 'segFixed' : mode === 'rolling' ? 'segRolling' : 'segNone');
+    document.getElementById("fixedConfig").classList.toggle("hidden", mode !== "fixed");
+    document.getElementById("rollingHint").classList.toggle("hidden", mode !== "rolling");
+    document.getElementById("noneHint").classList.toggle("hidden", mode !== "none");
 
-      // show/hide sections
-      document.getElementById('fixedConfig').classList.toggle('hidden', mode !== 'fixed');
-      document.getElementById('rollingHint').classList.toggle('hidden', mode !== 'rolling');
-      document.getElementById('noneHint').classList.toggle('hidden', mode !== 'none');
-
-      refreshServiceUI();
-      syncBadges();
-      syncReview();
-    }
-
-    function refreshServiceUI() {
-      const fixedType = document.getElementById('fixedType');
-      const customDates = document.getElementById('customDates');
-      const yearWrap = document.getElementById('yearWrap');
-
-      if (!modeFixed()) return;
-
-      const isCustom = fixedType.value === 'Custom';
-      customDates.classList.toggle('hidden', !isCustom);
-      yearWrap.classList.toggle('hidden', isCustom);
-
-      syncBadges();
-      syncReview();
-    }
-
-    // --- Badges & Review ---
-    function getServiceBadge() {
-      if (modeNone()) return { line1: 'None', line2: '—' };
-      if (modeRolling()) return { line1: 'Rolling', line2: 'Follows billing cycle' };
-
-      const type = document.getElementById('fixedType').value;
-      const year = document.getElementById('fixedYear').value;
-
-      if (type === 'Custom') {
-        const s = document.getElementById('customStart').value || '—';
-        const e = document.getElementById('customEnd').value || '—';
-        return { line1: 'Fixed', line2: `Custom ${s}–${e}` };
-      }
-      if (type === 'Club year (club start date)') return { line1: 'Fixed', line2: `Club year ${year}` };
-      return { line1: 'Fixed', line2: `Calendar year ${year}` };
-    }
-
-    function syncBadges() {
-      // Tax badge
-      const tax = document.getElementById('pTax').value;
-      const taxBadge = document.getElementById('taxBadge');
-      if (taxBadge) taxBadge.textContent = tax === 'none' ? 'None' : `${tax}%`;
-
-      // Service badge
-      const spBadge = document.getElementById('spBadge');
-      if (spBadge) {
-        const s = getServiceBadge();
-        spBadge.textContent = `${s.line1} · ${s.line2}`;
-      }
-    }
-
-    function syncReview() {
-      const name = document.getElementById('pName').value || '—';
-      const desc = document.getElementById('pDesc').value || '—';
-      const tax = document.getElementById('pTax').value;
-
-      const a1 = document.getElementById('availInvoice').checked;
-      const a2 = document.getElementById('availMembership').checked;
-
-      document.getElementById('rvName').textContent = name;
-      document.getElementById('rvDesc').textContent = desc;
-      document.getElementById('rvTax').textContent = tax === 'none' ? 'None' : `${tax}%`;
-
-      const s = getServiceBadge();
-      document.getElementById('rvSP').textContent = `${s.line1} · ${s.line2}`;
-
-      const showFixedExtra = modeFixed();
-      const pr = document.getElementById('proration').checked ? 'ON' : 'OFF';
-      const rn = document.getElementById('renewAnnually').checked ? 'ON' : 'OFF';
-      document.getElementById('rvSP2').textContent = showFixedExtra ? `Auto renew: ${rn} · Proration: ${pr}` : '—';
-
-      const avail = [];
-      if (a1) avail.push('Invoice creation');
-      if (a2) avail.push('Membership assignment');
-      document.getElementById('rvAvail').textContent = avail.length ? avail.join(', ') : '—';
-    }
-
-    // --- Option modal (unchanged) ---
-    function openOptionModal() {
-      document.getElementById('optionModal').classList.remove('hidden');
-      document.getElementById('optionModal').classList.add('flex');
-    }
-    function closeOptionModal() {
-      const m = document.getElementById('optionModal');
-      m.classList.add('hidden');
-      m.classList.remove('flex');
-    }
-    function setType(type) {
-      const once = document.getElementById('typeOnce');
-      const inst = document.getElementById('typeInstallments');
-      const sub = document.getElementById('typeSubscription');
-
-      once.classList.toggle('hidden', type !== 'once');
-      inst.classList.toggle('hidden', type !== 'installments');
-      sub.classList.toggle('hidden', type !== 'subscription');
-
-      const badge = document.getElementById('typeBadge');
-      badge.textContent = type === 'once' ? 'Once off' : (type === 'subscription' ? 'Subscription' : 'Installments');
-    }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeOptionModal();
+    ['segFixed','segRolling','segNone'].forEach(id=>{
+      const b=document.getElementById(id);
+      b.classList.remove('bg-slate-900','text-white');
+      b.classListadd?.('text-slate-700');
+      b.classList.add('text-slate-700');
     });
 
-    // wire service buttons
-    document.getElementById('segFixed').addEventListener('click', () => setServiceMode('fixed'));
-    document.getElementById('segRolling').addEventListener('click', () => setServiceMode('rolling'));
-    document.getElementById('segNone').addEventListener('click', () => setServiceMode('none'));
+    const active = mode === 'fixed' ? 'segFixed' : mode === 'rolling' ? 'segRolling' : 'segNone';
+    const b=document.getElementById(active);
+    b.classList.add('bg-slate-900','text-white');
+    b.classList.remove('text-slate-700');
 
-    ['fixedType','fixedYear','customStart','customEnd','proration','renewAnnually','pTax','pName','pDesc','availInvoice','availMembership']
-      .forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('change', () => { refreshServiceUI(); syncBadges(); syncReview(); });
-        if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA')) {
-          el.addEventListener('input', () => { syncBadges(); syncReview(); });
-        }
-      });
+    syncSummary();
+  }
 
-    // init
-    setServiceMode('fixed');
+  // ---------- options list ----------
+  function renderOptionsTable(){
+    const tbody = document.getElementById('optionsTbody');
+    tbody.innerHTML = '';
+
+    if(options.length === 0){
+      document.getElementById('emptyOptions').classList.remove('hidden');
+      document.getElementById('sumOptions').textContent = '0 options';
+      return;
+    }
+    document.getElementById('emptyOptions').classList.add('hidden');
+    document.getElementById('sumOptions').textContent = `${options.length} option${options.length===1?'':'s'}`;
+
+    options.forEach((o, idx) => {
+      const typeLabel = o.type === 'once' ? 'Once off' : (o.type === 'installments' ? 'Installments' : 'Subscription');
+      const priceLabel =
+        o.type === 'once'
+          ? `${o.currency} ${fmt(o.onceAmount)}`
+          : o.type === 'installments'
+            ? `${o.instCount} × ${o.currency} ${fmt(o.instAmount)} (${o.instCycle.toLowerCase()})`
+            : `${o.currency} ${fmt(o.subAmount)} / ${o.subCycle.toLowerCase()}`;
+
+      const indicators = [];
+      if(o.initialEnabled) indicators.push('Initial invoice');
+      if(o.fee && o.fee !== 'No fee') indicators.push('Fees');
+
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-slate-50/50';
+      tr.innerHTML = `
+        <td class="px-3 py-2">
+          <div class="font-medium">${escapeHtml(o.title)}</div>
+          <div class="text-xs text-slate-500">${escapeHtml(o.desc||'')}</div>
+        </td>
+        <td class="px-3 py-2">
+          <span class="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-700">${typeLabel}</span>
+        </td>
+        <td class="px-3 py-2">
+          <div>${priceLabel}</div>
+          <div class="text-xs text-slate-500">Tax via product</div>
+        </td>
+        <td class="px-3 py-2">
+          <div class="flex flex-wrap gap-1.5">
+            ${indicators.map(x=>`<span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-600">${x}</span>`).join('') || `<span class="text-xs text-slate-400">—</span>`}
+          </div>
+        </td>
+        <td class="px-3 py-2 text-right whitespace-nowrap">
+          <button type="button" class="text-sm text-slate-700 hover:text-slate-900" onclick="editOption(${idx})">Edit</button>
+          <span class="mx-2 text-slate-300">·</span>
+          <button type="button" class="text-sm text-slate-500 hover:text-slate-700" onclick="removeOption(${idx})">Remove</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function removeOption(idx){
+    options.splice(idx,1);
+    renderOptionsTable();
+    syncSummary();
+    syncReview();
+  }
+
+  // ---------- modal open/close ----------
+  function openOptionModal(){
+    editIndex = -1;
+    document.getElementById('optModalTitle').textContent = 'Create option';
+    fillOptionForm({
+      title:'Installments',
+      desc:'Split payment plan',
+      type:'installments',
+      currency:'CHF',
+      onceAmount:220,
+      instAmount:20,
+      instCount:12,
+      instCycle:'Monthly',
+      subAmount:25,
+      subCycle:'Monthly',
+      initialEnabled:true,
+      initialTitle:'Registration fee',
+      initialAmount:30,
+      fee:'No fee'
+    });
+    document.getElementById('optionModal').classList.remove('hidden');
+    document.getElementById('optionModal').classList.add('flex');
+  }
+
+  function closeOptionModal(){
+    const m = document.getElementById('optionModal');
+    m.classList.add('hidden');
+    m.classList.remove('flex');
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeOptionModal();
+  });
+
+  // ---------- modal form ----------
+  function setType(type){
+    const once = document.getElementById('typeOnce');
+    const inst = document.getElementById('typeInstallments');
+    const sub  = document.getElementById('typeSubscription');
+
+    once.classList.toggle('hidden', type !== 'once');
+    inst.classList.toggle('hidden', type !== 'installments');
+    sub.classList.toggle('hidden', type !== 'subscription');
+
+    const badge = document.getElementById('typeBadge');
+    badge.textContent = type === 'once' ? 'Once off' : (type === 'subscription' ? 'Subscription' : 'Installments');
+
+    document.getElementById('btnTypeOnce').className = btnTypeClass(type==='once');
+    document.getElementById('btnTypeInst').className = btnTypeClass(type==='installments');
+    document.getElementById('btnTypeSub').className  = btnTypeClass(type==='subscription');
+
+    refreshPreviews();
+  }
+
+  function btnTypeClass(active){
+    return active
+      ? 'px-3 py-1.5 text-sm rounded-full bg-slate-900 text-white'
+      : 'px-3 py-1.5 text-sm rounded-full border border-slate-200 bg-white hover:bg-slate-50';
+  }
+
+  function toggleInitial(){
+    const on = document.getElementById('initEnabled').checked;
+    document.getElementById('initBlock').classList.toggle('hidden', !on);
+  }
+
+  function fillOptionForm(o){
+    document.getElementById('oTitle').value = o.title || '';
+    document.getElementById('oDesc').value = o.desc || '';
+    document.getElementById('onceAmount').value = o.onceAmount ?? 0;
+    document.getElementById('instAmount').value = o.instAmount ?? 0;
+    document.getElementById('instCount').value = o.instCount ?? 12;
+    document.getElementById('instCycle').value = o.instCycle || 'Monthly';
+    document.getElementById('subAmount').value = o.subAmount ?? 0;
+    document.getElementById('subCycle').value = o.subCycle || 'Monthly';
+
+    document.getElementById('currency1').value = o.currency || 'CHF';
+    document.getElementById('currency2').value = o.currency || 'CHF';
+    document.getElementById('currency3').value = o.currency || 'CHF';
+    document.getElementById('currencyInit').value = o.currency || 'CHF';
+
+    document.getElementById('initEnabled').checked = !!o.initialEnabled;
+    document.getElementById('initTitle').value = o.initialTitle || 'Initial payment';
+    document.getElementById('initAmount').value = o.initialAmount ?? 0;
+    document.getElementById('feeSelect').value = o.fee || 'No fee';
+
+    toggleInitial();
+    setType(o.type || 'installments');
+    refreshPreviews();
+  }
+
+  function readOptionForm(){
+    const type = document.getElementById('typeOnce').classList.contains('hidden')
+      ? (document.getElementById('typeSubscription').classList.contains('hidden') ? 'installments' : 'subscription')
+      : 'once';
+
+    const currency = type === 'once' ? document.getElementById('currency1').value
+      : type === 'installments' ? document.getElementById('currency2').value
+      : document.getElementById('currency3').value;
+
+    return {
+      title: document.getElementById('oTitle').value.trim() || 'Option',
+      desc: document.getElementById('oDesc').value.trim(),
+      type,
+      currency,
+
+      onceAmount: num(document.getElementById('onceAmount').value),
+      instAmount: num(document.getElementById('instAmount').value),
+      instCount: Math.max(2, Math.floor(num(document.getElementById('instCount').value) || 2)),
+      instCycle: document.getElementById('instCycle').value,
+
+      subAmount: num(document.getElementById('subAmount').value),
+      subCycle: document.getElementById('subCycle').value,
+
+      initialEnabled: document.getElementById('initEnabled').checked,
+      initialTitle: document.getElementById('initTitle').value.trim() || 'Initial payment',
+      initialAmount: num(document.getElementById('initAmount').value),
+      fee: document.getElementById('feeSelect').value
+    }
+  }
+
+  function refreshPreviews(){
+    const type = document.getElementById('typeOnce').classList.contains('hidden')
+      ? (document.getElementById('typeSubscription').classList.contains('hidden') ? 'installments' : 'subscription')
+      : 'once';
+
+    // Once preview
+    const c1 = document.getElementById('currency1').value;
+    document.getElementById('oncePreview').textContent = `${c1} ${fmt(num(document.getElementById('onceAmount').value))}`;
+
+    // Installments preview
+    const c2 = document.getElementById('currency2').value;
+    const ic = Math.max(2, Math.floor(num(document.getElementById('instCount').value) || 2));
+    const ia = num(document.getElementById('instAmount').value);
+    document.getElementById('instPreview').textContent = `${ic} × ${c2} ${fmt(ia)}`;
+
+    // Subscription preview
+    const c3 = document.getElementById('currency3').value;
+    const sa = num(document.getElementById('subAmount').value);
+    const sc = document.getElementById('subCycle').value.toLowerCase();
+    document.getElementById('subPreview').textContent = `${c3} ${fmt(sa)} / ${sc}`;
+
+    // Initial preview
+    const ci = document.getElementById('currencyInit').value;
+    const it = document.getElementById('initTitle').value.trim() || 'Initial payment';
+    const ia2 = num(document.getElementById('initAmount').value);
+    document.getElementById('initPrevTitle').textContent = it;
+    document.getElementById('initPrevAmount').textContent = `${ci} ${fmt(ia2)}`;
+  }
+
+  ['onceAmount','instAmount','instCount','subAmount','initTitle','initAmount'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('input', refreshPreviews);
+  });
+  ['currency1','currency2','currency3','currencyInit','instCycle','subCycle','feeSelect'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('change', refreshPreviews);
+  });
+
+  function saveOption(){
+    const o = readOptionForm();
+    if(editIndex >= 0) options[editIndex] = o;
+    else options.push(o);
+
+    closeOptionModal();
+    renderOptionsTable();
+    syncSummary();
+    syncReview();
+  }
+
+  function editOption(idx){
+    editIndex = idx;
+    document.getElementById('optModalTitle').textContent = 'Edit option';
+    fillOptionForm(options[idx]);
+    document.getElementById('optionModal').classList.remove('hidden');
+    document.getElementById('optionModal').classList.add('flex');
+  }
+
+  // ---------- summaries ----------
+  function getServiceSummary(){
+    if(serviceMode === 'none') return {line1:'None', line2:'No service period'};
+    if(serviceMode === 'rolling') return {line1:'Rolling', line2:'Follows billing cycle'};
+    // fixed
+    const t = document.getElementById('fixedType').value;
+    const y = document.getElementById('fixedYear').value;
+    const p = document.getElementById('proration').checked ? 'Proration: ON' : 'Proration: OFF';
+    const r = document.getElementById('autoRenew').checked ? 'Auto renew: ON' : 'Auto renew: OFF';
+    return {line1:`Fixed: ${t} ${y}`, line2:`${r} · ${p}`};
+  }
+
+  function syncSummary(){
+    document.getElementById('sumName').textContent = document.getElementById('pName').value || '—';
+
+    const scope = document.getElementById('scopeDept').checked
+      ? `Department: ${document.getElementById('pDept').value || '—'}`
+      : 'Scope: Club';
+    document.getElementById('sumScope').textContent = scope;
+
+    const s = getServiceSummary();
+    document.getElementById('sumService').textContent = s.line1;
+    document.getElementById('sumService2').textContent = s.line2;
+
+    document.getElementById('sumOptions').textContent = `${options.length} option${options.length===1?'':'s'}`;
+  }
+
+  function syncReview(){
+    const name = document.getElementById('pName').value || '—';
+    const desc = document.getElementById('pDesc').value || '—';
+    const tax = document.getElementById('pTax').value;
+    const status = document.getElementById('pStatus').value;
+
+    const usage = document.getElementById('isContribution').checked ? 'Membership contribution' : '—';
+
+    const scope = document.getElementById('scopeDept').checked
+      ? `Department: ${document.getElementById('pDept').value || '—'}`
+      : 'Club';
+
+    const s = getServiceSummary();
+
+    document.getElementById('rvName').textContent = name;
+    document.getElementById('rvDesc').textContent = desc;
+    document.getElementById('rvTax').textContent = tax === 'none' ? 'No tax' : `${tax}%`;
+    document.getElementById('rvTax2').textContent = tax === 'none' ? 'No tax' : `${tax}%`;
+
+    document.getElementById('rvUsage').textContent = usage;
+    document.getElementById('rvScope').textContent = scope;
+
+    document.getElementById('rvService').textContent = s.line1;
+    document.getElementById('rvService2').textContent = s.line2;
+
+    document.getElementById('rvStatus').textContent = status;
+
+    // options
+    document.getElementById('rvOptionCount').textContent = String(options.length);
+
+    const rv = document.getElementById('rvOptions');
+    rv.innerHTML = '';
+    options.forEach(o=>{
+      const typeLabel = o.type === 'once' ? 'Once off' : (o.type === 'installments' ? 'Installments' : 'Subscription');
+      const priceLabel =
+        o.type === 'once'
+          ? `${o.currency} ${fmt(o.onceAmount)}`
+          : o.type === 'installments'
+            ? `${o.instCount} × ${o.currency} ${fmt(o.instAmount)} (${o.instCycle.toLowerCase()})`
+            : `${o.currency} ${fmt(o.subAmount)} / ${o.subCycle.toLowerCase()}`;
+
+      const chips = [];
+      if(o.initialEnabled) chips.push('Initial invoice');
+      if(o.fee && o.fee !== 'No fee') chips.push('Fees');
+
+      const div = document.createElement('div');
+      div.className = 'rounded-xl border border-slate-200 bg-slate-50 px-3 py-2';
+      div.innerHTML = `
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="text-sm font-medium">${escapeHtml(o.title)}</div>
+            <div class="text-xs text-slate-500">${escapeHtml(typeLabel)} — ${escapeHtml(priceLabel)}</div>
+          </div>
+          <div class="flex flex-wrap gap-1.5">
+            ${chips.map(c=>`<span class="inline-flex items-center rounded-full border border-slate-200 bg-white px-2 py-0.5 text-xs text-slate-600">${c}</span>`).join('') || `<span class="text-xs text-slate-400">—</span>`}
+          </div>
+        </div>
+      `;
+      rv.appendChild(div);
+    });
+
+    const optTypes = {};
+    options.forEach(o => optTypes[o.type] = true);
+    const types = Object.keys(optTypes).map(t => t==='once'?'Once off':t==='installments'?'Installments':'Subscription');
+    document.getElementById('rvOptionsSummary').textContent = `${options.length} option(s) · ${types.join(', ') || '—'}`;
+  }
+
+  // ---------- helpers ----------
+  function num(v){ const n = parseFloat(String(v).replace(',','.')); return isFinite(n) ? n : 0; }
+  function fmt(n){ return (Math.round(n*100)/100).toFixed(2); }
+  function escapeHtml(s){
+    return String(s||'').replace(/[&<>"']/g, (c)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+  }
+
+  // ---------- init ----------
+  function init(){
+    toggleDeptScope();
+    setMode('fixed');
+    renderOptionsTable();
+    refreshPreviews();
+
+    ['pName','pDesc'].forEach(id=>document.getElementById(id).addEventListener('input', ()=>{syncSummary(); syncReview();}));
+    ['pTax','pStatus','fixedType','fixedYear','proration','autoRenew'].forEach(id=>document.getElementById(id).addEventListener('change', ()=>{syncSummary(); syncReview();}));
+    document.getElementById('pDept').addEventListener('change', ()=>{syncSummary(); syncReview();});
+
     goToStep(1);
-  </script>
+  }
+  init();
+</script>
+
 </body>
 </html>
