@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pay Link – Vollständiger Flow</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-[#f3f4f6] text-slate-900">
+  <div id="app" class="mx-auto max-w-[1450px] px-8 py-7">
+    <div id="layoutGrid" class="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_420px]">
+
+      <!-- LEFT -->
+      <div id="leftColumn" class="space-y-5">
+        <div>
+          <h1 class="text-[32px] font-semibold leading-tight tracking-[-0.02em] text-slate-950">
+            Schließen Sie Ihre Zahlung für Claudia DFB Test ab
+          </h1>
+          <p class="mt-2 text-[16px] text-slate-500">
+            Überprüfen Sie die Rechnungsdetails und wählen Sie aus, wie Sie die Zahlungsart festlegen möchten.
+          </p>
+        </div>
+
+        <!-- PAYMENT INTRO -->
+        <section id="paymentIntro" class="rounded-[28px] border border-slate-200 bg-white px-6 py-5 shadow-sm">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <div class="text-[14px] font-semibold text-slate-500">Mitgliedschaft – Initiale Gebühr</div>
+              <div class="mt-1 text-[22px] font-semibold text-slate-950">EUR 282.00</div>
+              <div class="mt-2 text-sm text-slate-500">Fällig am <span class="font-semibold text-slate-900">02.04.2026</span></div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-slate-400">Rechnung</div>
+              <div class="text-sm font-semibold text-slate-900">INV-2026-00124</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="paymentSection" class="rounded-[28px] border border-slate-200 bg-white px-8 py-7 shadow-sm">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h2 id="paymentSectionTitle" class="text-[20px] font-semibold text-slate-950">Zahlungsart festlegen</h2>
+              <p id="paymentSectionText" class="mt-2 text-[15px] text-slate-400">Legen Sie fest, wie die Zahlung erfolgen soll</p>
+            </div>
+            <div class="hidden lg:flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-600">
+              <span>Interaktive Demo</span>
+            </div>
+          </div>
+
+          <div id="singleMethodInfo" class="hidden mt-7 rounded-[18px] border border-slate-200 bg-slate-50 px-5 py-4"></div>
+
+          <div id="methodList" class="mt-7 space-y-4">
+            <button data-method="card" class="method-btn group w-full rounded-[18px] border border-slate-200 bg-white px-5 py-5 text-left transition hover:border-slate-300 hover:bg-slate-50">
+              <div class="flex items-start gap-4">
+                <span class="radio mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-300">
+                  <span class="dot hidden h-2.5 w-2.5 rounded-full bg-slate-900"></span>
+                </span>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <div class="text-[15px] font-semibold text-slate-900">Online-Zahlung (Kartenzahlung)</div>
+                    <span class="selected-badge hidden rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Ausgewählt</span>
+                  </div>
+                  <div class="mt-1 text-sm text-slate-500">Sofort online bezahlen</div>
+                </div>
+              </div>
+            </button>
+
+            <div id="sepaMethodCard" class="rounded-[18px] border-2 border-slate-800 bg-white px-5 py-5 transition">
+              <button data-method="sepa" class="method-btn w-full text-left">
+                <div class="flex items-start gap-4">
+                  <span class="radio mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-800">
+                    <span class="dot h-2.5 w-2.5 rounded-full bg-slate-900"></span>
+                  </span>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <div class="text-[15px] font-semibold text-slate-900">SEPA-Lastschrift</div>
+                      <span class="selected-badge rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Ausgewählt</span>
+                    </div>
+                    <div class="mt-1 text-sm text-slate-500">Bankkonto verwenden oder neues Konto hinzufügen</div>
+                  </div>
+                </div>
+              </button>
+
+              <div id="sepaInlineArea" class="mt-5"></div>
+            </div>
+
+            <button data-method="bank" class="method-btn group w-full rounded-[18px] border border-slate-200 bg-white px-5 py-5 text-left transition hover:border-slate-300 hover:bg-slate-50">
+              <div class="flex items-start gap-4">
+                <span class="radio mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-300">
+                  <span class="dot hidden h-2.5 w-2.5 rounded-full bg-slate-900"></span>
+                </span>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <div class="text-[15px] font-semibold text-slate-900">Banküberweisung</div>
+                    <span class="selected-badge hidden rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Ausgewählt</span>
+                  </div>
+                  <div class="mt-1 text-sm text-slate-500">Rechnungsdaten für manuelle Überweisung anzeigen</div>
+                </div>
+              </div>
+            </button>
+
+            <button data-method="cash" class="method-btn group w-full rounded-[18px] border border-slate-200 bg-white px-5 py-5 text-left transition hover:border-slate-300 hover:bg-slate-50">
+              <div class="flex items-start gap-4">
+                <span class="radio mt-0.5 inline-flex h-5 w-5 items-center justify-center rounded-full border-2 border-slate-300">
+                  <span class="dot hidden h-2.5 w-2.5 rounded-full bg-slate-900"></span>
+                </span>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <div class="text-[15px] font-semibold text-slate-900">Barzahlung</div>
+                    <span class="selected-badge hidden rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Ausgewählt</span>
+                  </div>
+                  <div class="mt-1 text-sm text-slate-500">Direkt im Club bezahlen</div>
+                </div>
+              </div>
+            </button>
+          </div>
+        </section>
+
+        <section id="planSection" class="rounded-[28px] border border-slate-200 bg-white px-6 py-5 shadow-sm">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h2 class="text-[18px] font-semibold text-slate-950">Zahlungsplan</h2>
+              <p class="mt-1 text-[15px] text-slate-400">Übersicht über alle Rechnungen, einschließlich Betrag, Fälligkeitsdatum und Zahlungsstatus</p>
+            </div>
+            <button id="togglePlan" class="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50">Weniger anzeigen</button>
+          </div>
+
+          <div class="mt-7 grid grid-cols-1 gap-5 md:grid-cols-3">
+            <div>
+              <div class="text-[14px] font-semibold text-slate-500">Gesamtbetrag</div>
+              <div class="mt-1 text-[20px] font-semibold text-slate-950">EUR 954.00</div>
+            </div>
+            <div>
+              <div class="text-[14px] font-semibold text-slate-500">Bezahlter Betrag</div>
+              <div class="mt-1 text-[20px] font-semibold text-slate-950">EUR 0.00</div>
+            </div>
+            <div>
+              <div class="text-[14px] font-semibold text-slate-500">Verbleibender Betrag</div>
+              <div class="mt-1 text-[20px] font-semibold text-slate-950">EUR 954.00</div>
+            </div>
+          </div>
+
+          <div id="planTable" class="mt-7 overflow-hidden rounded-[18px] border border-slate-200">
+            <div class="grid grid-cols-[minmax(0,1.6fr)_120px_160px_120px] gap-4 bg-slate-50 px-5 py-4 text-[13px] font-semibold uppercase tracking-wide text-slate-500">
+              <div>Rechnung</div>
+              <div>Betrag</div>
+              <div>Fälligkeitsdatum</div>
+              <div>Status</div>
+            </div>
+
+            <div class="grid grid-cols-[minmax(0,1.6fr)_120px_160px_120px] gap-4 border-t border-slate-100 px-5 py-5 text-[15px]">
+              <div class="font-semibold text-slate-900">Mitgliedschaft - Installment: Initial Gebühr (Jetzt bezahlen)</div>
+              <div class="text-slate-800">EUR 282.00</div>
+              <div class="text-slate-800">02.04.2026</div>
+              <div><span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">Offen</span></div>
+            </div>
+
+            <div class="grid grid-cols-[minmax(0,1.6fr)_120px_160px_120px] gap-4 border-t border-slate-100 px-5 py-5 text-[15px]">
+              <div class="font-semibold text-slate-900">Mitgliedschaft - Installment: 1/12</div>
+              <div class="text-slate-800">EUR 56.00</div>
+              <div class="text-slate-800">01.05.2026</div>
+              <div><span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">Offen</span></div>
+            </div>
+
+            <div class="grid grid-cols-[minmax(0,1.6fr)_120px_160px_120px] gap-4 border-t border-slate-100 px-5 py-5 text-[15px]">
+              <div class="font-semibold text-slate-900">Mitgliedschaft - Installment: 2/12</div>
+              <div class="text-slate-800">EUR 56.00</div>
+              <div class="text-slate-800">01.06.2026</div>
+              <div><span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">Offen</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="confirmationSection" class="hidden rounded-[28px] border border-emerald-200 bg-white px-8 py-7 shadow-sm">
+          <div id="confirmationContent"></div>
+        </section>
+      </div>
+
+      <!-- RIGHT -->
+      <aside id="summaryAside">
+        <div class="sticky top-6 rounded-[28px] border border-slate-200 bg-white px-6 py-5 shadow-sm">
+          <h2 class="text-[20px] font-semibold text-slate-950">Zusammenfassung</h2>
+
+          <div class="mt-5 border-t border-slate-200 pt-5">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-[14px] font-semibold text-slate-500">Zahlung an</p>
+                <p class="mt-1 text-[16px] font-semibold text-slate-700">Club Dashboard Demoooo</p>
+              </div>
+              <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-black text-xl font-semibold text-white">cb</div>
+            </div>
+          </div>
+
+          <div class="mt-5 rounded-[18px] bg-slate-50 px-5 py-5">
+            <p class="text-center text-[18px] font-semibold leading-7 text-slate-900">Mitgliedschaft - Installment: Initial Gebühr</p>
+            <p class="mt-4 text-center text-[25px] font-semibold text-slate-950">EUR 282.00</p>
+            <p id="summaryInfo" class="mt-4 text-center text-[14px] text-slate-500">Die Rechnung muss bis zum <span class="font-semibold text-slate-900">02.04.2026</span> bezahlt werden</p>
+          </div>
+
+          <div class="mt-5 border-t border-slate-200 pt-5">
+            <div class="flex items-center justify-between gap-4 text-[17px] font-semibold text-slate-950">
+              <span>Gesamt inkl. Gebühren &amp; Steuer</span>
+              <span>EUR 282.00</span>
+            </div>
+          </div>
+
+          <button id="mainCta" class="mt-7 w-full rounded-full bg-emerald-500 px-5 py-3.5 text-[18px] font-semibold text-white transition hover:bg-emerald-600">
+            Lastschrift bestätigen
+          </button>
+
+          <p id="summaryHelper" class="mt-3 text-center text-sm leading-6 text-slate-400">
+            Das hinterlegte Konto wird für diese Zahlung verwendet.
+          </p>
+
+          <div class="mt-6 rounded-[16px] border border-slate-200 bg-slate-50 px-4 py-4">
+            <div class="text-[13px] font-semibold uppercase tracking-wide text-slate-400">Demo-Steuerung</div>
+            <div class="mt-3 space-y-3">
+              <div class="grid grid-cols-2 gap-2">
+                <button data-demo="sepa-existing" class="demo-btn rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700">SEPA vorhanden</button>
+                <button data-demo="sepa-none" class="demo-btn rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700">SEPA neu</button>
+                <button data-demo="card" class="demo-btn rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700">Karte</button>
+                <button data-demo="bank" class="demo-btn rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700">Überweisung</button>
+              </div>
+              <div>
+                <div class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Verfügbare Methoden</div>
+                <div class="grid grid-cols-2 gap-2">
+                  <label class="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"><input type="checkbox" class="availability-toggle" value="card" checked> Karte</label>
+                  <label class="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"><input type="checkbox" class="availability-toggle" value="sepa" checked> SEPA</label>
+                  <label class="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"><input type="checkbox" class="availability-toggle" value="bank" checked> Überweisung</label>
+                  <label class="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700"><input type="checkbox" class="availability-toggle" value="cash" checked> Bar</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div id="modalBackdrop" class="hidden fixed inset-0 z-40 bg-slate-900/45 backdrop-blur-[1px]"></div>
+  <div id="modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6">
+    <div class="w-full max-w-[430px] rounded-[24px] bg-white shadow-2xl">
+      <div class="flex items-center justify-between px-7 py-6">
+        <div class="text-[20px] font-semibold tracking-tight text-slate-950">coachbetter</div>
+        <button id="closeModal" class="rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+        </button>
+      </div>
+
+      <div class="border-t border-slate-200 px-7 py-6">
+        <h3 class="text-[18px] font-semibold text-slate-950">Bankkonto hinzufügen</h3>
+        <p class="mt-1 text-[15px] text-slate-500">Geben Sie Ihre SEPA-Lastschrift-Daten ein.</p>
+
+        <div class="mt-5 rounded-[16px] border border-slate-200 bg-slate-50 p-4">
+          <label class="flex items-start gap-3">
+            <input id="modalConsent" type="checkbox" checked class="mt-1 h-5 w-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500" />
+            <span class="text-[14px] leading-6 text-slate-700">Ich ermächtige den Club hiermit, Zahlungen für meine Mitgliedschaft und weitere Vereinsaktivitäten per SEPA-Lastschrift von meinem Bankkonto einzuziehen.</span>
+          </label>
+        </div>
+
+        <div class="mt-5">
+          <label class="mb-2 block text-[15px] font-semibold text-slate-800">IBAN*</label>
+          <input id="ibanInput" type="text" value="DE89370400440532013000" class="w-full rounded-[12px] border border-slate-300 px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+        </div>
+
+        <div class="mt-4">
+          <label class="mb-2 block text-[15px] font-semibold text-slate-800">Kontoinhaber*</label>
+          <input id="holderInput" type="text" value="Claudia Test" class="w-full rounded-[12px] border border-slate-300 px-4 py-3 text-[15px] text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100" />
+        </div>
+
+        <div class="mt-6 grid grid-cols-2 gap-4">
+          <button id="cancelModal" class="rounded-full border-2 border-indigo-900 px-5 py-3 text-[18px] font-semibold text-indigo-900 transition hover:bg-indigo-50">Schließen</button>
+          <button id="saveModal" class="rounded-full bg-emerald-500 px-5 py-3 text-[18px] font-semibold text-white transition hover:bg-emerald-600">Speichern und verwenden</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const METHOD_META = {
+      card: {
+        title: 'Online-Zahlung (Kartenzahlung)',
+        text: 'Diese Zahlung kann direkt online abgeschlossen werden.'
+      },
+      sepa: {
+        title: 'SEPA-Lastschrift',
+        text: 'Das Konto wird für diese Zahlung verwendet oder neu hinterlegt.'
+      },
+      bank: {
+        title: 'Banküberweisung',
+        text: 'Die Überweisungsdaten werden im nächsten Schritt angezeigt.'
+      },
+      cash: {
+        title: 'Barzahlung',
+        text: 'Die Rechnung bleibt offen, bis die Zahlung manuell bestätigt wurde.'
+      }
+    };
+
+    const state = {
+      method: 'sepa',
+      sepaMode: 'existing',
+      storedIbanMasked: '•••• 3000',
+      storedHolderMasked: 'C. Test',
+      currentIban: 'DE89370400440532013000',
+      currentHolder: 'Claudia Test',
+      planExpanded: true,
+      confirmed: false,
+      availableMethods: ['card', 'sepa', 'bank', 'cash']
+    };
+
+    const leftColumn = document.getElementById('leftColumn');
+    const layoutGrid = document.getElementById('layoutGrid');
+    const summaryAside = document.getElementById('summaryAside');
+    const sepaInlineArea = document.getElementById('sepaInlineArea');
+    const mainCta = document.getElementById('mainCta');
+    const summaryInfo = document.getElementById('summaryInfo');
+    const summaryHelper = document.getElementById('summaryHelper');
+    const planTable = document.getElementById('planTable');
+    const togglePlan = document.getElementById('togglePlan');
+    const modal = document.getElementById('modal');
+    const modalBackdrop = document.getElementById('modalBackdrop');
+    const ibanInput = document.getElementById('ibanInput');
+    const holderInput = document.getElementById('holderInput');
+    const paymentSection = document.getElementById('paymentSection');
+    const planSection = document.getElementById('planSection');
+    const confirmationSection = document.getElementById('confirmationSection');
+    const confirmationContent = document.getElementById('confirmationContent');
+    const methodList = document.getElementById('methodList');
+    const singleMethodInfo = document.getElementById('singleMethodInfo');
+    const paymentSectionTitle = document.getElementById('paymentSectionTitle');
+    const paymentSectionText = document.getElementById('paymentSectionText');
+
+    function maskIban(iban) {
+      const clean = (iban || '').replace(/\s+/g, '');
+      return '•••• ' + (clean.slice(-4) || '0000');
+    }
+
+    function maskHolder(holder) {
+      if (!holder) return 'Konto hinterlegt';
+      const parts = holder.trim().split(/\s+/);
+      if (parts.length === 1) return parts[0].charAt(0).toUpperCase() + '.';
+      return parts[0].charAt(0).toUpperCase() + '. ' + parts[parts.length - 1];
+    }
+
+    function getFirstAvailableMethod(preferred = 'sepa') {
+      return state.availableMethods.includes(preferred) ? preferred : state.availableMethods[0] || 'card';
+    }
+
+    function renderSepaInline() {
+      if (state.sepaMode === 'existing' || state.sepaMode === 'entered') {
+        const holder = state.sepaMode === 'existing' ? state.storedHolderMasked : maskHolder(state.currentHolder);
+        const iban = state.sepaMode === 'existing' ? state.storedIbanMasked : maskIban(state.currentIban);
+        const label = state.sepaMode === 'existing' ? 'Bereits hinterlegtes Konto' : 'Neues Konto gespeichert';
+        const sub = state.sepaMode === 'existing' ? 'Für diesen öffentlichen Link werden nur gekürzte Daten angezeigt.' : 'Die eingegebenen Daten werden für diese Zahlung verwendet.';
+
+        sepaInlineArea.innerHTML = `
+          <div class="rounded-[16px] border border-slate-200 bg-slate-50 px-5 py-4">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <div class="text-[14px] font-semibold text-slate-900">${label}</div>
+                <div class="mt-1 text-sm text-slate-500">${sub}</div>
+              </div>
+              <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">SEPA</span>
+            </div>
+
+            <div class="mt-4 grid gap-3 md:grid-cols-2">
+              <div class="rounded-[14px] bg-white px-4 py-3 ring-1 ring-slate-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">IBAN</div>
+                <div class="mt-1 text-[15px] font-semibold text-slate-900">${iban}</div>
+              </div>
+              <div class="rounded-[14px] bg-white px-4 py-3 ring-1 ring-slate-200">
+                <div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Kontoinhaber</div>
+                <div class="mt-1 text-[15px] font-semibold text-slate-900">${holder}</div>
+              </div>
+            </div>
+
+            <div class="mt-4 flex flex-wrap items-center gap-3">
+              <button id="changeSepaBtn" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Anderes Konto verwenden</button>
+              <span class="text-sm text-slate-400">Die endgültige Bestätigung erfolgt rechts über den Hauptbutton.</span>
+            </div>
+          </div>
+        `;
+
+        document.getElementById('changeSepaBtn').addEventListener('click', openModal);
+      } else {
+        sepaInlineArea.innerHTML = `
+          <div class="rounded-[16px] border border-dashed border-slate-300 bg-slate-50 px-5 py-5">
+            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <div class="text-[15px] font-semibold text-slate-900">Kein Konto hinterlegt</div>
+                <div class="mt-1 text-sm text-slate-500">Fügen Sie ein Bankkonto hinzu, um per SEPA-Lastschrift zu bezahlen.</div>
+              </div>
+              <button id="addSepaBtn" class="rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-slate-800 ring-1 ring-slate-300 transition hover:bg-slate-100">Konto hinzufügen</button>
+            </div>
+          </div>
+        `;
+        document.getElementById('addSepaBtn').addEventListener('click', openModal);
+      }
+    }
+
+    function updateSummary() {
+      const summaryByMethod = {
+        sepa: {
+          cta: 'Lastschrift bestätigen',
+          info: 'Die Rechnung muss bis zum <span class="font-semibold text-slate-900">02.04.2026</span> bezahlt werden',
+          helper: state.sepaMode === 'none'
+            ? 'Fügen Sie zuerst ein Konto hinzu, bevor Sie die Lastschrift bestätigen.'
+            : state.sepaMode === 'entered'
+              ? 'Das neu hinzugefügte Konto wird für diese Zahlung verwendet.'
+              : 'Das hinterlegte Konto wird für diese Zahlung verwendet.'
+        },
+        card: {
+          cta: 'Jetzt bezahlen',
+          info: 'Die Rechnung muss bis zum <span class="font-semibold text-slate-900">02.04.2026</span> bezahlt werden',
+          helper: 'Ihre Kartendaten werden sicher verarbeitet und können für zukünftige Zahlungen gespeichert werden.'
+        },
+        bank: {
+          cta: 'Banküberweisung bestätigen',
+          info: 'Bitte überweisen Sie den Betrag bis zum <span class="font-semibold text-slate-900">02.04.2026</span>',
+          helper: 'Die Auswahl gilt nur für diese Rechnung und ändert nicht automatisch die bevorzugte Zahlungsmethode.'
+        },
+        cash: {
+          cta: 'Barzahlung bestätigen',
+          info: 'Die Rechnung muss bis zum <span class="font-semibold text-slate-900">02.04.2026</span> bezahlt werden',
+          helper: 'Die Zahlung bleibt offen, bis sie vom Club manuell bestätigt wurde.'
+        }
+      };
+
+      const current = summaryByMethod[state.method];
+      mainCta.textContent = current.cta;
+      summaryInfo.innerHTML = current.info;
+      summaryHelper.textContent = current.helper;
+
+      const disableSepa = state.method === 'sepa' && state.sepaMode === 'none';
+      mainCta.disabled = disableSepa;
+      mainCta.classList.toggle('opacity-50', disableSepa);
+      mainCta.classList.toggle('cursor-not-allowed', disableSepa);
+    }
+
+    function updateMethodUi() {
+      document.querySelectorAll('.method-btn').forEach(btn => {
+        const method = btn.dataset.method;
+        const wrapper = method === 'sepa' ? document.getElementById('sepaMethodCard') : btn;
+        const radio = wrapper.querySelector('.radio');
+        const dot = wrapper.querySelector('.dot');
+        const badge = wrapper.querySelector('.selected-badge');
+        const isAvailable = state.availableMethods.includes(method);
+        const isActive = state.method === method;
+
+        wrapper.classList.toggle('hidden', !isAvailable);
+        if (!isAvailable) return;
+
+        wrapper.classList.remove('border-slate-800', 'border-slate-200', 'border-2');
+        wrapper.classList.add(isActive ? 'border-slate-800' : 'border-slate-200');
+        if (isActive) wrapper.classList.add('border-2');
+
+        radio.classList.remove('border-slate-800', 'border-slate-300');
+        radio.classList.add(isActive ? 'border-slate-800' : 'border-slate-300');
+        dot.classList.toggle('hidden', !isActive);
+        if (badge) badge.classList.toggle('hidden', !isActive);
+      });
+    }
+
+    function updateMethodAvailabilityUi() {
+      const singleMethod = state.availableMethods.length === 1;
+      methodList.classList.toggle('hidden', singleMethod);
+      singleMethodInfo.classList.toggle('hidden', !singleMethod);
+
+      if (singleMethod) {
+        const method = state.availableMethods[0];
+        const meta = METHOD_META[method];
+        paymentSectionTitle.textContent = 'Zahlungsart festlegen';
+        paymentSectionText.textContent = 'Für diese Rechnung ist nur eine Zahlungsart verfügbar.';
+        singleMethodInfo.innerHTML = `
+          <div class="flex items-start gap-4">
+            <div class="mt-0.5 flex h-10 w-10 items-center justify-center rounded-2xl bg-white ring-1 ring-slate-200 text-slate-700">•</div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <div class="text-[16px] font-semibold text-slate-900">${meta.title}</div>
+                <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Ausgewählt</span>
+              </div>
+              <div class="mt-1 text-sm text-slate-500">${meta.text}</div>
+            </div>
+          </div>
+        `;
+      } else {
+        paymentSectionTitle.textContent = 'Zahlungsart festlegen';
+        paymentSectionText.textContent = 'Legen Sie fest, wie die Zahlung erfolgen soll';
+        singleMethodInfo.innerHTML = '';
+      }
+    }
+
+    function openModal() {
+      modal.classList.remove('hidden');
+      modalBackdrop.classList.remove('hidden');
+      ibanInput.value = state.currentIban;
+      holderInput.value = state.currentHolder;
+    }
+
+    function closeModal() {
+      modal.classList.add('hidden');
+      modalBackdrop.classList.add('hidden');
+    }
+
+    function saveModal() {
+      state.currentIban = ibanInput.value.trim();
+      state.currentHolder = holderInput.value.trim();
+      state.sepaMode = 'entered';
+      renderSepaInline();
+      updateSummary();
+      closeModal();
+    }
+
+    function renderConfirmation() {
+      const confirmations = {
+        sepa: () => {
+          const iban = state.sepaMode === 'existing' ? state.storedIbanMasked : maskIban(state.currentIban);
+          const holder = state.sepaMode === 'existing' ? state.storedHolderMasked : maskHolder(state.currentHolder);
+          return `
+            <div class="flex items-start gap-4">
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+              </div>
+              <div>
+                <div class="flex items-center gap-2 flex-wrap"><h3 class="text-[24px] font-semibold text-slate-950">Zahlungsart festgelegt</h3><span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">SEPA-Lastschrift</span></div>
+                <p class="mt-2 text-[16px] text-slate-500">Der Betrag wird per SEPA-Lastschrift eingezogen. Sie müssen nichts weiter tun.</p>
+              </div>
+            </div>
+            <div class="mt-6 grid gap-4 md:grid-cols-3">
+              <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Betrag</div><div class="mt-1 text-[18px] font-semibold text-slate-950">EUR 282.00</div></div>
+              <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">IBAN</div><div class="mt-1 text-[18px] font-semibold text-slate-950">${iban}</div></div>
+              <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Kontoinhaber</div><div class="mt-1 text-[18px] font-semibold text-slate-950">${holder}</div></div>
+            </div>
+            <div class="mt-5 rounded-[16px] border border-emerald-200 bg-emerald-50 px-4 py-4 text-[15px] text-emerald-800">Der Einzug erfolgt für diese offene Rechnung. Die Rechnung bleibt für Sie sichtbar, bis die Zahlung verarbeitet wurde.</div>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <button id="backFromConfirmation" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Zurück</button>
+              <button class="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white">Schließen</button>
+            </div>
+          `;
+        },
+        bank: () => `
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap"><h3 class="text-[24px] font-semibold text-slate-950">Zahlungsart festgelegt</h3><span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Banküberweisung</span></div>
+              <p class="mt-2 text-[16px] text-slate-500">Bitte überweisen Sie den Betrag unter Verwendung der folgenden Angaben. Die Zahlung wird erst nach Eingang verbucht.</p>
+            </div>
+          </div>
+          <div class="mt-6 overflow-hidden rounded-[18px] border border-slate-200">
+            <div class="grid gap-0 divide-y divide-slate-200">
+              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Empfänger</div><div class="text-sm font-semibold text-slate-900">Club Dashboard Demoooo</div></div>
+              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">IBAN</div><div class="text-sm font-semibold text-slate-900">CH93 0076 2011 6238 5295 7</div></div>
+              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">BIC</div><div class="text-sm font-semibold text-slate-900">POFICHBEXXX</div></div>
+              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Verwendungszweck</div><div class="text-sm font-semibold text-slate-900">INV-2026-00124</div></div>
+              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Betrag</div><div class="text-sm font-semibold text-slate-900">EUR 282.00</div></div>
+              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Fällig bis</div><div class="text-sm font-semibold text-slate-900">02.04.2026</div></div>
+            </div>
+          </div>
+          <div class="mt-5 rounded-[16px] border border-amber-200 bg-amber-50 px-4 py-4 text-[15px] text-amber-800">Wichtig: Bitte geben Sie den Verwendungszweck genau so an, damit die Zahlung korrekt zugeordnet werden kann.</div>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="backFromConfirmation" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Zurück</button>
+            <button class="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white">Rechnung herunterladen</button>
+          </div>
+        `,
+        cash: () => `
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap"><h3 class="text-[24px] font-semibold text-slate-950">Zahlungsart festgelegt</h3><span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Barzahlung</span></div>
+              <p class="mt-2 text-[16px] text-slate-500">Bitte bezahlen Sie den Betrag direkt beim Club. Die Rechnung bleibt offen, bis die Zahlung manuell bestätigt wurde.</p>
+            </div>
+          </div>
+          <div class="mt-6 grid gap-4 md:grid-cols-3">
+            <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Betrag</div><div class="mt-1 text-[18px] font-semibold text-slate-950">EUR 282.00</div></div>
+            <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Fällig bis</div><div class="mt-1 text-[18px] font-semibold text-slate-950">02.04.2026</div></div>
+            <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Rechnung</div><div class="mt-1 text-[18px] font-semibold text-slate-950">INV-2026-00124</div></div>
+          </div>
+          <div class="mt-5 rounded-[16px] border border-slate-200 bg-slate-50 px-4 py-4 text-[15px] text-slate-700">Bringen Sie diese Rechnung oder die Rechnungsnummer zur Zahlung mit.</div>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="backFromConfirmation" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Zurück</button>
+            <button class="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white">Schließen</button>
+          </div>
+        `,
+        card: () => `
+          <div class="flex items-start gap-4">
+            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8L10 18l-5-5" /></svg>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap"><h3 class="text-[24px] font-semibold text-slate-950">Zahlungsart festgelegt</h3><span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">Online-Zahlung</span></div>
+              <p class="mt-2 text-[16px] text-slate-500">In der echten Anwendung würden Sie jetzt zum Zahlungsanbieter weitergeleitet werden. Wenn die Zahlung dort fehlschlägt, kehren Sie zur vorherigen Auswahl zurück.</p>
+            </div>
+          </div>
+          <div class="mt-6 rounded-[16px] border border-slate-200 bg-slate-50 px-5 py-5">
+            <div class="text-sm text-slate-500">Demo-Hinweis</div>
+            <div class="mt-2 text-[16px] text-slate-800">Für diese Demo wird keine echte Weiterleitung durchgeführt. Stattdessen sehen Sie hier den simulierten Zwischenschritt.</div>
+          </div>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <button id="backFromConfirmation" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Zurück</button>
+            <button class="rounded-full bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white">Payrexx öffnen</button>
+          </div>
+        `
+      };
+
+      confirmationContent.innerHTML = confirmations[state.method]();
+      const backBtn = document.getElementById('backFromConfirmation');
+      if (backBtn) backBtn.addEventListener('click', resetConfirmation);
+    }
+
+    function confirmCurrentMethod() {
+      if (state.method === 'sepa' && state.sepaMode === 'none') return;
+      state.confirmed = true;
+      paymentSection.classList.add('hidden');
+      planSection.classList.add('hidden');
+      summaryAside.classList.add('hidden');
+      layoutGrid.classList.remove('xl:grid-cols-[minmax(0,1fr)_420px]');
+      leftColumn.classList.add('max-w-4xl', 'mx-auto');
+      confirmationSection.classList.remove('hidden');
+      renderConfirmation();
+    }
+
+    function resetConfirmation() {
+      state.confirmed = false;
+      paymentSection.classList.remove('hidden');
+      planSection.classList.remove('hidden');
+      summaryAside.classList.remove('hidden');
+      layoutGrid.classList.add('xl:grid-cols-[minmax(0,1fr)_420px]');
+      leftColumn.classList.remove('max-w-4xl', 'mx-auto');
+      confirmationSection.classList.add('hidden');
+    }
+
+    function refreshUi() {
+      if (!state.availableMethods.includes(state.method)) {
+        state.method = getFirstAvailableMethod();
+      }
+      updateMethodAvailabilityUi();
+      updateMethodUi();
+      updateSummary();
+    }
+
+    function setMethod(method) {
+      if (!state.availableMethods.includes(method)) return;
+      state.method = method;
+      resetConfirmation();
+      refreshUi();
+    }
+
+    function setDemo(mode) {
+      resetConfirmation();
+      const demoMap = {
+        'sepa-existing': () => { state.method = getFirstAvailableMethod('sepa'); state.sepaMode = 'existing'; },
+        'sepa-none': () => { state.method = getFirstAvailableMethod('sepa'); state.sepaMode = 'none'; },
+        'card': () => { state.method = getFirstAvailableMethod('card'); },
+        'bank': () => { state.method = getFirstAvailableMethod('bank'); }
+      };
+      demoMap[mode]();
+      renderSepaInline();
+      refreshUi();
+    }
+
+    document.querySelectorAll('.method-btn').forEach(btn => {
+      btn.addEventListener('click', () => setMethod(btn.dataset.method));
+    });
+
+    document.querySelectorAll('.demo-btn').forEach(btn => {
+      btn.addEventListener('click', () => setDemo(btn.dataset.demo));
+    });
+
+    document.querySelectorAll('.availability-toggle').forEach(toggle => {
+      toggle.addEventListener('change', () => {
+        const checked = Array.from(document.querySelectorAll('.availability-toggle:checked')).map(el => el.value);
+        if (!checked.length) {
+          document.querySelector('.availability-toggle[value="card"]').checked = true;
+        }
+        state.availableMethods = Array.from(document.querySelectorAll('.availability-toggle:checked')).map(el => el.value);
+        resetConfirmation();
+        refreshUi();
+      });
+    });
+
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    document.getElementById('cancelModal').addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', closeModal);
+    document.getElementById('saveModal').addEventListener('click', saveModal);
+    mainCta.addEventListener('click', confirmCurrentMethod);
+
+    togglePlan.addEventListener('click', () => {
+      state.planExpanded = !state.planExpanded;
+      planTable.classList.toggle('hidden', !state.planExpanded);
+      togglePlan.textContent = state.planExpanded ? 'Weniger anzeigen' : 'Mehr anzeigen';
+    });
+
+    renderSepaInline();
+    refreshUi();
+  </script>
+</body>
+</html>
