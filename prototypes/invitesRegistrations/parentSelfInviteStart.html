@@ -1,1 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invitation Link Modal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-slate-100 p-8 font-sans text-slate-900">
+  <div class="mx-auto max-w-5xl">
 
+    <!-- Example page background -->
+    <div class="rounded-3xl border border-slate-200 bg-white shadow-sm">
+      <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+        <div>
+          <h1 class="text-lg font-semibold">Linked accounts</h1>
+          <p class="mt-1 text-sm text-slate-500">Example background view behind the modal.</p>
+        </div>
+
+        <button
+          type="button"
+          onclick="openInviteModal('profile')"
+          class="inline-flex items-center rounded-full bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+        >
+          Invitation link
+        </button>
+      </div>
+
+      <div class="grid gap-4 px-6 py-6 md:grid-cols-2">
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div class="text-sm font-medium text-slate-900">Profile access</div>
+          <div class="mt-1 text-sm text-slate-500">No linked user</div>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm font-medium text-slate-900">Parents / guardians</div>
+              <div class="mt-1 text-sm text-slate-500">1 linked account</div>
+            </div>
+            <button
+              type="button"
+              onclick="openInviteModal('parent')"
+              class="text-sm font-medium text-emerald-700 hover:text-emerald-800"
+            >
+              Invite parent
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal backdrop -->
+    <div id="inviteModal" class="fixed inset-0 z-40 hidden">
+      <div class="absolute inset-0 bg-slate-900/40"></div>
+
+      <!-- Modal -->
+      <div class="relative z-50 flex min-h-screen items-center justify-center p-4">
+        <div class="w-full max-w-2xl rounded-3xl border border-slate-200 bg-white shadow-2xl">
+          
+          <!-- Header -->
+          <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
+            <div>
+              <h2 class="text-xl font-semibold text-slate-900">Invitation link</h2>
+              <p class="mt-1 text-sm text-slate-500">
+                Invite access for <span class="font-medium text-slate-700">Deeet dd</span>.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onclick="closeInviteModal()"
+              class="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+              aria-label="Close"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Tabs -->
+          <div class="border-b border-slate-200 px-6 pt-4">
+            <div class="flex gap-2">
+              <button
+                id="tab-profile"
+                type="button"
+                onclick="switchTab('profile')"
+                class="tab-button inline-flex items-center rounded-t-2xl border border-b-0 border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-900"
+              >
+                Profile access
+              </button>
+
+              <button
+                id="tab-parent"
+                type="button"
+                onclick="switchTab('parent')"
+                class="tab-button inline-flex items-center rounded-t-2xl border border-transparent px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-slate-700"
+              >
+                Parent / guardian
+              </button>
+            </div>
+          </div>
+
+          <!-- Tab content -->
+          <div class="px-6 py-5">
+
+            <!-- PROFILE TAB -->
+            <div id="panel-profile" class="space-y-5">
+              <div>
+                <h3 class="text-sm font-semibold text-slate-900">Profile access invite</h3>
+                <p class="mt-1 text-sm text-slate-500">
+                  Invite access for this profile. You can keep this link limited to this person or allow a parent / guardian to continue with it as well.
+                </p>
+              </div>
+
+              <!-- Toggle -->
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="pr-4">
+                    <div class="text-sm font-medium text-slate-900">
+                      Allow parent or guardian to use this link
+                    </div>
+                    <p class="mt-1 text-xs leading-5 text-slate-500">
+                      If enabled, the recipient can continue as this person or as a parent / guardian during registration.
+                    </p>
+                    <p class="mt-2 text-xs text-slate-400">
+                      Default can be set based on birthdate.
+                    </p>
+                  </div>
+
+                  <button
+                    id="flexToggle"
+                    type="button"
+                    onclick="toggleFlexible()"
+                    aria-pressed="true"
+                    class="relative mt-1 inline-flex h-6 w-11 items-center rounded-full bg-emerald-500 transition"
+                  >
+                    <span
+                      id="flexToggleDot"
+                      class="inline-block h-4 w-4 translate-x-6 rounded-full bg-white shadow transition"
+                    ></span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Link -->
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Invitation link
+                </label>
+                <div class="flex flex-col gap-3 sm:flex-row">
+                  <div
+                    id="profileLink"
+                    class="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 break-all"
+                  >
+                    https://app.coachbetter.com/invite/profile/72fa5d66?flexible=true
+                  </div>
+
+                  <button
+                    type="button"
+                    class="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-medium text-white hover:bg-emerald-700"
+                  >
+                    Copy link
+                  </button>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Send via email
+                </label>
+                <div class="flex flex-col gap-3 sm:flex-row">
+                  <div class="flex-1 rounded-2xl border border-slate-200 bg-white px-3 py-2.5">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-sm text-slate-700">
+                        claudia@example.com
+                        <button class="text-slate-400 hover:text-slate-600">×</button>
+                      </span>
+                      <input
+                        type="text"
+                        placeholder="Add email address"
+                        class="min-w-[180px] flex-1 border-0 bg-transparent p-0 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-0"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-medium text-white hover:bg-emerald-700"
+                  >
+                    Send email
+                  </button>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 text-xs leading-5 text-blue-900">
+                This link gives access to this profile. When the option above is enabled, the same link can also be used by a parent or guardian.
+              </div>
+            </div>
+
+            <!-- PARENT TAB -->
+            <div id="panel-parent" class="hidden space-y-5">
+              <div>
+                <h3 class="text-sm font-semibold text-slate-900">Parent / guardian invite</h3>
+                <p class="mt-1 text-sm text-slate-500">
+                  Use this invite when access should definitely be created for a parent or guardian.
+                </p>
+              </div>
+
+              <!-- Link -->
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Parent invitation link
+                </label>
+                <div class="flex flex-col gap-3 sm:flex-row">
+                  <div class="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 break-all">
+                    https://app.coachbetter.com/invite/parent/72fa5d66
+                  </div>
+
+                  <button
+                    type="button"
+                    class="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-medium text-white hover:bg-emerald-700"
+                  >
+                    Copy link
+                  </button>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div>
+                <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">
+                  Send parent invite by email
+                </label>
+                <div class="flex flex-col gap-3 sm:flex-row">
+                  <input
+                    type="text"
+                    placeholder="Enter parent email address"
+                    class="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 placeholder:text-slate-400 focus:border-slate-300 focus:outline-none focus:ring-0"
+                  />
+
+                  <button
+                    type="button"
+                    class="inline-flex items-center justify-center rounded-full bg-emerald-600 px-5 py-3 text-sm font-medium text-white hover:bg-emerald-700"
+                  >
+                    Send email
+                  </button>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs leading-5 text-slate-600">
+                This invite always starts the parent / guardian flow and links the created or selected parent account to this profile.
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Footer -->
+          <div class="flex items-center justify-end gap-3 border-t border-slate-200 px-6 py-4">
+            <button
+              type="button"
+              onclick="closeInviteModal()"
+              class="rounded-full px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('inviteModal');
+    const tabProfile = document.getElementById('tab-profile');
+    const tabParent = document.getElementById('tab-parent');
+    const panelProfile = document.getElementById('panel-profile');
+    const panelParent = document.getElementById('panel-parent');
+    const flexToggle = document.getElementById('flexToggle');
+    const flexToggleDot = document.getElementById('flexToggleDot');
+    const profileLink = document.getElementById('profileLink');
+
+    let flexible = true;
+
+    function openInviteModal(defaultTab = 'profile') {
+      modal.classList.remove('hidden');
+      switchTab(defaultTab);
+    }
+
+    function closeInviteModal() {
+      modal.classList.add('hidden');
+    }
+
+    function switchTab(tab) {
+      const profileActive = tab === 'profile';
+
+      tabProfile.className = profileActive
+        ? 'tab-button inline-flex items-center rounded-t-2xl border border-b-0 border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-900'
+        : 'tab-button inline-flex items-center rounded-t-2xl border border-transparent px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-slate-700';
+
+      tabParent.className = !profileActive
+        ? 'tab-button inline-flex items-center rounded-t-2xl border border-b-0 border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-900'
+        : 'tab-button inline-flex items-center rounded-t-2xl border border-transparent px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-slate-700';
+
+      panelProfile.classList.toggle('hidden', !profileActive);
+      panelParent.classList.toggle('hidden', profileActive);
+    }
+
+    function toggleFlexible() {
+      flexible = !flexible;
+
+      flexToggle.setAttribute('aria-pressed', String(flexible));
+      flexToggle.className = flexible
+        ? 'relative mt-1 inline-flex h-6 w-11 items-center rounded-full bg-emerald-500 transition'
+        : 'relative mt-1 inline-flex h-6 w-11 items-center rounded-full bg-slate-300 transition';
+
+      flexToggleDot.className = flexible
+        ? 'inline-block h-4 w-4 translate-x-6 rounded-full bg-white shadow transition'
+        : 'inline-block h-4 w-4 translate-x-1 rounded-full bg-white shadow transition';
+
+      profileLink.textContent = flexible
+        ? 'https://app.coachbetter.com/invite/profile/72fa5d66?flexible=true'
+        : 'https://app.coachbetter.com/invite/profile/72fa5d66?flexible=false';
+    }
+
+    // open by default for demo
+    openInviteModal('profile');
+  </script>
+</body>
+</html>
