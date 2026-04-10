@@ -22,19 +22,7 @@
         </div>
 
         <!-- PAYMENT INTRO -->
-        <section id="paymentIntro" class="rounded-[28px] border border-slate-200 bg-white px-6 py-5 shadow-sm">
-          <div class="flex items-start justify-between gap-4">
-            <div>
-              <div class="text-[14px] font-semibold text-slate-500">Membership – Initial fee</div>
-              <div class="mt-1 text-[22px] font-semibold text-slate-950">EUR 282.00</div>
-              <div class="mt-2 text-sm text-slate-500">Due on <span class="font-semibold text-slate-900">02.04.2026</span></div>
-            </div>
-            <div class="text-right">
-              <div class="text-xs text-slate-400">Invoice</div>
-              <div class="text-sm font-semibold text-slate-900">INV-2026-00124</div>
-            </div>
-          </div>
-        </section>
+        <section id="paymentIntro" class="rounded-[28px] border border-slate-200 bg-white px-6 py-5 shadow-sm"></section>
 
         <section id="paymentSection" class="rounded-[28px] border border-slate-200 bg-white px-8 py-7 shadow-sm">
           <div class="flex items-start justify-between gap-4">
@@ -125,50 +113,8 @@
             <button id="togglePlan" class="rounded-full border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50">Show less</button>
           </div>
 
-          <div class="mt-7 grid grid-cols-1 gap-5 md:grid-cols-3">
-            <div>
-              <div class="text-[14px] font-semibold text-slate-500">Total amount</div>
-              <div class="mt-1 text-[20px] font-semibold text-slate-950">EUR 954.00</div>
-            </div>
-            <div>
-              <div class="text-[14px] font-semibold text-slate-500">Paid amount</div>
-              <div class="mt-1 text-[20px] font-semibold text-slate-950">EUR 0.00</div>
-            </div>
-            <div>
-              <div class="text-[14px] font-semibold text-slate-500">Remaining amount</div>
-              <div class="mt-1 text-[20px] font-semibold text-slate-950">EUR 954.00</div>
-            </div>
-          </div>
-
-          <div id="planTable" class="mt-7 overflow-hidden rounded-[18px] border border-slate-200">
-            <div class="grid grid-cols-[minmax(0,1.6fr)_120px_160px_120px] gap-4 bg-slate-50 px-5 py-4 text-[13px] font-semibold uppercase tracking-wide text-slate-500">
-              <div>Invoice</div>
-              <div>Amount</div>
-              <div>Due date</div>
-              <div>Status</div>
-            </div>
-
-            <div class="grid grid-cols-[minmax(0,1.6fr)_120px_160px_120px] gap-4 border-t border-slate-100 px-5 py-5 text-[15px]">
-              <div class="font-semibold text-slate-900">Membership - Installment: Initial fee (Pay now)</div>
-              <div class="text-slate-800">EUR 282.00</div>
-              <div class="text-slate-800">02.04.2026</div>
-              <div><span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">Open</span></div>
-            </div>
-
-            <div class="grid grid-cols-[minmax(0,1.6fr)_120px_160px_120px] gap-4 border-t border-slate-100 px-5 py-5 text-[15px]">
-              <div class="font-semibold text-slate-900">Membership - Installment: 1/12</div>
-              <div class="text-slate-800">EUR 56.00</div>
-              <div class="text-slate-800">01.05.2026</div>
-              <div><span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">Open</span></div>
-            </div>
-
-            <div class="grid grid-cols-[minmax(0,1.6fr)_120px_160px_120px] gap-4 border-t border-slate-100 px-5 py-5 text-[15px]">
-              <div class="font-semibold text-slate-900">Membership - Installment: 2/12</div>
-              <div class="text-slate-800">EUR 56.00</div>
-              <div class="text-slate-800">01.06.2026</div>
-              <div><span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">Open</span></div>
-            </div>
-          </div>
+          <div id="planTotals" class="mt-7 grid grid-cols-1 gap-5 md:grid-cols-3"></div>
+          <div id="planTable" class="mt-7 overflow-hidden rounded-[18px] border border-slate-200"></div>
         </section>
 
         <section id="confirmationSection" class="hidden rounded-[28px] border border-emerald-200 bg-white px-8 py-7 shadow-sm">
@@ -191,16 +137,17 @@
             </div>
           </div>
 
-          <div class="mt-5 rounded-[18px] bg-slate-50 px-5 py-5">
-            <p class="text-center text-[18px] font-semibold leading-7 text-slate-900">Membership - Installment: Initial fee</p>
-            <p class="mt-4 text-center text-[25px] font-semibold text-slate-950">EUR 282.00</p>
-            <p id="summaryInfo" class="mt-4 text-center text-[14px] text-slate-500">The invoice must be paid by <span class="font-semibold text-slate-900">02.04.2026</span></p>
+          <div class="mt-5">
+            <p class="text-[18px] font-semibold leading-7 text-slate-900" id="summaryProductTitle"></p>
+            <p class="mt-1 text-[15px] text-slate-500" id="summaryProductType"></p>
           </div>
+
+          <div id="summaryCards" class="mt-5 space-y-4"></div>
 
           <div class="mt-5 border-t border-slate-200 pt-5">
             <div class="flex items-center justify-between gap-4 text-[17px] font-semibold text-slate-950">
               <span>Total incl. fees &amp; tax</span>
-              <span>EUR 282.00</span>
+              <span id="summaryGrandTotal">USD 50.00</span>
             </div>
           </div>
 
@@ -215,6 +162,15 @@
           <div class="mt-6 rounded-[16px] border border-slate-200 bg-slate-50 px-4 py-4">
             <div class="text-[13px] font-semibold uppercase tracking-wide text-slate-400">Demo controls</div>
             <div class="mt-3 space-y-3">
+              <div>
+                <div class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Scenario</div>
+                <div class="grid grid-cols-3 gap-2">
+                  <button data-scenario="once" class="scenario-btn rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700">Once-off</button>
+                  <button data-scenario="installment" class="scenario-btn rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700">Installments</button>
+                  <button data-scenario="subscription" class="scenario-btn rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700">Subscription</button>
+                </div>
+              </div>
+
               <div class="grid grid-cols-2 gap-2">
                 <button data-demo="sepa-existing" class="demo-btn rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700">SEPA saved</button>
                 <button data-demo="sepa-none" class="demo-btn rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700">SEPA new</button>
@@ -277,26 +233,194 @@
   </div>
 
   <script>
-    const METHOD_META = {
-      card: {
-        title: 'Online payment (card)',
-        text: 'This payment can be completed online immediately.'
+    const SCENARIOS = {
+      once: {
+        productTitle: 'Onboarding for player',
+        productType: 'Once-off',
+        intro: {
+          person: 'Claudia DFB Test',
+          product: 'Onboarding for player',
+          subtitle: 'One-off payment',
+          payNow: 'USD 50.00',
+          payNowHint: 'incl. 50% discount',
+          dueDate: '06.04.2026',
+          invoiceNo: 'INV-2026-00124',
+          next: null,
+          totalPlan: null
+        },
+        summaryGrandTotal: 'USD 50.00',
+        summaryCards: [
+          {
+            title: 'One-off amount',
+            badge: '50% discount',
+            amount: 'USD 50.00',
+            subtitle: 'Once-off only',
+            detailsLabel: 'Total amount',
+            collapsed: true,
+            details: [
+              ['Product', 'USD 100.00'],
+              ['Discount', '- USD 50.00', 'green']
+            ],
+            totalLine: ['Total amount', 'USD 50.00'],
+            footer: 'Invoice date: 06.04.2026'
+          }
+        ],
+        planTotals: [
+          ['Total amount', 'USD 50.00'],
+          ['Paid amount', 'USD 0.00'],
+          ['Remaining amount', 'USD 50.00']
+        ],
+        planRows: [
+          ['Onboarding for player', 'USD 50.00', '06.04.2026', 'Open']
+        ]
       },
-      sepa: {
-        title: 'SEPA direct debit',
-        text: 'The account will be used or added for this payment.'
+      installment: {
+        productTitle: 'Onboarding for player',
+        productType: 'Installments 8',
+        intro: {
+          person: 'Claudia DFB Test',
+          product: 'Onboarding for player',
+          subtitle: 'Initial payment plus recurring installments',
+          payNow: 'USD 25.73',
+          payNowHint: 'incl. admin fee, tax, fees and discount',
+          dueDate: '06.04.2026',
+          invoiceNo: 'INV-2026-00124',
+          next: {
+            title: 'Then',
+            amount: 'USD 42.00',
+            note: '8 weekly installments from 06.04.2026'
+          },
+          totalPlan: {
+            title: 'Total plan',
+            amount: 'USD 361.73',
+            note: 'Initial amount + recurring installments'
+          }
+        },
+        summaryGrandTotal: 'USD 361.73',
+        summaryCards: [
+          {
+            title: 'Start amount',
+            badge: 'Discount',
+            amount: 'USD 25.73',
+            subtitle: 'First payment and one-off admin fee',
+            detailsLabel: 'Total amount',
+            collapsed: true,
+            details: [
+              ['First payment', 'USD 20.00'],
+              ['Admin fee', 'USD 5.00'],
+              ['Discount', '- USD 2.00', 'green'],
+              ['Tax', 'USD 1.84'],
+              ['Transaction fees', 'USD 0.89']
+            ],
+            totalLine: ['Total amount', 'USD 25.73']
+          },
+          {
+            title: 'Installment plan',
+            badge: 'Discount',
+            amount: 'USD 42.00',
+            amountSuffix: 'per installment',
+            subtitle: '8 weekly installments from 06.04.2026',
+            detailsLabel: 'Total per installment',
+            collapsed: true,
+            details: [
+              ['Amount per installment', 'USD 40.00'],
+              ['Discount', '- USD 3.00', 'green'],
+              ['Tax', 'USD 2.50'],
+              ['Transaction fees', 'USD 2.50']
+            ],
+            totalLine: ['Total per installment', 'USD 42.00']
+          }
+        ],
+        planTotals: [
+          ['Total amount', 'USD 361.73'],
+          ['Paid amount', 'USD 0.00'],
+          ['Remaining amount', 'USD 361.73']
+        ],
+        planRows: [
+          ['Onboarding for player - Initial amount', 'USD 25.73', '06.04.2026', 'Open'],
+          ['Onboarding for player - Installment 1/8', 'USD 42.00', '13.04.2026', 'Open'],
+          ['Onboarding for player - Installment 2/8', 'USD 42.00', '20.04.2026', 'Upcoming']
+        ]
       },
-      bank: {
-        title: 'Bank transfer',
-        text: 'The transfer details will be shown in the next step.'
-      },
-      cash: {
-        title: 'Cash payment',
-        text: 'The invoice remains open until the payment has been confirmed manually.'
+      subscription: {
+        productTitle: 'Onboarding for player',
+        productType: 'Subscription',
+        intro: {
+          person: 'Claudia DFB Test',
+          product: 'Onboarding for player',
+          subtitle: 'One-off start amount plus recurring monthly subscription',
+          payNow: 'USD 25.73',
+          payNowHint: 'incl. start amount, admin fee, tax and discount',
+          dueDate: '06.04.2026',
+          invoiceNo: 'INV-2026-00124',
+          next: {
+            title: 'Then',
+            amount: 'USD 42.00',
+            note: 'Monthly from 06.05.2026'
+          },
+          totalPlan: {
+            title: 'Billing cycle',
+            amount: 'Monthly',
+            note: 'Recurring until ended'
+          }
+        },
+        summaryGrandTotal: 'USD 25.73 now',
+        summaryCards: [
+          {
+            title: 'Start amount',
+            badge: 'Discount',
+            amount: 'USD 25.73',
+            subtitle: 'First payment and one-off admin fee',
+            detailsLabel: 'Total amount',
+            collapsed: true,
+            details: [
+              ['First payment', 'USD 20.00'],
+              ['Admin fee', 'USD 5.00'],
+              ['Discount', '- USD 2.00', 'green'],
+              ['Tax', 'USD 1.84'],
+              ['Transaction fees', 'USD 0.89']
+            ],
+            totalLine: ['Total amount', 'USD 25.73']
+          },
+          {
+            title: 'Recurring payment',
+            badge: 'Discount',
+            amount: 'USD 42.00',
+            amountSuffix: 'per month',
+            subtitle: 'Monthly from 06.05.2026',
+            detailsLabel: 'Total per month',
+            collapsed: true,
+            details: [
+              ['Base amount', 'USD 40.00'],
+              ['Discount', '- USD 3.00', 'green'],
+              ['Tax', 'USD 2.50'],
+              ['Transaction fees', 'USD 2.50']
+            ],
+            totalLine: ['Total per month', 'USD 42.00']
+          }
+        ],
+        planTotals: [
+          ['Current amount', 'USD 25.73'],
+          ['Paid amount', 'USD 0.00'],
+          ['Next recurring amount', 'USD 42.00']
+        ],
+        planRows: [
+          ['Onboarding for player - Start amount', 'USD 25.73', '06.04.2026', 'Open'],
+          ['Onboarding for player - Subscription May 2026', 'USD 42.00', '06.05.2026', 'Upcoming'],
+          ['Onboarding for player - Subscription Jun 2026', 'USD 42.00', '06.06.2026', 'Upcoming']
+        ]
       }
     };
 
+    const METHOD_META = {
+      card: { title: 'Online payment (card)', text: 'This payment can be completed online immediately.' },
+      sepa: { title: 'SEPA direct debit', text: 'The account will be used or added for this payment.' },
+      bank: { title: 'Bank transfer', text: 'The transfer details will be shown in the next step.' },
+      cash: { title: 'Cash payment', text: 'The invoice remains open until the payment has been confirmed manually.' }
+    };
+
     const state = {
+      scenario: 'installment',
       method: 'sepa',
       sepaMode: 'existing',
       storedIbanMasked: '•••• 3000',
@@ -311,10 +435,16 @@
     const leftColumn = document.getElementById('leftColumn');
     const layoutGrid = document.getElementById('layoutGrid');
     const summaryAside = document.getElementById('summaryAside');
+    const paymentIntro = document.getElementById('paymentIntro');
+    const summaryProductTitle = document.getElementById('summaryProductTitle');
+    const summaryProductType = document.getElementById('summaryProductType');
+    const summaryCards = document.getElementById('summaryCards');
+    const summaryGrandTotal = document.getElementById('summaryGrandTotal');
     const sepaInlineArea = document.getElementById('sepaInlineArea');
     const mainCta = document.getElementById('mainCta');
     const summaryInfo = document.getElementById('summaryInfo');
     const summaryHelper = document.getElementById('summaryHelper');
+    const planTotals = document.getElementById('planTotals');
     const planTable = document.getElementById('planTable');
     const togglePlan = document.getElementById('togglePlan');
     const modal = document.getElementById('modal');
@@ -330,6 +460,10 @@
     const paymentSectionTitle = document.getElementById('paymentSectionTitle');
     const paymentSectionText = document.getElementById('paymentSectionText');
 
+    function currentScenario() {
+      return SCENARIOS[state.scenario];
+    }
+
     function maskIban(iban) {
       const clean = (iban || '').replace(/\s+/g, '');
       return '•••• ' + (clean.slice(-4) || '0000');
@@ -344,6 +478,138 @@
 
     function getFirstAvailableMethod(preferred = 'sepa') {
       return state.availableMethods.includes(preferred) ? preferred : state.availableMethods[0] || 'card';
+    }
+
+    function renderPaymentIntro() {
+      const intro = currentScenario().intro;
+      const nextCard = intro.next
+        ? `<div class="rounded-[16px] bg-white px-4 py-3 ring-1 ring-slate-200">
+             <div class="text-[12px] font-semibold uppercase tracking-wide text-slate-400">${intro.next.title}</div>
+             <div class="mt-1 text-[16px] font-semibold text-slate-950">${intro.next.amount}</div>
+             <div class="mt-1 text-sm text-slate-500">${intro.next.note}</div>
+           </div>`
+        : '';
+      const totalCard = intro.totalPlan
+        ? `<div class="rounded-[16px] bg-white px-4 py-3 ring-1 ring-slate-200">
+             <div class="text-[12px] font-semibold uppercase tracking-wide text-slate-400">${intro.totalPlan.title}</div>
+             <div class="mt-1 text-[16px] font-semibold text-slate-950">${intro.totalPlan.amount}</div>
+             <div class="mt-1 text-sm text-slate-500">${intro.totalPlan.note}</div>
+           </div>`
+        : '';
+
+      paymentIntro.innerHTML = `
+        <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div class="min-w-0">
+            <div class="text-[13px] font-semibold uppercase tracking-wide text-slate-400">For</div>
+            <div class="mt-1 text-[18px] font-semibold text-slate-950">${intro.person}</div>
+
+            <div class="mt-5 text-[13px] font-semibold uppercase tracking-wide text-slate-400">Product</div>
+            <div class="mt-1 text-[20px] font-semibold text-slate-950">${intro.product}</div>
+            <div class="mt-1 text-sm text-slate-500">${intro.subtitle}</div>
+          </div>
+
+          <div class="w-full max-w-[440px] rounded-[22px] bg-slate-50 px-5 py-5 ring-1 ring-slate-200">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <div class="text-[13px] font-semibold uppercase tracking-wide text-slate-400">Pay now</div>
+                <div class="mt-1 text-[28px] font-semibold leading-none text-slate-950">${intro.payNow}</div>
+                <div class="mt-2 text-sm text-slate-500">${intro.payNowHint}</div>
+                <div class="mt-2 text-sm text-slate-500">Due on <span class="font-semibold text-slate-900">${intro.dueDate}</span></div>
+              </div>
+              <div class="text-right">
+                <div class="text-[13px] font-semibold uppercase tracking-wide text-slate-400">Invoice</div>
+                <div class="mt-1 text-sm font-semibold text-slate-900">${intro.invoiceNo}</div>
+              </div>
+            </div>
+
+            ${(nextCard || totalCard) ? `<div class="mt-5 grid gap-3 sm:grid-cols-2">${nextCard}${totalCard}</div>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSummary() {
+      const scenario = currentScenario();
+      summaryProductTitle.textContent = scenario.productTitle;
+      summaryProductType.textContent = scenario.productType;
+      summaryGrandTotal.textContent = scenario.summaryGrandTotal;
+
+      summaryCards.innerHTML = scenario.summaryCards.map((card, index) => `
+        <div class="rounded-[18px] border border-slate-200 bg-slate-50 px-4 py-4">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <div class="text-[16px] font-semibold text-slate-900">${card.title}</div>
+                ${card.badge ? `<span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-700">${card.badge}</span>` : ''}
+              </div>
+              <div class="mt-1 text-[15px] text-slate-500">${card.subtitle}</div>
+            </div>
+            <div class="text-right">
+              <div class="text-[18px] font-semibold leading-6 text-slate-950">${card.amount}</div>
+              ${card.amountSuffix ? `<div class="mt-1 text-sm text-slate-500">${card.amountSuffix}</div>` : ''}
+            </div>
+          </div>
+
+          <div class="mt-4 rounded-[16px] bg-white px-4 py-3 ring-1 ring-slate-200">
+            <button class="summary-toggle flex w-full items-center justify-between gap-4 text-left" data-index="${index}">
+              <span class="text-[15px] font-semibold text-slate-700">${card.detailsLabel}</span>
+              <span class="text-sm font-medium text-slate-500">${card.collapsed ? 'Show details' : 'Hide details'}</span>
+            </button>
+
+            <div class="summary-details ${card.collapsed ? 'hidden' : ''} mt-4 space-y-3 border-t border-slate-200 pt-4" data-index="${index}">
+              ${card.details.map(([label, value, color]) => `
+                <div class="flex items-center justify-between gap-4 text-[15px] ${color === 'green' ? 'text-emerald-700' : 'text-slate-700'}">
+                  <span>${label}</span>
+                  <span class="font-medium">${value}</span>
+                </div>
+              `).join('')}
+              <div class="flex items-center justify-between gap-4 border-t border-slate-200 pt-4 text-[15px] font-semibold text-slate-950">
+                <span>${card.totalLine[0]}</span>
+                <span>${card.totalLine[1]}</span>
+              </div>
+            </div>
+          </div>
+
+          ${card.footer ? `<div class="mt-4 text-sm text-slate-500">${card.footer}</div>` : ''}
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.summary-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const index = Number(btn.dataset.index);
+          const card = scenario.summaryCards[index];
+          card.collapsed = !card.collapsed;
+          renderSummary();
+        });
+      });
+    }
+
+    function renderPlan() {
+      const scenario = currentScenario();
+      planTotals.innerHTML = scenario.planTotals.map(([label, value]) => `
+        <div>
+          <div class="text-[14px] font-semibold text-slate-500">${label}</div>
+          <div class="mt-1 text-[20px] font-semibold text-slate-950">${value}</div>
+        </div>
+      `).join('');
+
+      planTable.innerHTML = `
+        <div class="grid grid-cols-[minmax(0,1.6fr)_120px_160px_120px] gap-4 bg-slate-50 px-5 py-4 text-[13px] font-semibold uppercase tracking-wide text-slate-500">
+          <div>Invoice</div>
+          <div>Amount</div>
+          <div>Due date</div>
+          <div>Status</div>
+        </div>
+        ${scenario.planRows.map(([name, amount, due, status]) => `
+          <div class="grid grid-cols-[minmax(0,1.6fr)_120px_160px_120px] gap-4 border-t border-slate-100 px-5 py-5 text-[15px]">
+            <div class="font-semibold text-slate-900">${name}</div>
+            <div class="text-slate-800">${amount}</div>
+            <div class="text-slate-800">${due}</div>
+            <div><span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-600">${status}</span></div>
+          </div>
+        `).join('')}
+      `;
+      planTable.classList.toggle('hidden', !state.planExpanded);
     }
 
     function renderSepaInline() {
@@ -399,10 +665,12 @@
     }
 
     function updateSummary() {
+      const scenario = currentScenario();
+      const dueDate = scenario.intro.dueDate;
       const summaryByMethod = {
         sepa: {
           cta: 'Confirm direct debit',
-          info: 'The invoice must be paid by <span class="font-semibold text-slate-900">02.04.2026</span>',
+          info: `The invoice must be paid by <span class="font-semibold text-slate-900">${dueDate}</span>`,
           helper: state.sepaMode === 'none'
             ? 'Add an account first before you confirm the direct debit.'
             : state.sepaMode === 'entered'
@@ -411,17 +679,17 @@
         },
         card: {
           cta: 'Pay now',
-          info: 'The invoice must be paid by <span class="font-semibold text-slate-900">02.04.2026</span>',
+          info: `The invoice must be paid by <span class="font-semibold text-slate-900">${dueDate}</span>`,
           helper: 'Your card details will be processed securely and may be saved for future payments.'
         },
         bank: {
           cta: 'Confirm bank transfer',
-          info: 'Please transfer the amount by <span class="font-semibold text-slate-900">02.04.2026</span>',
+          info: `Please transfer the amount by <span class="font-semibold text-slate-900">${dueDate}</span>`,
           helper: 'This selection applies only to this invoice and does not automatically change the preferred payment method.'
         },
         cash: {
           cta: 'Confirm cash payment',
-          info: 'The invoice must be paid by <span class="font-semibold text-slate-900">02.04.2026</span>',
+          info: `The invoice must be paid by <span class="font-semibold text-slate-900">${dueDate}</span>`,
           helper: 'The payment remains open until it has been confirmed manually by the club.'
         }
       };
@@ -512,6 +780,10 @@
     }
 
     function renderConfirmation() {
+      const scenario = currentScenario();
+      const payNow = scenario.intro.payNow;
+      const dueDate = scenario.intro.dueDate;
+      const invoiceNo = scenario.intro.invoiceNo;
       const confirmations = {
         sepa: () => {
           const iban = state.sepaMode === 'existing' ? state.storedIbanMasked : maskIban(state.currentIban);
@@ -526,12 +798,13 @@
                 <p class="mt-2 text-[16px] text-slate-500">The amount will be collected by SEPA direct debit. No further action is required.</p>
               </div>
             </div>
-            <div class="mt-6 grid gap-4 md:grid-cols-3">
-              <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Amount</div><div class="mt-1 text-[18px] font-semibold text-slate-950">EUR 282.00</div></div>
+            <div class="mt-6 grid gap-4 md:grid-cols-4">
+              <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Amount</div><div class="mt-1 text-[18px] font-semibold text-slate-950">${payNow}</div></div>
+              <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Due by</div><div class="mt-1 text-[18px] font-semibold text-slate-950">${dueDate}</div></div>
               <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">IBAN</div><div class="mt-1 text-[18px] font-semibold text-slate-950">${iban}</div></div>
               <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Account holder</div><div class="mt-1 text-[18px] font-semibold text-slate-950">${holder}</div></div>
             </div>
-            <div class="mt-5 rounded-[16px] border border-emerald-200 bg-emerald-50 px-4 py-4 text-[15px] text-emerald-800">The collection applies to this open invoice. The invoice remains visible until the payment has been processed.</div>
+            <div class="mt-5 rounded-[16px] border border-emerald-200 bg-emerald-50 px-4 py-4 text-[15px] text-emerald-800">The collection applies to invoice ${invoiceNo}. The invoice remains visible until the payment has been processed.</div>
             <div class="mt-6 flex flex-wrap gap-3">
               <button id="backFromConfirmation" class="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">Back</button>
               <button class="rounded-full bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white">Close</button>
@@ -553,9 +826,9 @@
               <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Recipient</div><div class="text-sm font-semibold text-slate-900">Club Dashboard Demoooo</div></div>
               <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">IBAN</div><div class="text-sm font-semibold text-slate-900">CH93 0076 2011 6238 5295 7</div></div>
               <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">BIC</div><div class="text-sm font-semibold text-slate-900">POFICHBEXXX</div></div>
-              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Reference</div><div class="text-sm font-semibold text-slate-900">INV-2026-00124</div></div>
-              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Amount</div><div class="text-sm font-semibold text-slate-900">EUR 282.00</div></div>
-              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Due by</div><div class="text-sm font-semibold text-slate-900">02.04.2026</div></div>
+              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Reference</div><div class="text-sm font-semibold text-slate-900">${invoiceNo}</div></div>
+              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Amount</div><div class="text-sm font-semibold text-slate-900">${payNow}</div></div>
+              <div class="grid grid-cols-[180px_1fr] gap-4 px-5 py-4"><div class="text-sm text-slate-500">Due by</div><div class="text-sm font-semibold text-slate-900">${dueDate}</div></div>
             </div>
           </div>
           <div class="mt-5 rounded-[16px] border border-amber-200 bg-amber-50 px-4 py-4 text-[15px] text-amber-800">Important: Please include the reference exactly as shown so the payment can be matched correctly.</div>
@@ -575,9 +848,9 @@
             </div>
           </div>
           <div class="mt-6 grid gap-4 md:grid-cols-3">
-            <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Amount</div><div class="mt-1 text-[18px] font-semibold text-slate-950">EUR 282.00</div></div>
-            <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Due by</div><div class="mt-1 text-[18px] font-semibold text-slate-950">02.04.2026</div></div>
-            <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Invoice</div><div class="mt-1 text-[18px] font-semibold text-slate-950">INV-2026-00124</div></div>
+            <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Amount</div><div class="mt-1 text-[18px] font-semibold text-slate-950">${payNow}</div></div>
+            <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Due by</div><div class="mt-1 text-[18px] font-semibold text-slate-950">${dueDate}</div></div>
+            <div class="rounded-[16px] bg-slate-50 px-4 py-4"><div class="text-xs font-semibold uppercase tracking-wide text-slate-400">Invoice</div><div class="mt-1 text-[18px] font-semibold text-slate-950">${invoiceNo}</div></div>
           </div>
           <div class="mt-5 rounded-[16px] border border-slate-200 bg-slate-50 px-4 py-4 text-[15px] text-slate-700">Please bring this invoice or the invoice number with you when paying.</div>
           <div class="mt-6 flex flex-wrap gap-3">
@@ -637,6 +910,9 @@
       if (!state.availableMethods.includes(state.method)) {
         state.method = getFirstAvailableMethod();
       }
+      renderPaymentIntro();
+      renderSummary();
+      renderPlan();
       updateMethodAvailabilityUi();
       updateMethodUi();
       updateSummary();
@@ -668,6 +944,14 @@
 
     document.querySelectorAll('.demo-btn').forEach(btn => {
       btn.addEventListener('click', () => setDemo(btn.dataset.demo));
+    });
+
+    document.querySelectorAll('.scenario-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        state.scenario = btn.dataset.scenario;
+        resetConfirmation();
+        refreshUi();
+      });
     });
 
     document.querySelectorAll('.availability-toggle').forEach(toggle => {
