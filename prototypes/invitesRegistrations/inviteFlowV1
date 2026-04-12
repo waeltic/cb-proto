@@ -1,1 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invite Flow Clickable Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 text-slate-900 font-sans">
+  <div class="min-h-screen">
+    <div class="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200">
+      <div>
+        <h1 class="text-lg font-semibold">Invite flow clickable prototype</h1>
+        <p class="text-sm text-slate-500">Prototype for self / parent access, data confirmation, legal step, and completion.</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="resetFlow()" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Reset</button>
+      </div>
+    </div>
 
+    <!-- SCREEN 1 -->
+    <section id="screen-start" class="screen min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-lg w-full">
+          <div class="mb-10 flex items-center justify-between">
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+
+          <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">
+            Invitation from Sportfreunde Burkhardsfelden e.V.
+          </div>
+
+          <h2 class="mt-6 text-4xl font-semibold leading-tight text-slate-900">
+            Join Leana Winter’s club access
+          </h2>
+
+          <p class="mt-5 text-base leading-7 text-slate-600">
+            Sportfreunde Burkhardsfelden e.V. invited you to continue the access setup for <span class="font-medium text-slate-800">Leana Winter</span>.
+          </p>
+
+          <p class="mt-3 text-sm leading-6 text-slate-500">
+            Sign in with your club account or continue with email. We’ll guide you through the remaining steps afterwards.
+          </p>
+
+          <div class="mt-8 space-y-4">
+            <button onclick="go('screen-auth')" class="w-full rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white hover:bg-emerald-700">
+              Continue
+            </button>
+          </div>
+
+          <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
+            <div class="text-sm font-medium text-slate-800">What happens next?</div>
+            <div class="mt-2 text-sm leading-6 text-slate-600">
+              First you sign in or create an account. After that, we’ll confirm whether the access should be connected directly to Leana Winter or to a parent / guardian.
+            </div>
+          </div>
+
+          <div class="mt-8 text-xs leading-5 text-slate-400">
+            Not the right person or having trouble signing in? Please contact Sportfreunde Burkhardsfelden e.V.
+          </div>
+        </div>
+      </div>
+
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-12">
+          <div class="w-full max-w-lg rounded-[2rem] border border-white/10 bg-white/10 p-8 backdrop-blur-sm">
+            <div class="aspect-[4/3] rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-slate-300/10 to-white/5 flex items-center justify-center">
+              <div class="h-40 w-40 rounded-[2rem] bg-white/90 flex items-center justify-center shadow-2xl">
+                <div class="text-5xl font-bold tracking-tight text-red-600">SFB</div>
+              </div>
+            </div>
+            <div class="mt-6 text-center text-sm text-white/80">
+              Secure access provided through Coachbetter.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2 AUTH -->
+    <section id="screen-auth" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-lg w-full">
+          <div class="mb-10 flex items-center justify-between">
+            <button onclick="go('screen-start')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+
+          <div class="text-xs font-medium uppercase tracking-wide text-slate-400">Sign in</div>
+          <h2 class="mt-3 text-4xl font-semibold leading-tight text-slate-900">
+            Continue your access setup
+          </h2>
+          <p class="mt-4 text-sm leading-6 text-slate-600">
+            Sign in with your club account or continue with email to access Leana Winter’s profile.
+          </p>
+
+          <div class="mt-8 space-y-4">
+            <button onclick="go('screen-sso')" class="w-full rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white hover:bg-emerald-700">
+              Continue with SFB account
+            </button>
+
+            <div class="flex items-center gap-3">
+              <div class="h-px flex-1 bg-slate-200"></div>
+              <div class="text-xs uppercase tracking-wide text-slate-400">or</div>
+              <div class="h-px flex-1 bg-slate-200"></div>
+            </div>
+
+            <div>
+              <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Continue with email</label>
+              <input id="emailInput" value="claudia+5555@pixel-plus.ch" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 w-full" />
+              <div class="mt-3 grid grid-cols-2 gap-3">
+                <button onclick="goToEmail('existing')" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                  Existing user
+                </button>
+                <button onclick="goToEmail('new')" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50">
+                  New user
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-600">
+            In production this screen would show only the options that are really available for this invite.
+          </div>
+        </div>
+      </div>
+
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2A SSO -->
+    <section id="screen-sso" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-lg w-full">
+          <div class="mb-10 flex items-center justify-between">
+            <button onclick="go('screen-auth')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+          <div class="text-xs font-medium uppercase tracking-wide text-slate-400">Club sign in</div>
+          <h3 class="mt-3 text-4xl font-semibold leading-tight">Welcome back</h3>
+          <p class="mt-4 text-sm leading-6 text-slate-600">Use your SFB account to continue the access setup for Leana Winter.</p>
+          <button onclick="go('screen-access-choice')" class="mt-8 w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white hover:bg-emerald-700">Continue with SFB account</button>
+        </div>
+      </div>
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2B EXISTING EMAIL -->
+    <section id="screen-email-existing" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-lg w-full">
+          <div class="mb-10 flex items-center justify-between">
+            <button onclick="go('screen-auth')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+          <div class="text-xs font-medium uppercase tracking-wide text-slate-400">Email sign in</div>
+          <h3 class="mt-3 text-4xl font-semibold leading-tight">Welcome back</h3>
+          <p class="mt-4 text-sm leading-6 text-slate-600">Enter your password to continue the access setup for Leana Winter.</p>
+          <div id="existingEmailLabel" class="mt-6 rounded-xl border px-4 py-3 text-sm text-slate-700 bg-slate-50"></div>
+          <input type="password" placeholder="Password" class="mt-4 w-full rounded-xl border px-4 py-3 text-sm" />
+          <button onclick="go('screen-access-choice')" class="mt-5 w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white hover:bg-emerald-700">Log in</button>
+          <button class="mt-4 text-sm text-red-500 hover:underline">Forgot your password?</button>
+        </div>
+      </div>
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2C NEW EMAIL -->
+    <section id="screen-email-new" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-lg w-full">
+          <div class="mb-10 flex items-center justify-between">
+            <button onclick="go('screen-auth')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+          <div class="text-xs font-medium uppercase tracking-wide text-slate-400">Create account</div>
+          <h3 class="mt-3 text-4xl font-semibold leading-tight">Set up your account</h3>
+          <p class="mt-4 text-sm leading-6 text-slate-600">Create your account to continue the access setup for Leana Winter.</p>
+          <div id="newEmailLabel" class="mt-6 rounded-xl border px-4 py-3 text-sm text-slate-700 bg-slate-50"></div>
+          <div class="mt-4 grid grid-cols-2 gap-3">
+            <input type="text" placeholder="First name" class="rounded-xl border px-3 py-3 text-sm" />
+            <input type="text" placeholder="Last name" class="rounded-xl border px-3 py-3 text-sm" />
+          </div>
+          <input type="password" placeholder="Password" class="mt-4 w-full rounded-xl border px-4 py-3 text-sm" />
+          <button onclick="go('screen-access-choice')" class="mt-5 w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white hover:bg-emerald-700">Accept and continue</button>
+          <p class="mt-4 text-xs text-slate-400">By creating an account, you agree to our Terms & Privacy Policy.</p>
+        </div>
+      </div>
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3 ACCESS CHOICE -->
+    <section id="screen-access-choice" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-xl w-full">
+          <div class="mb-8 flex items-center justify-between">
+            <button onclick="go('screen-auth')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+
+          <div class="mb-8 flex items-center gap-3 text-xs text-slate-500">
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div>
+            <div class="font-medium text-emerald-700">Access type</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-500">2</div>
+            <div>Review data</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-500">3</div>
+            <div>Complete</div>
+          </div>
+
+          <div class="text-xs font-medium uppercase tracking-wide text-slate-400">Access setup</div>
+          <h2 class="mt-3 text-4xl font-semibold leading-tight text-slate-900">How should this access be connected?</h2>
+          <p class="mt-4 max-w-lg text-sm leading-6 text-slate-600">Choose whether this account should be linked directly to Leana Winter or to a parent / guardian with access to the profile.</p>
+
+          <div class="mt-8 space-y-3">
+            <button onclick="setPath('self'); go('screen-player-form')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left hover:border-slate-300 hover:bg-slate-50">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <div class="text-lg font-medium">Self access</div>
+                  <div class="mt-1 text-sm text-slate-500">This account belongs to Leana Winter directly.</div>
+                </div>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">Direct link</span>
+              </div>
+            </button>
+
+            <button onclick="setPath('parent'); go('screen-parent-form')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left hover:border-slate-300 hover:bg-slate-50">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <div class="text-lg font-medium">Parent / guardian access</div>
+                  <div class="mt-1 text-sm text-slate-500">This account belongs to a parent or guardian who should be linked to Leana Winter.</div>
+                </div>
+                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">Linked access</span>
+              </div>
+            </button>
+
+            <button onclick="go('screen-already-linked')" class="w-full rounded-2xl border border-amber-200 bg-amber-50 p-5 text-left hover:bg-amber-100">
+              <div class="text-lg font-medium text-amber-900">Already connected</div>
+              <div class="mt-1 text-sm text-amber-800">Use this case when the signed-in account is already linked to this profile and should continue directly.</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-12">
+          <div class="rounded-[2rem] bg-white/90 p-8 shadow-2xl">
+            <div class="text-6xl font-bold tracking-tight text-red-600">SFB</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 3B ALREADY LINKED -->
+    <section id="screen-already-linked" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-xl w-full">
+          <div class="mb-8 flex items-center justify-between">
+            <button onclick="go('screen-access-choice')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+
+          <div class="mb-8 flex items-center gap-3 text-xs text-slate-500">
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div>
+            <div class="font-medium text-emerald-700">Access type</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">2</div>
+            <div class="font-medium text-emerald-700">Review data</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-500">3</div>
+            <div>Complete</div>
+          </div>
+
+          <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">Access already connected</div>
+          <h2 class="mt-6 text-4xl font-semibold leading-tight text-slate-900">This account is already linked</h2>
+          <p class="mt-4 text-sm leading-6 text-slate-600">The signed-in account is already connected to Leana Winter’s profile. You can continue directly without setting up the access again.</p>
+
+          <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-3 text-sm text-slate-700">
+            <div><span class="font-medium">Connected as:</span> Leana Winter</div>
+            <div><span class="font-medium">Account:</span> claudia+5555@pixel-plus.ch</div>
+            <div><span class="font-medium">Club:</span> Sportfreunde Burkhardsfelden e.V.</div>
+          </div>
+
+          <div class="mt-8 flex gap-3">
+            <button onclick="go('screen-access-choice')" class="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700">Back</button>
+            <button onclick="go('screen-end-linked')" class="flex-1 rounded-full bg-emerald-600 py-3 text-sm font-medium text-white">Continue</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.18),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- SCREEN 4 PLAYER FORM -->
+    <section id="screen-player-form" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-xl w-full">
+          <div class="mb-8 flex items-center justify-between">
+            <button onclick="go('screen-access-choice')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+          <div class="mb-6 flex items-center gap-3 text-xs text-slate-500">
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div><div class="font-medium text-emerald-700">Access type</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">2</div><div class="font-medium text-emerald-700">Review data</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-500">3</div><div>Complete</div>
+          </div>
+          <h3 class="text-4xl font-semibold leading-tight">Confirm player information</h3>
+          <p class="mt-4 text-sm leading-6 text-slate-600">Review and update the player details before continuing.</p>
+
+          <div class="mt-8 space-y-5">
+            <div>
+              <label class="mb-2 block text-sm font-medium">Player name</label>
+              <div class="grid grid-cols-2 gap-3">
+                <input value="Leana" class="rounded-xl border px-4 py-3 text-sm" />
+                <input value="Winter" class="rounded-xl border px-4 py-3 text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium">Birthdate & gender</label>
+              <div class="grid grid-cols-2 gap-3">
+                <select class="rounded-xl border px-4 py-3 text-sm"><option>Female</option><option>Male</option></select>
+                <input value="2014-10-11" class="rounded-xl border px-4 py-3 text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium">Address</label>
+              <input value="Teststrasse 1" class="rounded-xl border px-4 py-3 text-sm w-full" />
+              <div class="grid grid-cols-3 gap-3 mt-3">
+                <input value="8888" class="rounded-xl border px-4 py-3 text-sm" />
+                <input value="London" class="rounded-xl border px-4 py-3 text-sm" />
+                <input value="United Kingdom" class="rounded-xl border px-4 py-3 text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium">Contact</label>
+              <div class="grid grid-cols-2 gap-3">
+                <input value="test@test.ch" class="rounded-xl border px-4 py-3 text-sm" />
+                <input placeholder="Phone number" class="rounded-xl border px-4 py-3 text-sm" />
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 flex gap-3">
+            <button onclick="go('screen-access-choice')" class="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700">Back</button>
+            <button onclick="go('screen-legal-self')" class="flex-1 rounded-full bg-emerald-600 py-3 text-sm font-medium text-white">Next</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- SCREEN 4B PARENT FORM -->
+    <section id="screen-parent-form" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-xl w-full">
+          <div class="mb-8 flex items-center justify-between">
+            <button onclick="go('screen-access-choice')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+          <div class="mb-6 flex items-center gap-3 text-xs text-slate-500">
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div><div class="font-medium text-emerald-700">Access type</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">2</div><div class="font-medium text-emerald-700">Review data</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-500">3</div><div>Complete</div>
+          </div>
+          <h3 class="text-4xl font-semibold leading-tight">Confirm parent / guardian information</h3>
+          <p class="mt-4 text-sm leading-6 text-slate-600">Review the parent details and the linked player information before continuing.</p>
+
+          <div class="mt-8 space-y-5">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+              <div class="text-sm font-medium">Linked player</div>
+              <div class="mt-1 text-sm text-slate-700">Leana Winter</div>
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium">Parent / guardian name</label>
+              <div class="grid grid-cols-2 gap-3">
+                <input value="Claudia" class="rounded-xl border px-4 py-3 text-sm" />
+                <input value="Neu" class="rounded-xl border px-4 py-3 text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium">Relationship</label>
+              <select class="rounded-xl border px-4 py-3 text-sm w-full">
+                <option>Mother</option>
+                <option>Father</option>
+                <option>Guardian</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium">Contact</label>
+              <div class="grid grid-cols-2 gap-3">
+                <input value="claudia+5555@pixel-plus.ch" class="rounded-xl border px-4 py-3 text-sm" />
+                <input placeholder="Phone number" class="rounded-xl border px-4 py-3 text-sm" />
+              </div>
+            </div>
+            <div>
+              <label class="mb-2 block text-sm font-medium">Address</label>
+              <input value="Teststrasse 1" class="rounded-xl border px-4 py-3 text-sm w-full" />
+            </div>
+          </div>
+          <div class="mt-6 flex gap-3">
+            <button onclick="go('screen-access-choice')" class="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700">Back</button>
+            <button onclick="go('screen-legal-parent')" class="flex-1 rounded-full bg-emerald-600 py-3 text-sm font-medium text-white">Next</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- SCREEN 5 LEGAL SELF -->
+    <section id="screen-legal-self" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-xl w-full">
+          <div class="mb-8 flex items-center justify-between">
+            <button onclick="go('screen-player-form')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+          <div class="mb-6 flex items-center gap-3 text-xs text-slate-500">
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div><div class="font-medium text-emerald-700">Access type</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">2</div><div class="font-medium text-emerald-700">Review data</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">3</div><div class="font-medium text-emerald-700">Complete</div>
+          </div>
+          <h3 class="text-4xl font-semibold leading-tight">Confirm access</h3>
+          <p class="mt-4 text-sm leading-6 text-slate-600">Please confirm the information below before completing the access setup.</p>
+          <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-3 text-sm">
+            <div><span class="font-medium">Access type:</span> Self access</div>
+            <div><span class="font-medium">Profile:</span> Leana Winter</div>
+            <div><span class="font-medium">Account:</span> claudia+5555@pixel-plus.ch</div>
+          </div>
+          <div class="mt-6 rounded-2xl border border-slate-200 p-5">
+            <label class="flex items-start gap-3 text-sm text-slate-700">
+              <input type="checkbox" class="mt-1" checked />
+              <span>I confirm that the information is correct and I want to connect this account directly to Leana Winter’s profile.</span>
+            </label>
+          </div>
+          <div class="mt-6 flex gap-3">
+            <button onclick="go('screen-player-form')" class="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700">Back</button>
+            <button onclick="go('screen-end-self')" class="flex-1 rounded-full bg-emerald-600 py-3 text-sm font-medium text-white">Complete</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- SCREEN 5 LEGAL PARENT -->
+    <section id="screen-legal-parent" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-xl w-full">
+          <div class="mb-8 flex items-center justify-between">
+            <button onclick="go('screen-parent-form')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
+            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
+            <div class="text-xs text-slate-500">EN · Help</div>
+          </div>
+          <div class="mb-6 flex items-center gap-3 text-xs text-slate-500">
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div><div class="font-medium text-emerald-700">Access type</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">2</div><div class="font-medium text-emerald-700">Review data</div>
+            <div class="h-px flex-1 bg-slate-200"></div>
+            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">3</div><div class="font-medium text-emerald-700">Complete</div>
+          </div>
+          <h3 class="text-4xl font-semibold leading-tight">Confirm access</h3>
+          <p class="mt-4 text-sm leading-6 text-slate-600">Please confirm the relationship and the linked profile before completing the access setup.</p>
+          <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-3 text-sm">
+            <div><span class="font-medium">Access type:</span> Parent / guardian access</div>
+            <div><span class="font-medium">Linked player:</span> Leana Winter</div>
+            <div><span class="font-medium">Relationship:</span> Mother</div>
+            <div><span class="font-medium">Account:</span> claudia+5555@pixel-plus.ch</div>
+          </div>
+          <div class="mt-6 space-y-3 rounded-2xl border border-slate-200 p-5">
+            <label class="flex items-start gap-3 text-sm text-slate-700">
+              <input type="checkbox" class="mt-1" checked />
+              <span>I confirm that I am authorised to access and manage this player profile.</span>
+            </label>
+            <label class="flex items-start gap-3 text-sm text-slate-700">
+              <input type="checkbox" class="mt-1" checked />
+              <span>I confirm that the relationship to Leana Winter is correct.</span>
+            </label>
+          </div>
+          <div class="mt-6 flex gap-3">
+            <button onclick="go('screen-parent-form')" class="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700">Back</button>
+            <button onclick="go('screen-end-parent')" class="flex-1 rounded-full bg-emerald-600 py-3 text-sm font-medium text-white">Complete</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- END SELF -->
+    <section id="screen-end-self" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-xl w-full text-center lg:text-left">
+          <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">Completed successfully</div>
+          <h2 class="mt-6 text-4xl font-semibold leading-tight text-slate-900">Welcome to the club</h2>
+          <p class="mt-4 text-sm leading-6 text-slate-600">Your account is now connected directly to Leana Winter’s profile. You can continue in the web version or download the app.</p>
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button class="rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white">Open web version</button>
+            <button class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700">Download app</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.18),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- END PARENT -->
+    <section id="screen-end-parent" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-xl w-full text-center lg:text-left">
+          <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">Completed successfully</div>
+          <h2 class="mt-6 text-4xl font-semibold leading-tight text-slate-900">Parent access is ready</h2>
+          <p class="mt-4 text-sm leading-6 text-slate-600">Your account is now linked as a parent / guardian for Leana Winter. You can continue in the web version or download the app.</p>
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button class="rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white">Open web version</button>
+            <button class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700">Download app</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.18),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+
+    <!-- END LINKED -->
+    <section id="screen-end-linked" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
+      <div class="flex items-center justify-center p-10 lg:p-14">
+        <div class="max-w-xl w-full text-center lg:text-left">
+          <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">Already connected</div>
+          <h2 class="mt-6 text-4xl font-semibold leading-tight text-slate-900">You’re ready to continue</h2>
+          <p class="mt-4 text-sm leading-6 text-slate-600">This account was already connected to Leana Winter’s profile. You can continue directly to the web version or open the app.</p>
+          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button class="rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white">Open web version</button>
+            <button class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700">Open app</button>
+          </div>
+        </div>
+      </div>
+      <div class="relative hidden lg:block bg-slate-900">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.18),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let selectedPath = 'self';
+
+    function go(id) {
+      document.querySelectorAll('.screen').forEach((el) => el.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function setPath(path) {
+      selectedPath = path;
+    }
+
+    function goToEmail(type) {
+      const email = document.getElementById('emailInput').value || 'claudia+5555@pixel-plus.ch';
+      document.getElementById('existingEmailLabel').textContent = email;
+      document.getElementById('newEmailLabel').textContent = email;
+      if (type === 'existing') go('screen-email-existing');
+      else go('screen-email-new');
+    }
+
+    function resetFlow() {
+      go('screen-start');
+    }
+  </script>
+</body>
+</html>
