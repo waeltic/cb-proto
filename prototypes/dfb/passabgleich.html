@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Passabgleich – Clickable Prototype</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              cb: {
+                navy: '#0f172a',
+                blue: '#2563eb',
+                soft: '#eff6ff',
+                border: '#e5e7eb',
+                text: '#111827',
+                muted: '#6b7280',
+                bg: '#f8fafc',
+                green: '#16a34a',
+                yellow: '#d97706',
+                red: '#dc2626',
+                orange: '#ea580c'
+              }
+            },
+            boxShadow: {
+              card: '0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.10)'
+            }
+          }
+        }
+      };
+    </script>
+    <style>
+      .hidden-step { display: none; }
+      .step-active { background: #0f172a; color: white; border-color: #0f172a; }
+      .tab-active { background: #0f172a; color: white; }
+      .row-active { background: #eff6ff; }
+      .chip-active { background: #dbeafe; color: #1d4ed8; border-color: #bfdbfe; }
+      pre { white-space: pre-wrap; word-break: break-word; }
+    </style>
+  </head>
+  <body class="bg-cb-bg text-cb-text antialiased">
+    <div class="min-h-screen">
+      <div class="border-b border-cb-border bg-white">
+        <div class="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
+          <div class="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <div class="mb-1 flex items-center gap-2 text-xs font-medium text-cb-muted">
+                <span>Personen</span>
+                <span>›</span>
+                <span>Spielerlizenzen</span>
+              </div>
+              <div class="flex flex-wrap items-center gap-3">
+                <h1 class="text-2xl font-semibold tracking-tight text-cb-navy">Passabgleich</h1>
+                <span class="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">Clickable prototype</span>
+              </div>
+              <p class="mt-1 text-sm text-cb-muted">Schrittweiser Abgleich zwischen Fremdsystem, euren Personen, Mitgliedschaften und Teams.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button onclick="goStep(0)" class="rounded-lg border border-cb-border bg-white px-3 py-2 text-sm font-medium text-cb-text shadow-sm hover:bg-slate-50">Reset</button>
+              <button onclick="nextStep()" class="rounded-lg bg-cb-blue px-3.5 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700">Nächster Schritt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+        <div class="mb-6 grid gap-2 md:grid-cols-5">
+          <button id="step-btn-0" onclick="goStep(0)" class="step-btn step-active rounded-2xl border border-cb-border bg-white px-4 py-3 text-left shadow-card">
+            <div class="text-xs font-medium uppercase tracking-wide">1. Input</div>
+            <div class="mt-1 text-sm font-semibold">Fremdsystem</div>
+          </button>
+          <button id="step-btn-1" onclick="goStep(1)" class="step-btn rounded-2xl border border-cb-border bg-white px-4 py-3 text-left shadow-card">
+            <div class="text-xs font-medium uppercase tracking-wide text-cb-muted">2. Matching</div>
+            <div class="mt-1 text-sm font-semibold">Personen zuordnen</div>
+          </button>
+          <button id="step-btn-2" onclick="goStep(2)" class="step-btn rounded-2xl border border-cb-border bg-white px-4 py-3 text-left shadow-card">
+            <div class="text-xs font-medium uppercase tracking-wide text-cb-muted">3. Probleme</div>
+            <div class="mt-1 text-sm font-semibold">Fälle prüfen</div>
+          </button>
+          <button id="step-btn-3" onclick="goStep(3)" class="step-btn rounded-2xl border border-cb-border bg-white px-4 py-3 text-left shadow-card">
+            <div class="text-xs font-medium uppercase tracking-wide text-cb-muted">4. Team Check</div>
+            <div class="mt-1 text-sm font-semibold">Wer spielt ohne Lizenz</div>
+          </button>
+          <button id="step-btn-4" onclick="goStep(4)" class="step-btn rounded-2xl border border-cb-border bg-white px-4 py-3 text-left shadow-card">
+            <div class="text-xs font-medium uppercase tracking-wide text-cb-muted">5. Summary</div>
+            <div class="mt-1 text-sm font-semibold">Aktueller Stand</div>
+          </button>
+        </div>
+
+        <section id="step-0" class="step-panel">
+          <div class="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+            <div class="rounded-2xl border border-cb-border bg-white shadow-card">
+              <div class="border-b border-cb-border px-4 py-4">
+                <h2 class="text-lg font-semibold text-cb-navy">Input vom Fremdsystem</h2>
+                <p class="mt-1 text-sm text-cb-muted">Beispiel für <span class="font-medium text-cb-text">/club/{club-id}/members</span>. Klick auf einzelne Felder, um zu sehen, was ihr für den Passabgleich nutzen würdet.</p>
+              </div>
+              <div class="p-4">
+                <pre class="rounded-xl bg-slate-950 p-4 text-xs leading-6 text-slate-100">Path: /club/{club-id}/members
+
+{
+  "club": {
+    "id": "00ES8GN8OC0000A8VV0AG08LVUPGND5I",
+    "number": "270520",
+    "name": "FC BORUSSIA DROESCHEDE 1911 E.V.",
+    "shortName": "FC Borussia Droeschede",
+    "threeLetterCode": "FCD",
+    "stateAssociationId": "0123456789ABCDEF0123456700004130",
+    "active": true,
+    "address": {
+      "street": "Werner-Heisenberg-Allee 25",
+      "zipCode": "80939",
+      "city": "München"
+    },
+    "association": {
+      "name": "Kreis Offenbach",
+      "type": "NATIONAL"
+    }
+  },
+  "members": [
+    {
+      "id": "01RSRTUVOG000000VS548984VV40ROET",
+      "firstName": "Max",
+      "lastName": "Mustermann",
+      "birthday": "2000-01-25",
+      "gender": "MALE",
+      "memberUntil": "2023-10-03",
+      "idCardNumber": "0544-2160"
+    }
+  ]
+}</pre>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="rounded-2xl border border-cb-border bg-white p-4 shadow-card">
+                <h3 class="text-sm font-semibold text-cb-navy">Welche Felder sind für den Abgleich relevant?</h3>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button onclick="showFieldInfo('name')" class="rounded-full border border-cb-border px-3 py-1.5 text-xs font-medium hover:bg-slate-50">firstName + lastName</button>
+                  <button onclick="showFieldInfo('birthday')" class="rounded-full border border-cb-border px-3 py-1.5 text-xs font-medium hover:bg-slate-50">birthday</button>
+                  <button onclick="showFieldInfo('memberUntil')" class="rounded-full border border-cb-border px-3 py-1.5 text-xs font-medium hover:bg-slate-50">memberUntil</button>
+                  <button onclick="showFieldInfo('idCardNumber')" class="rounded-full border border-cb-border px-3 py-1.5 text-xs font-medium hover:bg-slate-50">idCardNumber</button>
+                  <button onclick="showFieldInfo('club')" class="rounded-full border border-cb-border px-3 py-1.5 text-xs font-medium hover:bg-slate-50">club</button>
+                </div>
+                <div id="field-info" class="mt-4 rounded-xl bg-slate-50 p-3 text-sm text-cb-muted">
+                  Wähle ein Feld aus. Empfehlung für das erste Matching: <span class="font-medium text-cb-text">Vorname, Nachname und Geburtstag</span>.
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-blue-200 bg-blue-50 p-4 shadow-card">
+                <h3 class="text-sm font-semibold text-blue-900">Vorschlag für V1-Mapping</h3>
+                <ul class="mt-3 space-y-2 text-sm text-blue-900">
+                  <li><span class="font-medium">Externe Person:</span> id, firstName, lastName, birthday, gender</li>
+                  <li><span class="font-medium">Lizenz / Pass:</span> idCardNumber</li>
+                  <li><span class="font-medium">Externer Statushinweis:</span> memberUntil</li>
+                  <li><span class="font-medium">Kontext:</span> club.id, club.name, association.name</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="step-1" class="step-panel hidden-step">
+          <div class="grid gap-6 xl:grid-cols-[1fr_400px]">
+            <div class="rounded-2xl border border-cb-border bg-white shadow-card">
+              <div class="border-b border-cb-border px-4 py-4">
+                <h2 class="text-lg font-semibold text-cb-navy">Matching</h2>
+                <p class="mt-1 text-sm text-cb-muted">Klick auf eine Zeile, um rechts den Matching-Entscheid Schritt für Schritt zu sehen.</p>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-cb-border text-sm">
+                  <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-cb-muted">
+                    <tr>
+                      <th class="px-4 py-3">Externe Person</th>
+                      <th class="px-4 py-3">Geburtsdatum</th>
+                      <th class="px-4 py-3">Pass / Lizenz</th>
+                      <th class="px-4 py-3">Interner Treffer</th>
+                      <th class="px-4 py-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-cb-border bg-white">
+                    <tr id="match-row-0" onclick="selectMatch(0)" class="cursor-pointer row-active hover:bg-slate-50">
+                      <td class="px-4 py-4"><div class="font-medium">Max Mustermann</div><div class="mt-1 text-xs text-cb-muted">Extern ID 01RS...</div></td>
+                      <td class="px-4 py-4">25.01.2000</td>
+                      <td class="px-4 py-4">0544-2160</td>
+                      <td class="px-4 py-4"><div class="font-medium">Max Mustermann</div><div class="mt-1 text-xs text-cb-muted">1 eindeutiger Treffer</div></td>
+                      <td class="px-4 py-4"><span class="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-200">Matched</span></td>
+                    </tr>
+                    <tr id="match-row-1" onclick="selectMatch(1)" class="cursor-pointer hover:bg-slate-50">
+                      <td class="px-4 py-4"><div class="font-medium">Luca Meier</div><div class="mt-1 text-xs text-cb-muted">Extern ID 77ZA...</div></td>
+                      <td class="px-4 py-4">12.08.2011</td>
+                      <td class="px-4 py-4">784512</td>
+                      <td class="px-4 py-4"><span class="text-cb-muted">Kein Treffer</span></td>
+                      <td class="px-4 py-4"><span class="inline-flex rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-200">Unmatched</span></td>
+                    </tr>
+                    <tr id="match-row-2" onclick="selectMatch(2)" class="cursor-pointer hover:bg-slate-50">
+                      <td class="px-4 py-4"><div class="font-medium">Mia Steiner</div><div class="mt-1 text-xs text-cb-muted">Extern ID 88LM...</div></td>
+                      <td class="px-4 py-4">18.11.2010</td>
+                      <td class="px-4 py-4">667901</td>
+                      <td class="px-4 py-4"><div class="font-medium">2 mögliche Treffer</div><div class="mt-1 text-xs text-cb-muted">Name ähnlich, Geburtstag nah</div></td>
+                      <td class="px-4 py-4"><span class="inline-flex rounded-full bg-orange-50 px-2.5 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-200">Review needed</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <aside class="rounded-2xl border border-cb-border bg-white shadow-card">
+              <div class="border-b border-cb-border px-4 py-4">
+                <h3 class="text-base font-semibold text-cb-navy">Matching Details</h3>
+                <p class="mt-1 text-sm text-cb-muted">Zeigt, wie der Datensatz zugeordnet wurde.</p>
+              </div>
+              <div id="match-detail" class="p-4"></div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="step-2" class="step-panel hidden-step">
+          <div class="rounded-2xl border border-cb-border bg-white shadow-card">
+            <div class="border-b border-cb-border px-4 py-4">
+              <h2 class="text-lg font-semibold text-cb-navy">Problemfälle</h2>
+              <p class="mt-1 text-sm text-cb-muted">Hier sieht der Admin, was konkret bearbeitet werden muss.</p>
+            </div>
+            <div class="border-b border-cb-border px-4 py-3">
+              <div class="flex flex-wrap gap-2">
+                <button id="issue-chip-all" onclick="filterIssues('all')" class="issue-chip chip-active rounded-full border px-3 py-1.5 text-xs font-medium">Alle</button>
+                <button id="issue-chip-unmatched" onclick="filterIssues('unmatched')" class="issue-chip rounded-full border border-cb-border px-3 py-1.5 text-xs font-medium text-cb-muted">Kein Treffer</button>
+                <button id="issue-chip-ambiguous" onclick="filterIssues('ambiguous')" class="issue-chip rounded-full border border-cb-border px-3 py-1.5 text-xs font-medium text-cb-muted">Mehrdeutig</button>
+                <button id="issue-chip-inactive" onclick="filterIssues('inactive')" class="issue-chip rounded-full border border-cb-border px-3 py-1.5 text-xs font-medium text-cb-muted">Nicht aktiv</button>
+              </div>
+            </div>
+            <div class="grid gap-4 p-4 md:grid-cols-3">
+              <div data-issue="unmatched" class="issue-card rounded-2xl border border-amber-200 bg-amber-50 p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="text-sm font-semibold text-amber-900">Kein interner Treffer</div>
+                    <p class="mt-1 text-sm text-amber-800">Luca Meier, 12.08.2011, Pass 784512</p>
+                  </div>
+                  <span class="rounded-full bg-white px-2 py-1 text-xs font-medium text-amber-800">Unmatched</span>
+                </div>
+                <div class="mt-4 flex gap-2">
+                  <button class="rounded-lg bg-white px-3 py-2 text-xs font-medium text-cb-text shadow-sm">Zuordnen</button>
+                  <button class="rounded-lg bg-white px-3 py-2 text-xs font-medium text-cb-text shadow-sm">Ignorieren</button>
+                </div>
+              </div>
+              <div data-issue="ambiguous" class="issue-card rounded-2xl border border-orange-200 bg-orange-50 p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="text-sm font-semibold text-orange-900">Mehrdeutiger Treffer</div>
+                    <p class="mt-1 text-sm text-orange-800">Mia Steiner hat 2 mögliche Kontakte</p>
+                  </div>
+                  <span class="rounded-full bg-white px-2 py-1 text-xs font-medium text-orange-800">Review</span>
+                </div>
+                <div class="mt-4 flex gap-2">
+                  <button class="rounded-lg bg-white px-3 py-2 text-xs font-medium text-cb-text shadow-sm">Prüfen</button>
+                  <button class="rounded-lg bg-white px-3 py-2 text-xs font-medium text-cb-text shadow-sm">Später</button>
+                </div>
+              </div>
+              <div data-issue="inactive" class="issue-card rounded-2xl border border-rose-200 bg-rose-50 p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <div class="text-sm font-semibold text-rose-900">Lizenz für inaktives Mitglied</div>
+                    <p class="mt-1 text-sm text-rose-800">Lea Berger ist nicht mehr aktives Mitglied</p>
+                  </div>
+                  <span class="rounded-full bg-white px-2 py-1 text-xs font-medium text-rose-800">Inactive</span>
+                </div>
+                <div class="mt-4 flex gap-2">
+                  <button class="rounded-lg bg-white px-3 py-2 text-xs font-medium text-cb-text shadow-sm">Profil</button>
+                  <button class="rounded-lg bg-white px-3 py-2 text-xs font-medium text-cb-text shadow-sm">Markieren</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="step-3" class="step-panel hidden-step">
+          <div class="grid gap-6 xl:grid-cols-[1fr_360px]">
+            <div class="rounded-2xl border border-cb-border bg-white shadow-card">
+              <div class="border-b border-cb-border px-4 py-4">
+                <h2 class="text-lg font-semibold text-cb-navy">Team Check</h2>
+                <p class="mt-1 text-sm text-cb-muted">Diese Sicht dreht den Abgleich um: nicht von der externen Lizenzliste aus, sondern von euren aktiven Spielern im Team.</p>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-cb-border text-sm">
+                  <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-cb-muted">
+                    <tr>
+                      <th class="px-4 py-3">Person</th>
+                      <th class="px-4 py-3">Mitgliedschaft</th>
+                      <th class="px-4 py-3">Team</th>
+                      <th class="px-4 py-3">Lizenz</th>
+                      <th class="px-4 py-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-cb-border bg-white">
+                    <tr class="hover:bg-slate-50">
+                      <td class="px-4 py-4"><div class="font-medium">Noah Keller</div><div class="mt-1 text-xs text-cb-muted">Typ: Spieler</div></td>
+                      <td class="px-4 py-4"><span class="inline-flex rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">Aktiv</span></td>
+                      <td class="px-4 py-4">U14</td>
+                      <td class="px-4 py-4 text-cb-muted">Keine Lizenz gefunden</td>
+                      <td class="px-4 py-4"><span class="inline-flex rounded-full bg-red-50 px-2.5 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-200">Fehlt</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50">
+                      <td class="px-4 py-4"><div class="font-medium">Lea Berger</div><div class="mt-1 text-xs text-cb-muted">Typ: Spieler</div></td>
+                      <td class="px-4 py-4"><span class="inline-flex rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">Aktiv</span></td>
+                      <td class="px-4 py-4">U16</td>
+                      <td class="px-4 py-4">Junioren B</td>
+                      <td class="px-4 py-4"><span class="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-200">OK</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50">
+                      <td class="px-4 py-4"><div class="font-medium">Mia Steiner</div><div class="mt-1 text-xs text-cb-muted">Typ: Spieler</div></td>
+                      <td class="px-4 py-4"><span class="inline-flex rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">Aktiv</span></td>
+                      <td class="px-4 py-4">U16</td>
+                      <td class="px-4 py-4 text-cb-muted">Treffer nicht eindeutig</td>
+                      <td class="px-4 py-4"><span class="inline-flex rounded-full bg-orange-50 px-2.5 py-1 text-xs font-medium text-orange-700 ring-1 ring-inset ring-orange-200">Prüfen</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <aside class="rounded-2xl border border-cb-border bg-white p-4 shadow-card">
+              <h3 class="text-base font-semibold text-cb-navy">Regel für V1</h3>
+              <div class="mt-3 rounded-xl bg-slate-50 p-3 text-sm text-cb-muted">
+                Prüfe nur <span class="font-medium text-cb-text">aktive Spieler</span> mit aktiver Teamzuweisung. So vermeidet ihr falsche Warnungen für Coaches, Kontakte oder archivierte Teamrollen.
+              </div>
+              <h3 class="mt-5 text-base font-semibold text-cb-navy">Sinnvolle Aktionen</h3>
+              <div class="mt-3 space-y-2 text-sm text-cb-muted">
+                <div class="rounded-lg bg-slate-50 px-3 py-2">Person öffnen</div>
+                <div class="rounded-lg bg-slate-50 px-3 py-2">Einzelabfrage beim Verband</div>
+                <div class="rounded-lg bg-slate-50 px-3 py-2">Als Ausnahme markieren</div>
+                <div class="rounded-lg bg-slate-50 px-3 py-2">Zur Bearbeitung an Admin geben</div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section id="step-4" class="step-panel hidden-step">
+          <div class="grid gap-6 xl:grid-cols-[1fr_360px]">
+            <div class="space-y-6">
+              <div class="grid grid-cols-2 gap-3 xl:grid-cols-4">
+                <div class="rounded-2xl border border-cb-border bg-white p-4 shadow-card">
+                  <div class="text-xs font-medium uppercase tracking-wide text-cb-muted">Importiert</div>
+                  <div class="mt-2 text-2xl font-semibold text-cb-navy">312</div>
+                </div>
+                <div class="rounded-2xl border border-cb-border bg-white p-4 shadow-card">
+                  <div class="text-xs font-medium uppercase tracking-wide text-cb-muted">Matched</div>
+                  <div class="mt-2 text-2xl font-semibold text-cb-navy">280</div>
+                </div>
+                <div class="rounded-2xl border border-red-200 bg-red-50 p-4 shadow-card">
+                  <div class="text-xs font-medium uppercase tracking-wide text-red-700">Offene Probleme</div>
+                  <div class="mt-2 text-2xl font-semibold text-red-900">29</div>
+                </div>
+                <div class="rounded-2xl border border-cb-border bg-white p-4 shadow-card">
+                  <div class="text-xs font-medium uppercase tracking-wide text-cb-muted">Teamspieler ohne OK</div>
+                  <div class="mt-2 text-2xl font-semibold text-cb-navy">14</div>
+                </div>
+              </div>
+
+              <div class="rounded-2xl border border-cb-border bg-white shadow-card">
+                <div class="border-b border-cb-border px-4 py-4">
+                  <h2 class="text-lg font-semibold text-cb-navy">Aktueller Stand</h2>
+                  <p class="mt-1 text-sm text-cb-muted">Diese Übersicht wäre der eigentliche operative Status nach dem Passabgleich.</p>
+                </div>
+                <div class="p-4">
+                  <div class="grid gap-3 md:grid-cols-2">
+                    <div class="rounded-xl border border-amber-200 bg-amber-50 p-4">
+                      <div class="text-sm font-semibold text-amber-900">9 unbekannte externe Personen</div>
+                      <p class="mt-1 text-sm text-amber-800">Im Fremdsystem vorhanden, intern aber aktuell nicht bekannt.</p>
+                    </div>
+                    <div class="rounded-xl border border-rose-200 bg-rose-50 p-4">
+                      <div class="text-sm font-semibold text-rose-900">7 Lizenzen bei nicht aktiven Mitgliedern</div>
+                      <p class="mt-1 text-sm text-rose-800">Soll geprüft werden, ob die Zuordnung oder der Status korrekt ist.</p>
+                    </div>
+                    <div class="rounded-xl border border-red-200 bg-red-50 p-4">
+                      <div class="text-sm font-semibold text-red-900">14 aktive Spieler ohne Lizenz</div>
+                      <p class="mt-1 text-sm text-red-800">Besonders relevant für Teams und Einsatzberechtigung.</p>
+                    </div>
+                    <div class="rounded-xl border border-orange-200 bg-orange-50 p-4">
+                      <div class="text-sm font-semibold text-orange-900">6 mehrdeutige Matches</div>
+                      <p class="mt-1 text-sm text-orange-800">Diese Fälle brauchen manuelle Bestätigung.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="rounded-2xl border border-cb-border bg-white p-4 shadow-card">
+              <h3 class="text-base font-semibold text-cb-navy">Nächste sinnvolle Schritte</h3>
+              <div class="mt-3 space-y-3 text-sm text-cb-muted">
+                <div class="rounded-xl bg-slate-50 p-3"><span class="font-medium text-cb-text">1.</span> Zuerst unbekannte und mehrdeutige Fälle bereinigen.</div>
+                <div class="rounded-xl bg-slate-50 p-3"><span class="font-medium text-cb-text">2.</span> Danach Teamspieler ohne Lizenz prüfen.</div>
+                <div class="rounded-xl bg-slate-50 p-3"><span class="font-medium text-cb-text">3.</span> Anschliessend Detailintegration in Personen- und Teamlisten.</div>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      let currentStep = 0;
+      const matchDetails = [
+        {
+          title: 'Max Mustermann',
+          subtitle: 'Eindeutiger Match',
+          html: `
+            <div class="space-y-4">
+              <div class="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-900">
+                Vorname, Nachname und Geburtstag passen eindeutig zu einer internen Person.
+              </div>
+              <div class="rounded-xl border border-cb-border p-3">
+                <div class="text-xs font-semibold uppercase tracking-wide text-cb-muted">Extern</div>
+                <div class="mt-2 text-sm"><span class="font-medium">Name:</span> Max Mustermann</div>
+                <div class="mt-1 text-sm"><span class="font-medium">Geburtsdatum:</span> 25.01.2000</div>
+                <div class="mt-1 text-sm"><span class="font-medium">Passnummer:</span> 0544-2160</div>
+              </div>
+              <div class="rounded-xl border border-cb-border p-3">
+                <div class="text-xs font-semibold uppercase tracking-wide text-cb-muted">Intern</div>
+                <div class="mt-2 text-sm"><span class="font-medium">Person:</span> Max Mustermann</div>
+                <div class="mt-1 text-sm"><span class="font-medium">Mitgliedschaft:</span> Aktiv</div>
+                <div class="mt-1 text-sm"><span class="font-medium">Team:</span> 1. Mannschaft</div>
+              </div>
+            </div>`
+        },
+        {
+          title: 'Luca Meier',
+          subtitle: 'Kein Treffer',
+          html: `
+            <div class="space-y-4">
+              <div class="rounded-xl bg-amber-50 p-3 text-sm text-amber-900">
+                Kein Kontakt mit passendem Vorname, Nachname und Geburtsdatum gefunden.
+              </div>
+              <div class="rounded-xl border border-cb-border p-3">
+                <div class="text-xs font-semibold uppercase tracking-wide text-cb-muted">Empfohlene Aktionen</div>
+                <div class="mt-3 space-y-2">
+                  <button class="w-full rounded-lg bg-cb-blue px-3 py-2 text-sm font-medium text-white">Passende Person suchen</button>
+                  <button class="w-full rounded-lg border border-cb-border px-3 py-2 text-sm font-medium">Neue Person zuordnen</button>
+                  <button class="w-full rounded-lg border border-cb-border px-3 py-2 text-sm font-medium">Als extern markieren</button>
+                </div>
+              </div>
+            </div>`
+        },
+        {
+          title: 'Mia Steiner',
+          subtitle: 'Review nötig',
+          html: `
+            <div class="space-y-4">
+              <div class="rounded-xl bg-orange-50 p-3 text-sm text-orange-900">
+                Es gibt mehrere mögliche interne Treffer. Der Admin muss manuell bestätigen.
+              </div>
+              <div class="space-y-2">
+                <div class="rounded-xl border border-cb-border p-3">
+                  <div class="text-sm font-medium">Mia Steiner</div>
+                  <div class="mt-1 text-xs text-cb-muted">Geburtsdatum 18.11.2010 · Team U16</div>
+                </div>
+                <div class="rounded-xl border border-cb-border p-3">
+                  <div class="text-sm font-medium">Mia Steiner-Santos</div>
+                  <div class="mt-1 text-xs text-cb-muted">Geburtsdatum 19.11.2010 · Kein aktives Team</div>
+                </div>
+              </div>
+            </div>`
+        }
+      ];
+
+      function goStep(step) {
+        currentStep = step;
+        document.querySelectorAll('.step-panel').forEach((panel, index) => {
+          panel.classList.toggle('hidden-step', index !== step);
+        });
+        document.querySelectorAll('.step-btn').forEach((btn, index) => {
+          btn.classList.toggle('step-active', index === step);
+        });
+      }
+
+      function nextStep() {
+        goStep((currentStep + 1) % 5);
+      }
+
+      function showFieldInfo(type) {
+        const map = {
+          name: 'firstName + lastName sind die wichtigste Basis für das Matching, aber allein noch nicht sicher genug.',
+          birthday: 'birthday ist in V1 der stärkste Zusatz für einen eindeutigen Match. Ohne Geburtstag steigt das Risiko für falsche Zuordnungen.',
+          memberUntil: 'memberUntil kann als externer Statushinweis verwendet werden. Das ist nicht eure interne Mitgliedschaft, aber ein gutes Signal für Prüfungen.',
+          idCardNumber: 'idCardNumber würde ich als Pass- oder Lizenznummer speichern. Diese Nummer ist zentral für Anzeige, Historie und Nachvollziehbarkeit.',
+          club: 'club-Daten helfen, den Importlauf, den Kontext und die Quelle des Passabgleichs sauber zu dokumentieren.'
+        };
+        document.getElementById('field-info').innerHTML = map[type];
+      }
+
+      function selectMatch(index) {
+        document.querySelectorAll('[id^="match-row-"]').forEach((row, i) => {
+          row.classList.toggle('row-active', i === index);
+        });
+        const detail = matchDetails[index];
+        document.getElementById('match-detail').innerHTML = `
+          <div>
+            <h4 class="text-base font-semibold text-cb-navy">${detail.title}</h4>
+            <p class="mt-1 text-sm text-cb-muted">${detail.subtitle}</p>
+          </div>
+          <div class="mt-4">${detail.html}</div>
+        `;
+      }
+
+      function filterIssues(type) {
+        document.querySelectorAll('.issue-chip').forEach((chip) => {
+          chip.classList.remove('chip-active');
+        });
+        const activeChip = document.getElementById(`issue-chip-${type}`);
+        if (activeChip) activeChip.classList.add('chip-active');
+
+        document.querySelectorAll('.issue-card').forEach((card) => {
+          card.style.display = type === 'all' || card.dataset.issue === type ? 'block' : 'none';
+        });
+      }
+
+      selectMatch(0);
+    </script>
+  </body>
+</html>
