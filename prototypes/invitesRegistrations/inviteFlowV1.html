@@ -1,603 +1,354 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Invite Flow Clickable Prototype</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-100 text-slate-900 font-sans">
-  <div class="min-h-screen">
-    <div class="flex items-center justify-between px-6 py-4 bg-white border-b border-slate-200">
-      <div>
-        <h1 class="text-lg font-semibold">Invite flow clickable prototype</h1>
-        <p class="text-sm text-slate-500">Prototype for self / parent access, data confirmation, legal step, and completion.</p>
-      </div>
-      <div class="flex items-center gap-2">
-        <button onclick="resetFlow()" class="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50">Reset</button>
+<body class="bg-slate-50 text-slate-900">
+  <script>
+    const i18n = {
+      de: {
+        brand: 'coachbetter', help: 'Hilfe', invite_from: 'Einladung von', title_invite: 'Einladung',
+        subtitle_setup_access: 'Zugang für Leana Winter einrichten',
+        intro_text: 'Der Verein hat Sie eingeladen, den Zugang einzurichten. Damit können Sie Informationen zum Verein, zu Teams und zu Terminen einsehen – entweder für sich selbst oder als Elternteil.',
+        continue_club: 'Mit Vereinskonto fortfahren', continue_club_desc: 'Falls verfügbar, können Sie sich direkt mit Ihrem Vereinskonto anmelden.', continue_sfb: 'Mit SFB-Konto fortfahren',
+        continue_email: 'Mit E-Mail fortfahren', continue_email_desc: 'Melden Sie sich mit einem bestehenden Konto an oder erstellen Sie ein neues Konto.', existing_account: 'Bestehendes Konto', new_account: 'Neues Konto',
+        contact: 'Kontakt: info@sfb-club.de', sign_in: 'Anmeldung', sign_in_email: 'Mit E-Mail anmelden', sign_in_email_desc: 'Geben Sie Ihr Passwort ein, um mit der Einrichtung des Zugangs für Leana Winter fortzufahren.',
+        email: 'E-Mail', password: 'Passwort', change_email: 'E-Mail ändern', forgot_password: 'Passwort vergessen?', next: 'Weiter', back: 'Zurück', finish: 'Abschließen',
+        step1: 'Schritt 1', step2: 'Schritt 2', step3: 'Schritt 3', step4: 'Schritt 4', step5: 'Schritt 5',
+        step_access: 'Zugang festlegen', step_review: 'Daten prüfen', step_child: 'Kind-Daten prüfen', step_parent: 'Eltern-Daten prüfen', step_complete: 'Abschließen',
+        who_access_for: 'Für wen ist dieser Zugang?', who_access_desc: 'Bitte wählen Sie aus, für wen der Zugang eingerichtet werden soll. Danach prüfen wir die Angaben und schließen die Einrichtung ab.',
+        appears_when: 'Wann erscheint dieser Schritt?', appears_when_desc: 'Dieser Schritt wird nur angezeigt, wenn noch nicht eindeutig klar ist, für wen der Zugang eingerichtet werden soll. Wenn der Einladungslink bereits eindeutig für Leana Winter oder für ein Elternteil bestimmt ist, kann dieser Schritt übersprungen werden.',
+        for_self: 'Für Leana Winter selbst', for_self_desc: 'Dieses Konto wird direkt mit dem Profil von Leana Winter verknüpft.', direct_access: 'Direkter Zugang',
+        for_parent: 'Für ein Elternteil oder eine erziehungsberechtigte Person', for_parent_desc: 'Dieses Konto wird als Elternzugang mit dem Profil von Leana Winter verknüpft.', parent_access: 'Elternzugang',
+        already_linked_q: 'Bereits verbunden?', already_linked_desc: 'Wenn dieses Konto bereits mit dem Profil verbunden ist, können Sie direkt fortfahren.', check_linked: 'Bereits verbundenen Zugang prüfen',
+        review_profile: 'Profil von Leana Winter prüfen', review_profile_self_desc: 'Bitte prüfen und ergänzen Sie die Angaben, bevor der direkte Zugang eingerichtet wird.', review_profile_parent_desc: 'Bitte prüfen und ergänzen Sie zuerst die Angaben des Kindes. Danach prüfen wir, ob bereits ein passender Elternkontakt vorhanden ist.',
+        note: 'Hinweis', parent_may_exist: 'Für dieses Profil kann bereits ein Elternkontakt vorhanden sein. Details werden erst nach Eingabe der Elternangaben geprüft.',
+        personal_info: 'Persönliche Angaben', first_name: 'Vorname', last_name: 'Nachname', birthdate: 'Geburtsdatum', gender: 'Geschlecht', female: 'Weiblich', male: 'Männlich', diverse: 'Divers', no_info: 'Keine Angabe',
+        contact_section: 'Kontakt', child_email_hint: 'Falls vorhanden, kann hier auch eine E-Mail eines Elternteils hinterlegt werden.', phone: 'Telefonnummer',
+        emergency: 'Notfallkontakt', emergency_name: 'Name des Notfallkontakts', emergency_phone: 'Telefonnummer des Notfallkontakts',
+        address: 'Adresse', street: 'Straße und Hausnummer', zip: 'PLZ', city: 'Ort',
+        create_account: 'Konto erstellen', create_account_desc: 'Erstellen Sie ein neues Konto, um den Zugang für Leana Winter einzurichten.', terms_hint: 'Mit der Erstellung des Kontos stimmen Sie den Nutzungsbedingungen und der Datenschutzerklärung zu.',
+        review_parent_details: 'Angaben des Elternteils prüfen', review_parent_desc: 'Bitte ergänzen Sie nun die Angaben des Elternteils oder der erziehungsberechtigten Person. Anschließend prüfen wir, ob bereits ein passender Kontakt vorhanden ist.',
+        relationship_emergency: 'Beziehung & Notfall', relationship: 'Beziehung zum Kind', mother: 'Mutter', father: 'Vater', guardian: 'Erziehungsberechtigte Person', contact_or_emergency_phone: 'Kontakttelefon / Notfallnummer',
+        check_parent_contact: 'Möglichen Elternkontakt prüfen', check_parent_contact_desc: 'Wir haben bereits einen möglichen Elternkontakt zu diesem Profil gefunden. Bitte wählen Sie aus, ob der bestehende Kontakt verwendet oder ein neuer Elternzugang angelegt werden soll.', possible_existing_contact: 'Möglicher bestehender Kontakt', name: 'Name', relation: 'Bezug', relation_desc: 'Elternkontakt zu Leana Winter', use_existing_contact: 'Bestehenden Kontakt verwenden', use_existing_contact_desc: 'Der vorhandene Elternkontakt wird mit diesem Zugang verwendet.', create_new_parent_access: 'Neuen Elternzugang anlegen', create_new_parent_access_desc: 'Es wird ein neuer Elternkontakt mit den eingegebenen Angaben angelegt.',
+        confirm_access: 'Zugang bestätigen', confirm_access_desc: 'Bitte bestätigen Sie die Einrichtung des direkten Zugangs für Leana Winter.', confirm_access_checkbox: 'Ich bestätige, dass dieses Konto direkt mit dem Profil von Leana Winter verknüpft werden soll.',
+        confirm_parent_access: 'Elternzugang bestätigen', confirm_parent_access_desc: 'Bitte bestätigen Sie die Einrichtung des Elternzugangs für Leana Winter.', confirm_parent_checkbox_1: 'Ich bestätige, dass ich berechtigt bin, diesen Zugang als Elternteil oder erziehungsberechtigte Person zu nutzen.', confirm_parent_checkbox_2: 'Ich bestätige, dass dieser Zugang mit dem Profil von Leana Winter verknüpft werden soll.',
+        done: 'Fertig', done_access: 'Zugang eingerichtet', done_parent_access: 'Elternzugang eingerichtet',
+        already_connected: 'Zugang bereits verbunden', already_connected_desc: 'Dieses Konto ist bereits mit dem Profil von Leana Winter verbunden. Sie können direkt fortfahren. Falls die Verbindung nicht korrekt ist, gehen Sie zurück und wählen Sie eine andere Zuordnung.'
+      },
+      en: {
+        brand: 'coachbetter', help: 'Help', invite_from: 'Invitation from', title_invite: 'Invitation',
+        subtitle_setup_access: 'Set up access for Leana Winter',
+        intro_text: 'The club has invited you to set up access. This allows you to view information about the club, teams, and schedules — either for yourself or as a parent.',
+        continue_club: 'Continue with club account', continue_club_desc: 'If available, you can sign in directly with your club account.', continue_sfb: 'Continue with SFB account',
+        continue_email: 'Continue with email', continue_email_desc: 'Sign in with an existing account or create a new account.', existing_account: 'Existing account', new_account: 'New account',
+        contact: 'Contact: info@sfb-club.de', sign_in: 'Sign in', sign_in_email: 'Sign in with email', sign_in_email_desc: 'Enter your password to continue setting up access for Leana Winter.',
+        email: 'Email', password: 'Password', change_email: 'Change email', forgot_password: 'Forgot password?', next: 'Continue', back: 'Back', finish: 'Finish',
+        step1: 'Step 1', step2: 'Step 2', step3: 'Step 3', step4: 'Step 4', step5: 'Step 5',
+        step_access: 'Define access', step_review: 'Review details', step_child: 'Review child details', step_parent: 'Review parent details', step_complete: 'Complete',
+        who_access_for: 'Who is this access for?', who_access_desc: 'Please choose who this access should be set up for. Afterwards we will review the details and complete the setup.',
+        appears_when: 'When does this step appear?', appears_when_desc: 'This step is only shown when it is not yet clear who the access should be set up for. If the invitation link is already clearly intended for Leana Winter or for a parent, this step can be skipped.',
+        for_self: 'For Leana Winter herself', for_self_desc: 'This account will be linked directly to Leana Winter’s profile.', direct_access: 'Direct access',
+        for_parent: 'For a parent or guardian', for_parent_desc: 'This account will be linked as parent access to Leana Winter’s profile.', parent_access: 'Parent access',
+        already_linked_q: 'Already linked?', already_linked_desc: 'If this account is already linked to the profile, you can continue directly.', check_linked: 'Check existing linked access',
+        review_profile: 'Review Leana Winter’s profile', review_profile_self_desc: 'Please review and complete the details before setting up direct access.', review_profile_parent_desc: 'Please first review and complete the child’s details. Afterwards we will check if a matching parent contact already exists.',
+        note: 'Note', parent_may_exist: 'A parent contact may already exist for this profile. Details will only be checked after entering the parent details.',
+        personal_info: 'Personal details', first_name: 'First name', last_name: 'Last name', birthdate: 'Date of birth', gender: 'Gender', female: 'Female', male: 'Male', diverse: 'Diverse', no_info: 'Prefer not to say',
+        contact_section: 'Contact', child_email_hint: 'If available, a parent email address can also be entered here.', phone: 'Phone number',
+        emergency: 'Emergency contact', emergency_name: 'Emergency contact name', emergency_phone: 'Emergency contact phone number',
+        address: 'Address', street: 'Street and house number', zip: 'ZIP / Postal code', city: 'City',
+        create_account: 'Create account', create_account_desc: 'Create a new account to set up access for Leana Winter.', terms_hint: 'By creating the account, you agree to the Terms of Use and Privacy Policy.',
+        review_parent_details: 'Review parent details', review_parent_desc: 'Please complete the parent or guardian details. Afterwards we will check if a matching contact already exists.',
+        relationship_emergency: 'Relationship & emergency', relationship: 'Relationship to the child', mother: 'Mother', father: 'Father', guardian: 'Guardian', contact_or_emergency_phone: 'Contact / emergency phone',
+        check_parent_contact: 'Check for existing parent contact', check_parent_contact_desc: 'We found a possible existing parent contact for this profile. Please choose whether to use the existing contact or create a new parent access.', possible_existing_contact: 'Possible existing contact', name: 'Name', relation: 'Relation', relation_desc: 'Parent contact for Leana Winter', use_existing_contact: 'Use existing contact', use_existing_contact_desc: 'The existing parent contact will be used for this access.', create_new_parent_access: 'Create new parent access', create_new_parent_access_desc: 'A new parent contact will be created with the entered details.',
+        confirm_access: 'Confirm access', confirm_access_desc: 'Please confirm the setup of direct access for Leana Winter.', confirm_access_checkbox: 'I confirm that this account should be linked directly to Leana Winter’s profile.',
+        confirm_parent_access: 'Confirm parent access', confirm_parent_access_desc: 'Please confirm the setup of parent access for Leana Winter.', confirm_parent_checkbox_1: 'I confirm that I am authorised to use this access as a parent or guardian.', confirm_parent_checkbox_2: 'I confirm that this access should be linked to Leana Winter’s profile.',
+        done: 'Done', done_access: 'Access set up', done_parent_access: 'Parent access set up',
+        already_connected: 'Access already linked', already_connected_desc: 'This account is already linked to Leana Winter’s profile. You can continue directly. If the link is incorrect, go back and choose a different assignment.'
+      }
+    };
+
+    const state = { lang: 'de', email: 'test@test.ch' };
+
+    function t(key) { return i18n[state.lang][key] || key; }
+    function setLang(lang) { state.lang = lang; document.documentElement.lang = lang; render(); }
+    function go(id) {
+      document.querySelectorAll('.screen').forEach(el => el.classList.add('hidden'));
+      const target = document.getElementById(id);
+      if (target) target.classList.remove('hidden');
+      render();
+    }
+    function syncEmailFrom(id) {
+      const el = document.getElementById(id);
+      if (el) state.email = el.value || 'test@test.ch';
+    }
+    function continueExistingAccount() { syncEmailFrom('entry-email'); go('auth-existing'); }
+    function continueNewAccount() { syncEmailFrom('entry-email'); go('account-setup'); }
+    function render() {
+      document.querySelectorAll('[data-i18n]').forEach(el => el.textContent = t(el.dataset.i18n));
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => el.placeholder = t(el.dataset.i18nPlaceholder));
+      ['entry-email','auth-email','setup-email','player-email','parent-email'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = state.email;
+      });
+      document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+        const active = btn.dataset.langBtn === state.lang;
+        btn.className = active ? 'rounded-full bg-slate-900 px-3 py-1.5 text-xs font-medium text-white' : 'rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600';
+      });
+    }
+    window.addEventListener('DOMContentLoaded', render);
+  </script>
+
+  <header class="w-full bg-white border-b border-slate-200">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+      <div class="text-lg font-semibold" data-i18n="brand"></div>
+      <div class="flex items-center gap-3">
+        <div class="inline-flex items-center gap-2 rounded-full bg-slate-100 p-1">
+          <button type="button" data-lang-btn="de" onclick="setLang('de')">DE</button>
+          <button type="button" data-lang-btn="en" onclick="setLang('en')">EN</button>
+        </div>
+        <div class="text-sm text-slate-500" data-i18n="help"></div>
       </div>
     </div>
+  </header>
 
-    <!-- SCREEN 1 -->
-    <section id="screen-start" class="screen min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-lg w-full">
-          <div class="mb-10 flex items-center justify-between">
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
-          </div>
-
-          <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">
-            Invitation from Sportfreunde Burkhardsfelden e.V.
-          </div>
-
-          <h2 class="mt-6 text-4xl font-semibold leading-tight text-slate-900">
-            Join Leana Winter’s club access
-          </h2>
-
-          <p class="mt-5 text-base leading-7 text-slate-600">
-            Sportfreunde Burkhardsfelden e.V. invited you to continue the access setup for <span class="font-medium text-slate-800">Leana Winter</span>.
-          </p>
-
-          <p class="mt-3 text-sm leading-6 text-slate-500">
-            Sign in with your club account or continue with email. We’ll guide you through the remaining steps afterwards.
-          </p>
-
-          <div class="mt-8 space-y-4">
-            <button onclick="go('screen-auth')" class="w-full rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white hover:bg-emerald-700">
-              Continue
-            </button>
-          </div>
-
-          <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4">
-            <div class="text-sm font-medium text-slate-800">What happens next?</div>
-            <div class="mt-2 text-sm leading-6 text-slate-600">
-              First you sign in or create an account. After that, we’ll confirm whether the access should be connected directly to Leana Winter or to a parent / guardian.
-            </div>
-          </div>
-
-          <div class="mt-8 text-xs leading-5 text-slate-400">
-            Not the right person or having trouble signing in? Please contact Sportfreunde Burkhardsfelden e.V.
-          </div>
+  <section id="start" class="screen">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="mb-10 flex items-center gap-4">
+        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-200 font-bold">SFB</div>
+        <div>
+          <div class="text-sm text-slate-500" data-i18n="invite_from"></div>
+          <div class="font-medium">Sportfreunde Burkhardsfelden e.V.</div>
         </div>
       </div>
 
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-12">
-          <div class="w-full max-w-lg rounded-[2rem] border border-white/10 bg-white/10 p-8 backdrop-blur-sm">
-            <div class="aspect-[4/3] rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-slate-300/10 to-white/5 flex items-center justify-center">
-              <div class="h-40 w-40 rounded-[2rem] bg-white/90 flex items-center justify-center shadow-2xl">
-                <div class="text-5xl font-bold tracking-tight text-red-600">SFB</div>
-              </div>
-            </div>
-            <div class="mt-6 text-center text-sm text-white/80">
-              Secure access provided through Coachbetter.
+      <div class="max-w-xl">
+        <h1 class="text-3xl font-semibold" data-i18n="title_invite"></h1>
+        <h2 class="mt-2 text-xl" data-i18n="subtitle_setup_access"></h2>
+        <p class="mt-5 leading-relaxed text-slate-600" data-i18n="intro_text"></p>
+
+        <div class="mt-8 space-y-6">
+          <div class="rounded-2xl border border-slate-200 bg-white p-5">
+            <div class="text-sm font-medium" data-i18n="continue_club"></div>
+            <p class="mt-1 text-sm text-slate-500" data-i18n="continue_club_desc"></p>
+            <button onclick="go('decision')" class="mt-4 w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="continue_sfb"></button>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 bg-white p-5">
+            <div class="text-sm font-medium" data-i18n="continue_email"></div>
+            <p class="mt-1 text-sm text-slate-500" data-i18n="continue_email_desc"></p>
+            <input id="entry-email" class="mt-4 w-full rounded-xl border px-4 py-3" value="test@test.ch" />
+            <div class="mt-4 grid grid-cols-2 gap-3">
+              <button onclick="continueExistingAccount()" class="w-full rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="existing_account"></button>
+              <button onclick="continueNewAccount()" class="w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="new_account"></button>
             </div>
           </div>
         </div>
+
+        <p class="mt-10 text-sm text-slate-400" data-i18n="contact"></p>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SCREEN 2 AUTH -->
-    <section id="screen-auth" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-lg w-full">
-          <div class="mb-10 flex items-center justify-between">
-            <button onclick="go('screen-start')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
+  <section id="auth-existing" class="screen hidden">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="max-w-md">
+        <div class="mb-2 text-sm text-slate-400" data-i18n="sign_in"></div>
+        <h2 class="text-2xl font-semibold" data-i18n="sign_in_email"></h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="sign_in_email_desc"></p>
+        <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-5">
+          <label class="mb-2 block text-sm font-medium" data-i18n="email"></label>
+          <input id="auth-email" class="w-full rounded-xl border px-4 py-3" value="test@test.ch" />
+          <label class="mb-2 mt-4 block text-sm font-medium" data-i18n="password"></label>
+          <input type="password" class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="password" />
+          <div class="mt-2 flex justify-between text-sm text-slate-500">
+            <button onclick="go('start')" class="hover:text-slate-700" data-i18n="change_email"></button>
+            <button type="button" class="hover:text-slate-700" data-i18n="forgot_password"></button>
           </div>
+          <button onclick="syncEmailFrom('auth-email'); go('decision')" class="mt-6 w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-          <div class="text-xs font-medium uppercase tracking-wide text-slate-400">Sign in</div>
-          <h2 class="mt-3 text-4xl font-semibold leading-tight text-slate-900">
-            Continue your access setup
-          </h2>
-          <p class="mt-4 text-sm leading-6 text-slate-600">
-            Sign in with your club account or continue with email to access Leana Winter’s profile.
-          </p>
-
-          <div class="mt-8 space-y-4">
-            <button onclick="go('screen-sso')" class="w-full rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white hover:bg-emerald-700">
-              Continue with SFB account
-            </button>
-
-            <div class="flex items-center gap-3">
-              <div class="h-px flex-1 bg-slate-200"></div>
-              <div class="text-xs uppercase tracking-wide text-slate-400">or</div>
-              <div class="h-px flex-1 bg-slate-200"></div>
+  <section id="decision" class="screen hidden">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="mb-10 flex items-center justify-between">
+        <div class="flex gap-3 text-sm text-slate-500">
+          <span class="font-medium text-emerald-600" data-i18n="step_access"></span><span>›</span><span data-i18n="step_review"></span><span>›</span><span data-i18n="step_complete"></span>
+        </div>
+        <button onclick="go('start')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button>
+      </div>
+      <div class="max-w-2xl">
+        <div class="mb-2 text-sm text-slate-400" data-i18n="step2"></div>
+        <h2 class="text-2xl font-semibold" data-i18n="who_access_for"></h2>
+        <p class="mt-2 leading-6 text-slate-600" data-i18n="who_access_desc"></p>
+        <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <div class="text-sm font-medium text-slate-800" data-i18n="appears_when"></div>
+          <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="appears_when_desc"></p>
+        </div>
+        <div class="mt-8 grid gap-4">
+          <button onclick="go('player')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50">
+            <div class="flex items-start justify-between gap-4">
+              <div><div class="text-base font-semibold" data-i18n="for_self"></div><div class="mt-1 text-sm text-slate-500" data-i18n="for_self_desc"></div></div>
+              <div class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600" data-i18n="direct_access"></div>
             </div>
-
-            <div>
-              <label class="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Continue with email</label>
-              <input id="emailInput" value="claudia+5555@pixel-plus.ch" class="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 w-full" />
-              <div class="mt-3 grid grid-cols-2 gap-3">
-                <button onclick="goToEmail('existing')" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50">
-                  Existing user
-                </button>
-                <button onclick="goToEmail('new')" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50">
-                  New user
-                </button>
-              </div>
+          </button>
+          <button onclick="go('parent')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50">
+            <div class="flex items-start justify-between gap-4">
+              <div><div class="text-base font-semibold" data-i18n="for_parent"></div><div class="mt-1 text-sm text-slate-500" data-i18n="for_parent_desc"></div></div>
+              <div class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600" data-i18n="parent_access"></div>
             </div>
-          </div>
-
-          <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-600">
-            In production this screen would show only the options that are really available for this invite.
-          </div>
+          </button>
+        </div>
+        <div class="mt-8 rounded-2xl border border-amber-200 bg-amber-50 p-5">
+          <div class="text-sm font-medium text-amber-900" data-i18n="already_linked_q"></div>
+          <p class="mt-1 text-sm text-amber-800" data-i18n="already_linked_desc"></p>
+          <button onclick="go('already-linked')" class="mt-4 inline-flex items-center rounded-full border border-amber-300 bg-white px-4 py-2 text-sm font-medium text-amber-900" data-i18n="check_linked"></button>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
+  <section id="player" class="screen hidden">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="mb-10 flex items-center justify-between">
+        <div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span data-i18n="step_complete"></span></div>
+        <button onclick="go('decision')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button>
       </div>
-    </section>
-
-    <!-- SCREEN 2A SSO -->
-    <section id="screen-sso" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-lg w-full">
-          <div class="mb-10 flex items-center justify-between">
-            <button onclick="go('screen-auth')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
-          </div>
-          <div class="text-xs font-medium uppercase tracking-wide text-slate-400">Club sign in</div>
-          <h3 class="mt-3 text-4xl font-semibold leading-tight">Welcome back</h3>
-          <p class="mt-4 text-sm leading-6 text-slate-600">Use your SFB account to continue the access setup for Leana Winter.</p>
-          <button onclick="go('screen-access-choice')" class="mt-8 w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white hover:bg-emerald-700">Continue with SFB account</button>
+      <div class="max-w-2xl">
+        <div class="mb-2 text-sm text-slate-400" data-i18n="step3"></div>
+        <h2 class="text-2xl font-semibold" data-i18n="review_profile"></h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="review_profile_self_desc"></p>
+        <div class="mt-8 space-y-8">
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="personal_info"></h3><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="first_name"></label><input class="w-full rounded-xl border px-4 py-3" value="Leana" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="last_name"></label><input class="w-full rounded-xl border px-4 py-3" value="Winter" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="birthdate"></label><input class="w-full rounded-xl border px-4 py-3" value="2014-10-11" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="gender"></label><select class="w-full rounded-xl border px-4 py-3"><option data-i18n="female"></option><option data-i18n="male"></option><option data-i18n="diverse"></option><option data-i18n="no_info"></option></select></div></div></div>
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="contact_section"></h3><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="email"></label><input id="player-email" class="w-full rounded-xl border px-4 py-3" value="test@test.ch" /><p class="mt-2 text-xs text-slate-500" data-i18n="child_email_hint"></p></div><div><label class="mb-2 block text-sm font-medium" data-i18n="phone"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="phone" /></div></div></div>
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="emergency"></h3><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="emergency_name"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="name" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="emergency_phone"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="phone" /></div></div></div>
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="address"></h3><div class="space-y-4"><div><label class="mb-2 block text-sm font-medium" data-i18n="street"></label><input class="w-full rounded-xl border px-4 py-3" value="Teststrasse 1" /></div><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="zip"></label><input class="w-full rounded-xl border px-4 py-3" value="8888" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="city"></label><input class="w-full rounded-xl border px-4 py-3" value="London" /></div></div></div></div>
         </div>
+        <div class="mt-8 flex gap-3"><button onclick="go('decision')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="syncEmailFrom('player-email'); go('legal-self')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button></div>
       </div>
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SCREEN 2B EXISTING EMAIL -->
-    <section id="screen-email-existing" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-lg w-full">
-          <div class="mb-10 flex items-center justify-between">
-            <button onclick="go('screen-auth')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
-          </div>
-          <div class="text-xs font-medium uppercase tracking-wide text-slate-400">Email sign in</div>
-          <h3 class="mt-3 text-4xl font-semibold leading-tight">Welcome back</h3>
-          <p class="mt-4 text-sm leading-6 text-slate-600">Enter your password to continue the access setup for Leana Winter.</p>
-          <div id="existingEmailLabel" class="mt-6 rounded-xl border px-4 py-3 text-sm text-slate-700 bg-slate-50"></div>
-          <input type="password" placeholder="Password" class="mt-4 w-full rounded-xl border px-4 py-3 text-sm" />
-          <button onclick="go('screen-access-choice')" class="mt-5 w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white hover:bg-emerald-700">Log in</button>
-          <button class="mt-4 text-sm text-red-500 hover:underline">Forgot your password?</button>
+  <section id="parent" class="screen hidden">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span data-i18n="step_parent"></span><span>›</span><span data-i18n="step_complete"></span></div><button onclick="go('decision')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
+      <div class="max-w-2xl">
+        <div class="mb-2 text-sm text-slate-400" data-i18n="step3"></div>
+        <h2 class="text-2xl font-semibold" data-i18n="review_profile"></h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="review_profile_parent_desc"></p>
+        <div class="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4"><div class="text-sm font-medium text-slate-800" data-i18n="note"></div><p class="mt-1 text-sm text-slate-600" data-i18n="parent_may_exist"></p></div>
+        <div class="mt-8 space-y-8">
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="personal_info"></h3><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="first_name"></label><input class="w-full rounded-xl border px-4 py-3" value="Leana" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="last_name"></label><input class="w-full rounded-xl border px-4 py-3" value="Winter" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="birthdate"></label><input class="w-full rounded-xl border px-4 py-3" value="2014-10-11" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="gender"></label><select class="w-full rounded-xl border px-4 py-3"><option data-i18n="female"></option><option data-i18n="male"></option><option data-i18n="diverse"></option><option data-i18n="no_info"></option></select></div></div></div>
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="contact_section"></h3><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="email"></label><input class="w-full rounded-xl border px-4 py-3" value="test@test.ch" /><p class="mt-2 text-xs text-slate-500" data-i18n="child_email_hint"></p></div><div><label class="mb-2 block text-sm font-medium" data-i18n="phone"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="phone" /></div></div></div>
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="emergency"></h3><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="emergency_name"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="name" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="emergency_phone"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="phone" /></div></div></div>
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="address"></h3><div class="space-y-4"><div><label class="mb-2 block text-sm font-medium" data-i18n="street"></label><input class="w-full rounded-xl border px-4 py-3" value="Teststrasse 1" /></div><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="zip"></label><input class="w-full rounded-xl border px-4 py-3" value="8888" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="city"></label><input class="w-full rounded-xl border px-4 py-3" value="London" /></div></div></div></div>
         </div>
+        <div class="mt-8 flex gap-3"><button onclick="go('decision')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('parent-details')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button></div>
       </div>
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SCREEN 2C NEW EMAIL -->
-    <section id="screen-email-new" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-lg w-full">
-          <div class="mb-10 flex items-center justify-between">
-            <button onclick="go('screen-auth')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
-          </div>
-          <div class="text-xs font-medium uppercase tracking-wide text-slate-400">Create account</div>
-          <h3 class="mt-3 text-4xl font-semibold leading-tight">Set up your account</h3>
-          <p class="mt-4 text-sm leading-6 text-slate-600">Create your account to continue the access setup for Leana Winter.</p>
-          <div id="newEmailLabel" class="mt-6 rounded-xl border px-4 py-3 text-sm text-slate-700 bg-slate-50"></div>
-          <div class="mt-4 grid grid-cols-2 gap-3">
-            <input type="text" placeholder="First name" class="rounded-xl border px-3 py-3 text-sm" />
-            <input type="text" placeholder="Last name" class="rounded-xl border px-3 py-3 text-sm" />
-          </div>
-          <input type="password" placeholder="Password" class="mt-4 w-full rounded-xl border px-4 py-3 text-sm" />
-          <button onclick="go('screen-access-choice')" class="mt-5 w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white hover:bg-emerald-700">Accept and continue</button>
-          <p class="mt-4 text-xs text-slate-400">By creating an account, you agree to our Terms & Privacy Policy.</p>
+  <section id="parent-details" class="screen hidden">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span class="text-emerald-600" data-i18n="step_parent"></span><span>›</span><span data-i18n="step_complete"></span></div><button onclick="go('parent')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
+      <div class="max-w-2xl">
+        <div class="mb-2 text-sm text-slate-400" data-i18n="step4"></div>
+        <h2 class="text-2xl font-semibold" data-i18n="review_parent_details"></h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="review_parent_desc"></p>
+        <div class="mt-8 space-y-8">
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="personal_info"></h3><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="first_name"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="first_name" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="last_name"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="last_name" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="birthdate"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="birthdate" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="gender"></label><select class="w-full rounded-xl border px-4 py-3"><option data-i18n="female"></option><option data-i18n="male"></option><option data-i18n="diverse"></option><option data-i18n="no_info"></option></select></div></div></div>
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="contact_section"></h3><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="email"></label><input id="parent-email" class="w-full rounded-xl border px-4 py-3" value="test@test.ch" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="phone"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="phone" /></div></div></div>
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="relationship_emergency"></h3><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="relationship"></label><select class="w-full rounded-xl border px-4 py-3"><option data-i18n="mother"></option><option data-i18n="father"></option><option data-i18n="guardian"></option></select></div><div><label class="mb-2 block text-sm font-medium" data-i18n="contact_or_emergency_phone"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="phone" /></div></div></div>
+          <div><h3 class="mb-4 text-sm font-semibold text-slate-800" data-i18n="address"></h3><div class="space-y-4"><div><label class="mb-2 block text-sm font-medium" data-i18n="street"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="street" /></div><div class="grid grid-cols-1 gap-4 md:grid-cols-2"><div><label class="mb-2 block text-sm font-medium" data-i18n="zip"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="zip" /></div><div><label class="mb-2 block text-sm font-medium" data-i18n="city"></label><input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="city" /></div></div></div></div>
         </div>
+        <div class="mt-8 flex gap-3"><button onclick="go('parent')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="syncEmailFrom('parent-email'); go('parent-match')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button></div>
       </div>
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SCREEN 3 ACCESS CHOICE -->
-    <section id="screen-access-choice" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-xl w-full">
-          <div class="mb-8 flex items-center justify-between">
-            <button onclick="go('screen-auth')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
-          </div>
-
-          <div class="mb-8 flex items-center gap-3 text-xs text-slate-500">
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div>
-            <div class="font-medium text-emerald-700">Access type</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-500">2</div>
-            <div>Review data</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-500">3</div>
-            <div>Complete</div>
-          </div>
-
-          <div class="text-xs font-medium uppercase tracking-wide text-slate-400">Access setup</div>
-          <h2 class="mt-3 text-4xl font-semibold leading-tight text-slate-900">How should this access be connected?</h2>
-          <p class="mt-4 max-w-lg text-sm leading-6 text-slate-600">Choose whether this account should be linked directly to Leana Winter or to a parent / guardian with access to the profile.</p>
-
-          <div class="mt-8 space-y-3">
-            <button onclick="setPath('self'); go('screen-player-form')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left hover:border-slate-300 hover:bg-slate-50">
-              <div class="flex items-start justify-between gap-4">
-                <div>
-                  <div class="text-lg font-medium">Self access</div>
-                  <div class="mt-1 text-sm text-slate-500">This account belongs to Leana Winter directly.</div>
-                </div>
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">Direct link</span>
-              </div>
-            </button>
-
-            <button onclick="setPath('parent'); go('screen-parent-form')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left hover:border-slate-300 hover:bg-slate-50">
-              <div class="flex items-start justify-between gap-4">
-                <div>
-                  <div class="text-lg font-medium">Parent / guardian access</div>
-                  <div class="mt-1 text-sm text-slate-500">This account belongs to a parent or guardian who should be linked to Leana Winter.</div>
-                </div>
-                <span class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600">Linked access</span>
-              </div>
-            </button>
-
-            <button onclick="go('screen-already-linked')" class="w-full rounded-2xl border border-amber-200 bg-amber-50 p-5 text-left hover:bg-amber-100">
-              <div class="text-lg font-medium text-amber-900">Already connected</div>
-              <div class="mt-1 text-sm text-amber-800">Use this case when the signed-in account is already linked to this profile and should continue directly.</div>
-            </button>
+  <section id="parent-match" class="screen hidden">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span class="text-emerald-600" data-i18n="step_parent"></span><span>›</span><span data-i18n="step_complete"></span></div><button onclick="go('parent-details')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
+      <div class="max-w-2xl">
+        <div class="mb-2 text-sm text-slate-400" data-i18n="check_parent_contact"></div>
+        <h2 class="text-2xl font-semibold" data-i18n="check_parent_contact"></h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="check_parent_contact_desc"></p>
+        <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <div class="text-sm font-medium text-slate-800" data-i18n="possible_existing_contact"></div>
+          <div class="mt-3 space-y-1 text-sm text-slate-700">
+            <div><span class="font-medium" data-i18n="name"></span>: Anna Müller</div>
+            <div><span class="font-medium" data-i18n="email"></span>: anna.mueller@example.com</div>
+            <div><span class="font-medium" data-i18n="relation"></span>: <span data-i18n="relation_desc"></span></div>
           </div>
         </div>
-      </div>
-
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-        <div class="absolute inset-0 flex items-center justify-center p-12">
-          <div class="rounded-[2rem] bg-white/90 p-8 shadow-2xl">
-            <div class="text-6xl font-bold tracking-tight text-red-600">SFB</div>
-          </div>
+        <div class="mt-8 grid gap-4">
+          <button onclick="go('legal-parent')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50"><div class="text-base font-semibold" data-i18n="use_existing_contact"></div><div class="mt-1 text-sm text-slate-500" data-i18n="use_existing_contact_desc"></div></button>
+          <button onclick="go('legal-parent')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50"><div class="text-base font-semibold" data-i18n="create_new_parent_access"></div><div class="mt-1 text-sm text-slate-500" data-i18n="create_new_parent_access_desc"></div></button>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SCREEN 3B ALREADY LINKED -->
-    <section id="screen-already-linked" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-xl w-full">
-          <div class="mb-8 flex items-center justify-between">
-            <button onclick="go('screen-access-choice')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
-          </div>
+  <section id="legal-self" class="screen hidden">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span class="text-emerald-600" data-i18n="step_complete"></span></div><button onclick="go('player')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
+      <div class="max-w-xl">
+        <div class="mb-2 text-sm text-slate-400" data-i18n="step4"></div>
+        <h2 class="text-2xl font-semibold" data-i18n="confirm_access"></h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="confirm_access_desc"></p>
+        <label class="mt-8 flex items-start gap-3 text-sm text-slate-700"><input type="checkbox" class="mt-1" checked /><span data-i18n="confirm_access_checkbox"></span></label>
+        <div class="mt-8 flex gap-3"><button onclick="go('player')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('complete-self')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="finish"></button></div>
+      </div>
+    </div>
+  </section>
 
-          <div class="mb-8 flex items-center gap-3 text-xs text-slate-500">
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div>
-            <div class="font-medium text-emerald-700">Access type</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">2</div>
-            <div class="font-medium text-emerald-700">Review data</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-500">3</div>
-            <div>Complete</div>
-          </div>
-
-          <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">Access already connected</div>
-          <h2 class="mt-6 text-4xl font-semibold leading-tight text-slate-900">This account is already linked</h2>
-          <p class="mt-4 text-sm leading-6 text-slate-600">The signed-in account is already connected to Leana Winter’s profile. You can continue directly without setting up the access again.</p>
-
-          <div class="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-3 text-sm text-slate-700">
-            <div><span class="font-medium">Connected as:</span> Leana Winter</div>
-            <div><span class="font-medium">Account:</span> claudia+5555@pixel-plus.ch</div>
-            <div><span class="font-medium">Club:</span> Sportfreunde Burkhardsfelden e.V.</div>
-          </div>
-
-          <div class="mt-8 flex gap-3">
-            <button onclick="go('screen-access-choice')" class="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700">Back</button>
-            <button onclick="go('screen-end-linked')" class="flex-1 rounded-full bg-emerald-600 py-3 text-sm font-medium text-white">Continue</button>
-          </div>
+  <section id="legal-parent" class="screen hidden">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span class="text-emerald-600" data-i18n="step_parent"></span><span>›</span><span class="text-emerald-600" data-i18n="step_complete"></span></div><button onclick="go('parent-match')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
+      <div class="max-w-xl">
+        <div class="mb-2 text-sm text-slate-400" data-i18n="step5"></div>
+        <h2 class="text-2xl font-semibold" data-i18n="confirm_parent_access"></h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="confirm_parent_access_desc"></p>
+        <div class="mt-8 space-y-4">
+          <label class="flex items-start gap-3 text-sm text-slate-700"><input type="checkbox" class="mt-1" checked /><span data-i18n="confirm_parent_checkbox_1"></span></label>
+          <label class="flex items-start gap-3 text-sm text-slate-700"><input type="checkbox" class="mt-1" checked /><span data-i18n="confirm_parent_checkbox_2"></span></label>
         </div>
+        <div class="mt-8 flex gap-3"><button onclick="go('parent-match')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('complete-parent')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="finish"></button></div>
       </div>
+    </div>
+  </section>
 
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.18),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
+  <section id="complete-self" class="screen hidden"><div class="mx-auto max-w-5xl px-6 py-20 text-center"><h2 class="text-3xl font-semibold" data-i18n="done"></h2><p class="mt-3 text-slate-600" data-i18n="done_access"></p></div></section>
+  <section id="complete-parent" class="screen hidden"><div class="mx-auto max-w-5xl px-6 py-20 text-center"><h2 class="text-3xl font-semibold" data-i18n="done"></h2><p class="mt-3 text-slate-600" data-i18n="done_parent_access"></p></div></section>
 
-    <!-- SCREEN 4 PLAYER FORM -->
-    <section id="screen-player-form" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-xl w-full">
-          <div class="mb-8 flex items-center justify-between">
-            <button onclick="go('screen-access-choice')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
-          </div>
-          <div class="mb-6 flex items-center gap-3 text-xs text-slate-500">
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div><div class="font-medium text-emerald-700">Access type</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">2</div><div class="font-medium text-emerald-700">Review data</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-500">3</div><div>Complete</div>
-          </div>
-          <h3 class="text-4xl font-semibold leading-tight">Confirm player information</h3>
-          <p class="mt-4 text-sm leading-6 text-slate-600">Review and update the player details before continuing.</p>
-
-          <div class="mt-8 space-y-5">
-            <div>
-              <label class="mb-2 block text-sm font-medium">Player name</label>
-              <div class="grid grid-cols-2 gap-3">
-                <input value="Leana" class="rounded-xl border px-4 py-3 text-sm" />
-                <input value="Winter" class="rounded-xl border px-4 py-3 text-sm" />
-              </div>
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium">Birthdate & gender</label>
-              <div class="grid grid-cols-2 gap-3">
-                <select class="rounded-xl border px-4 py-3 text-sm"><option>Female</option><option>Male</option></select>
-                <input value="2014-10-11" class="rounded-xl border px-4 py-3 text-sm" />
-              </div>
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium">Address</label>
-              <input value="Teststrasse 1" class="rounded-xl border px-4 py-3 text-sm w-full" />
-              <div class="grid grid-cols-3 gap-3 mt-3">
-                <input value="8888" class="rounded-xl border px-4 py-3 text-sm" />
-                <input value="London" class="rounded-xl border px-4 py-3 text-sm" />
-                <input value="United Kingdom" class="rounded-xl border px-4 py-3 text-sm" />
-              </div>
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium">Contact</label>
-              <div class="grid grid-cols-2 gap-3">
-                <input value="test@test.ch" class="rounded-xl border px-4 py-3 text-sm" />
-                <input placeholder="Phone number" class="rounded-xl border px-4 py-3 text-sm" />
-              </div>
-            </div>
-          </div>
-          <div class="mt-6 flex gap-3">
-            <button onclick="go('screen-access-choice')" class="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700">Back</button>
-            <button onclick="go('screen-legal-self')" class="flex-1 rounded-full bg-emerald-600 py-3 text-sm font-medium text-white">Next</button>
-          </div>
+  <section id="account-setup" class="screen hidden">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="max-w-md">
+        <div class="mb-2 text-sm text-slate-400" data-i18n="step1"></div>
+        <h2 class="text-2xl font-semibold" data-i18n="create_account"></h2>
+        <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="create_account_desc"></p>
+        <div class="mt-8 space-y-4">
+          <input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="first_name" />
+          <input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="last_name" />
+          <input id="setup-email" class="w-full rounded-xl border px-4 py-3" value="test@test.ch" />
+          <input type="password" class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="password" />
         </div>
+        <p class="mt-4 text-xs text-slate-400" data-i18n="terms_hint"></p>
+        <div class="mt-8 flex gap-3"><button onclick="go('start')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="syncEmailFrom('setup-email'); go('decision')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button></div>
       </div>
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- SCREEN 4B PARENT FORM -->
-    <section id="screen-parent-form" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-xl w-full">
-          <div class="mb-8 flex items-center justify-between">
-            <button onclick="go('screen-access-choice')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
-          </div>
-          <div class="mb-6 flex items-center gap-3 text-xs text-slate-500">
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div><div class="font-medium text-emerald-700">Access type</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">2</div><div class="font-medium text-emerald-700">Review data</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-slate-500">3</div><div>Complete</div>
-          </div>
-          <h3 class="text-4xl font-semibold leading-tight">Confirm parent / guardian information</h3>
-          <p class="mt-4 text-sm leading-6 text-slate-600">Review the parent details and the linked player information before continuing.</p>
-
-          <div class="mt-8 space-y-5">
-            <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <div class="text-sm font-medium">Linked player</div>
-              <div class="mt-1 text-sm text-slate-700">Leana Winter</div>
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium">Parent / guardian name</label>
-              <div class="grid grid-cols-2 gap-3">
-                <input value="Claudia" class="rounded-xl border px-4 py-3 text-sm" />
-                <input value="Neu" class="rounded-xl border px-4 py-3 text-sm" />
-              </div>
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium">Relationship</label>
-              <select class="rounded-xl border px-4 py-3 text-sm w-full">
-                <option>Mother</option>
-                <option>Father</option>
-                <option>Guardian</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium">Contact</label>
-              <div class="grid grid-cols-2 gap-3">
-                <input value="claudia+5555@pixel-plus.ch" class="rounded-xl border px-4 py-3 text-sm" />
-                <input placeholder="Phone number" class="rounded-xl border px-4 py-3 text-sm" />
-              </div>
-            </div>
-            <div>
-              <label class="mb-2 block text-sm font-medium">Address</label>
-              <input value="Teststrasse 1" class="rounded-xl border px-4 py-3 text-sm w-full" />
-            </div>
-          </div>
-          <div class="mt-6 flex gap-3">
-            <button onclick="go('screen-access-choice')" class="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700">Back</button>
-            <button onclick="go('screen-legal-parent')" class="flex-1 rounded-full bg-emerald-600 py-3 text-sm font-medium text-white">Next</button>
-          </div>
-        </div>
-      </div>
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
-
-    <!-- SCREEN 5 LEGAL SELF -->
-    <section id="screen-legal-self" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-xl w-full">
-          <div class="mb-8 flex items-center justify-between">
-            <button onclick="go('screen-player-form')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
-          </div>
-          <div class="mb-6 flex items-center gap-3 text-xs text-slate-500">
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div><div class="font-medium text-emerald-700">Access type</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">2</div><div class="font-medium text-emerald-700">Review data</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">3</div><div class="font-medium text-emerald-700">Complete</div>
-          </div>
-          <h3 class="text-4xl font-semibold leading-tight">Confirm access</h3>
-          <p class="mt-4 text-sm leading-6 text-slate-600">Please confirm the information below before completing the access setup.</p>
-          <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-3 text-sm">
-            <div><span class="font-medium">Access type:</span> Self access</div>
-            <div><span class="font-medium">Profile:</span> Leana Winter</div>
-            <div><span class="font-medium">Account:</span> claudia+5555@pixel-plus.ch</div>
-          </div>
-          <div class="mt-6 rounded-2xl border border-slate-200 p-5">
-            <label class="flex items-start gap-3 text-sm text-slate-700">
-              <input type="checkbox" class="mt-1" checked />
-              <span>I confirm that the information is correct and I want to connect this account directly to Leana Winter’s profile.</span>
-            </label>
-          </div>
-          <div class="mt-6 flex gap-3">
-            <button onclick="go('screen-player-form')" class="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700">Back</button>
-            <button onclick="go('screen-end-self')" class="flex-1 rounded-full bg-emerald-600 py-3 text-sm font-medium text-white">Complete</button>
-          </div>
-        </div>
-      </div>
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
-
-    <!-- SCREEN 5 LEGAL PARENT -->
-    <section id="screen-legal-parent" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-xl w-full">
-          <div class="mb-8 flex items-center justify-between">
-            <button onclick="go('screen-parent-form')" class="text-sm text-slate-400 hover:text-slate-600">← Back</button>
-            <div class="text-2xl font-semibold tracking-tight text-slate-900">coachbetter</div>
-            <div class="text-xs text-slate-500">EN · Help</div>
-          </div>
-          <div class="mb-6 flex items-center gap-3 text-xs text-slate-500">
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">1</div><div class="font-medium text-emerald-700">Access type</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">2</div><div class="font-medium text-emerald-700">Review data</div>
-            <div class="h-px flex-1 bg-slate-200"></div>
-            <div class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white">3</div><div class="font-medium text-emerald-700">Complete</div>
-          </div>
-          <h3 class="text-4xl font-semibold leading-tight">Confirm access</h3>
-          <p class="mt-4 text-sm leading-6 text-slate-600">Please confirm the relationship and the linked profile before completing the access setup.</p>
-          <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 space-y-3 text-sm">
-            <div><span class="font-medium">Access type:</span> Parent / guardian access</div>
-            <div><span class="font-medium">Linked player:</span> Leana Winter</div>
-            <div><span class="font-medium">Relationship:</span> Mother</div>
-            <div><span class="font-medium">Account:</span> claudia+5555@pixel-plus.ch</div>
-          </div>
-          <div class="mt-6 space-y-3 rounded-2xl border border-slate-200 p-5">
-            <label class="flex items-start gap-3 text-sm text-slate-700">
-              <input type="checkbox" class="mt-1" checked />
-              <span>I confirm that I am authorised to access and manage this player profile.</span>
-            </label>
-            <label class="flex items-start gap-3 text-sm text-slate-700">
-              <input type="checkbox" class="mt-1" checked />
-              <span>I confirm that the relationship to Leana Winter is correct.</span>
-            </label>
-          </div>
-          <div class="mt-6 flex gap-3">
-            <button onclick="go('screen-parent-form')" class="flex-1 rounded-full border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700">Back</button>
-            <button onclick="go('screen-end-parent')" class="flex-1 rounded-full bg-emerald-600 py-3 text-sm font-medium text-white">Complete</button>
-          </div>
-        </div>
-      </div>
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.16),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
-
-    <!-- END SELF -->
-    <section id="screen-end-self" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-xl w-full text-center lg:text-left">
-          <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">Completed successfully</div>
-          <h2 class="mt-6 text-4xl font-semibold leading-tight text-slate-900">Welcome to the club</h2>
-          <p class="mt-4 text-sm leading-6 text-slate-600">Your account is now connected directly to Leana Winter’s profile. You can continue in the web version or download the app.</p>
-          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button class="rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white">Open web version</button>
-            <button class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700">Download app</button>
-          </div>
-        </div>
-      </div>
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.18),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
-
-    <!-- END PARENT -->
-    <section id="screen-end-parent" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-xl w-full text-center lg:text-left">
-          <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">Completed successfully</div>
-          <h2 class="mt-6 text-4xl font-semibold leading-tight text-slate-900">Parent access is ready</h2>
-          <p class="mt-4 text-sm leading-6 text-slate-600">Your account is now linked as a parent / guardian for Leana Winter. You can continue in the web version or download the app.</p>
-          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button class="rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white">Open web version</button>
-            <button class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700">Download app</button>
-          </div>
-        </div>
-      </div>
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.18),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
-
-    <!-- END LINKED -->
-    <section id="screen-end-linked" class="screen hidden min-h-[calc(100vh-73px)] grid grid-cols-1 lg:grid-cols-2 bg-white">
-      <div class="flex items-center justify-center p-10 lg:p-14">
-        <div class="max-w-xl w-full text-center lg:text-left">
-          <div class="inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 border border-emerald-100">Already connected</div>
-          <h2 class="mt-6 text-4xl font-semibold leading-tight text-slate-900">You’re ready to continue</h2>
-          <p class="mt-4 text-sm leading-6 text-slate-600">This account was already connectedto Leana Winter’s profile. You can continue directly to the web version or open the app.</p>
-          <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button class="rounded-xl bg-emerald-600 px-4 py-3 text-sm font-medium text-white">Open web version</button>
-            <button class="rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-medium text-slate-700">Open app</button>
-          </div>
-        </div>
-      </div>
-      <div class="relative hidden lg:block bg-slate-900">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.18),_transparent_40%),linear-gradient(135deg,#0f172a,#334155)]"></div>
-      </div>
-    </section>
-  </div>
-
-  <script>
-    let selectedPath = 'self';
-
-    function go(id) {
-      document.querySelectorAll('.screen').forEach((el) => el.classList.add('hidden'));
-      document.getElementById(id).classList.remove('hidden');
-    }
-
-    function setPath(path) {
-      selectedPath = path;
-    }
-
-    function goToEmail(type) {
-      const email = document.getElementById('emailInput').value || 'claudia+5555@pixel-plus.ch';
-      document.getElementById('existingEmailLabel').textContent = email;
-      document.getElementById('newEmailLabel').textContent = email;
-      if (type === 'existing') go('screen-email-existing');
-      else go('screen-email-new');
-    }
-
-    function resetFlow() {
-      go('screen-start');
-    }
-  </script>
+  <section id="already-linked" class="screen hidden">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="font-medium text-emerald-600" data-i18n="step_access"></span><span>›</span><span data-i18n="step_review"></span><span>›</span><span data-i18n="step_complete"></span></div><button onclick="go('decision')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
+      <div class="max-w-xl"><h2 class="text-2xl font-semibold" data-i18n="already_connected"></h2><p class="mt-2 leading-6 text-slate-600" data-i18n="already_connected_desc"></p><div class="mt-8 flex gap-3"><button onclick="go('decision')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('complete-self')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button></div></div>
+    </div>
+  </section>
 </body>
 </html>
