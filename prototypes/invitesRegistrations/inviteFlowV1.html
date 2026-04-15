@@ -13,9 +13,9 @@
         brand: 'coachbetter', help: 'Hilfe', invite_from: 'Einladung von', title_invite: 'Einladung',
         subtitle_setup_access: 'Zugang für Leana Winter einrichten',
         intro_text: 'Der Verein hat Sie eingeladen, den Zugang einzurichten. Damit können Sie Informationen zum Verein, zu Teams und zu Terminen einsehen – entweder für sich selbst oder als Elternteil.',
-        continue_club: 'Mit Vereinskonto fortfahren', continue_club_desc: 'Falls verfügbar, können Sie sich direkt mit Ihrem Vereinskonto anmelden.', continue_sfb: 'Mit SFB-Konto fortfahren',
-        continue_email: 'Mit E-Mail fortfahren', continue_email_desc: 'Melden Sie sich mit einem bestehenden Konto an oder erstellen Sie ein neues Konto.', existing_account: 'Bestehendes Konto', new_account: 'Neues Konto',
-        contact: 'Kontakt: info@sfb-club.de', sign_in: 'Anmeldung', sign_in_email: 'Mit E-Mail anmelden', sign_in_email_desc: 'Geben Sie Ihr Passwort ein, um mit der Einrichtung des Zugangs für Leana Winter fortzufahren.',
+        continue_club: 'Mit Vereinskonto fortfahren', continue_club_desc: 'Melden Sie sich mit Ihrem Vereinskonto an oder erstellen Sie eines, um fortzufahren.', continue_sfb: 'Mit SFB-Konto fortfahren',
+        continue_email: 'Mit E-Mail fortfahren', continue_email_desc: 'Melden Sie sich mit E-Mail an oder erstellen Sie ein neues Konto.', existing_account: 'Bestehendes Konto', new_account: 'Neues Konto',
+        what_next: 'Was passiert als Nächstes?', what_next_desc: 'Nach dem Fortfahren melden Sie sich an oder erstellen ein Konto. Anschließend führen wir Sie durch die nächsten Schritte, um den Zugang für Leana Winter einzurichten.', contact: 'Falls Sie diese Einladung irrtümlich erhalten haben, wenden Sie sich bitte an info@sfb-club.de', sign_in: 'Anmeldung', sign_in_email: 'Mit E-Mail anmelden', sign_in_email_desc: 'Geben Sie Ihr Passwort ein, um mit der Einrichtung des Zugangs für Leana Winter fortzufahren.',
         email: 'E-Mail', password: 'Passwort', change_email: 'E-Mail ändern', forgot_password: 'Passwort vergessen?', next: 'Weiter', back: 'Zurück', finish: 'Abschließen',
         step1: 'Schritt 1', step2: 'Schritt 2', step3: 'Schritt 3', step4: 'Schritt 4', step5: 'Schritt 5',
         step_access: 'Zugang festlegen', step_review: 'Daten prüfen', step_child: 'Kind-Daten prüfen', step_parent: 'Eltern-Daten prüfen', step_complete: 'Abschließen',
@@ -43,9 +43,9 @@
         brand: 'coachbetter', help: 'Help', invite_from: 'Invitation from', title_invite: 'Invitation',
         subtitle_setup_access: 'Set up access for Leana Winter',
         intro_text: 'The club has invited you to set up access. This allows you to view information about the club, teams, and schedules — either for yourself or as a parent.',
-        continue_club: 'Continue with club account', continue_club_desc: 'If available, you can sign in directly with your club account.', continue_sfb: 'Continue with SFB account',
-        continue_email: 'Continue with email', continue_email_desc: 'Sign in with an existing account or create a new account.', existing_account: 'Existing account', new_account: 'New account',
-        contact: 'Contact: info@sfb-club.de', sign_in: 'Sign in', sign_in_email: 'Sign in with email', sign_in_email_desc: 'Enter your password to continue setting up access for Leana Winter.',
+        continue_club: 'Continue with club account', continue_club_desc: 'Sign in with your club account or create one to continue.', continue_sfb: 'Continue with SFB account',
+        continue_email: 'Continue with email', continue_email_desc: 'Sign in with email or create a new account.', existing_account: 'Existing account', new_account: 'New account',
+        what_next: 'What happens next?', what_next_desc: 'After continuing, you’ll sign in or create an account. Then we’ll guide you through the next steps to set up access for Leana Winter.', contact: 'If you received this invitation by mistake, please contact info@sfb-club.de', sign_in: 'Sign in', sign_in_email: 'Sign in with email', sign_in_email_desc: 'Enter your password to continue setting up access for Leana Winter.',
         email: 'Email', password: 'Password', change_email: 'Change email', forgot_password: 'Forgot password?', next: 'Continue', back: 'Back', finish: 'Finish',
         step1: 'Step 1', step2: 'Step 2', step3: 'Step 3', step4: 'Step 4', step5: 'Step 5',
         step_access: 'Define access', step_review: 'Review details', step_child: 'Review child details', step_parent: 'Review parent details', step_complete: 'Complete',
@@ -71,7 +71,7 @@
       }
     };
 
-    const state = { lang: 'de', email: 'test@test.ch' };
+    const state = { lang: 'en', email: 'test@test.ch' };
 
     function t(key) { return i18n[state.lang][key] || key; }
     function setLang(lang) { state.lang = lang; document.documentElement.lang = lang; render(); }
@@ -129,7 +129,6 @@
         <h1 class="text-3xl font-semibold" data-i18n="title_invite"></h1>
         <h2 class="mt-2 text-xl" data-i18n="subtitle_setup_access"></h2>
         <p class="mt-5 leading-relaxed text-slate-600" data-i18n="intro_text"></p>
-
         <div class="mt-8 space-y-6">
           <div class="rounded-2xl border border-slate-200 bg-white p-5">
             <div class="text-sm font-medium" data-i18n="continue_club"></div>
@@ -146,6 +145,11 @@
               <button onclick="continueNewAccount()" class="w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="new_account"></button>
             </div>
           </div>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+          <div class="text-sm font-medium text-slate-800" data-i18n="what_next"></div>
+          <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="what_next_desc"></p>
         </div>
 
         <p class="mt-10 text-sm text-slate-400" data-i18n="contact"></p>
