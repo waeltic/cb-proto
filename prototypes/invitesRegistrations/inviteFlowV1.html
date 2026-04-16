@@ -479,9 +479,30 @@
           <button onclick="go('player')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50">
             <div class="flex items-start justify-between gap-4"><div><div class="text-base font-semibold" data-i18n="for_self"></div><div class="mt-1 text-sm text-slate-500" data-i18n="for_self_desc"></div></div><div class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600" data-i18n="direct_access"></div></div>
           </button>
-          <button onclick="openParentChildReview('choice')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50">
+          <button onclick="go('parent-confirm')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50">
             <div class="flex items-start justify-between gap-4"><div><div class="text-base font-semibold" data-i18n="for_parent"></div><div class="mt-1 text-sm text-slate-500" data-i18n="for_parent_desc"></div></div><div class="rounded-full bg-slate-100 px-3 py-1 text-xs text-slate-600" data-i18n="parent_access"></div></div>
           </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEW: Parent confirmation BEFORE profile -->
+  <section id="parent-confirm" class="screen hidden">
+    <div class="mx-auto max-w-3xl px-6 py-16">
+      <div class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <h2 class="text-2xl font-semibold">Confirm your role</h2>
+        <p class="mt-3 text-slate-600">You are setting up access as a parent or legal guardian of Leana Winter.</p>
+        <p class="mt-4 text-sm text-slate-500">You will be able to view and manage information on her behalf.</p>
+
+        <label class="mt-6 flex items-start gap-3 text-sm text-slate-700">
+          <input type="checkbox" class="mt-1" checked />
+          <span>I confirm that I am authorised to act as a parent or guardian.</span>
+        </label>
+
+        <div class="mt-8 flex gap-3">
+          <button onclick="goBack('decision')" class="flex-1 rounded-xl border border-slate-300 py-3 text-sm">Back</button>
+          <button onclick="openParentChildReview('choice')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm text-white">Continue</button>
         </div>
       </div>
     </div>
@@ -511,7 +532,7 @@
         <div class="flex gap-3 text-sm text-slate-500">
           <span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span data-i18n="step_parent"></span><span>›</span><span data-i18n="step_complete"></span>
         </div>
-        <button onclick="goBack('decision')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button>
+        <button onclick="goBack(state.parentEntryMode === 'forced' ? 'routing' : 'parent-confirm')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button>
       </div>
       <div class="max-w-2xl">
         <div class="mb-2 text-sm text-slate-400" data-i18n="step2"></div>
@@ -573,7 +594,7 @@
         </div>
 
         <div class="mt-8 flex gap-3">
-          <button onclick="goBack('decision')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button>
+          <button onclick="goBack(state.parentEntryMode === 'forced' ? 'routing' : 'parent-confirm')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button>
           <button onclick="go('parent-details')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button>
         </div>
       </div>
@@ -628,10 +649,7 @@
 
   <section id="legal-self" class="screen hidden">
     <div class="mx-auto max-w-5xl px-6 py-12">
-      <div class="mb-10 flex items-center justify-between">
-        <div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span class="text-emerald-600" data-i18n="step_complete"></span></div>
-        <button onclick="goBack('player')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button>
-      </div>
+      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span class="text-emerald-600" data-i18n="step_complete"></span></div><button onclick="goBack('player')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
       <div class="max-w-xl">
         <div class="mb-2 text-sm text-slate-400" data-i18n="step4"></div>
         <h2 class="text-2xl font-semibold">Legal confirmations</h2>
@@ -647,15 +665,11 @@
 
   <section id="legal-parent" class="screen hidden">
     <div class="mx-auto max-w-5xl px-6 py-12">
-      <div class="mb-10 flex items-center justify-between">
-        <div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span class="text-emerald-600" data-i18n="step_parent"></span><span>›</span><span class="text-emerald-600" data-i18n="step_complete"></span></div>
-        <button onclick="goBack('parent-details')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button>
-      </div>
+      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span class="text-emerald-600" data-i18n="step_parent"></span><span>›</span><span class="text-emerald-600" data-i18n="step_complete"></span></div><button onclick="goBack('parent-details')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
       <div class="max-w-xl">
         <div class="mb-2 text-sm text-slate-400" data-i18n="step4"></div>
         <h2 class="text-2xl font-semibold">Legal confirmations</h2>
         <p class="mt-2 text-sm leading-6 text-slate-600">Please confirm the required legal texts before parent access is completed.</p>
-        <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4"><div class="text-sm font-medium text-slate-800" data-i18n="parent_choice_summary"></div><p id="parent-choice-result" class="mt-1 text-sm text-slate-600"></p></div>
         <div class="mt-4 space-y-4 rounded-2xl border border-slate-200 bg-white p-5">
           <p class="text-sm text-slate-600">By continuing, you confirm that you are authorised to act as a parent or guardian for Leana Winter.</p>
           <label class="flex items-start gap-3 text-sm text-slate-700"><input type="checkbox" class="mt-1" checked /><span data-i18n="confirm_parent_checkbox_2"></span></label>
@@ -686,7 +700,7 @@
 
   <section id="post-complete-routing" class="screen hidden">
     <div class="mx-auto max-w-5xl px-6 py-12">
-      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="font-medium text-emerald-600" data-i18n="step_complete"></span><span>›</span><span data-i18n="prototype_label"></span></div><button onclick="goBack('complete-self')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
+      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="font-medium text-emerald-600" data-i18n="step_complete"></span><span>›</span><span data-i18n="prototype_label"></span></div><button onclick="goBack(state.postCompleteTarget === 'parent' ? 'complete-parent' : 'complete-self')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
       <div class="max-w-3xl">
         <h2 class="text-2xl font-semibold" data-i18n="post_complete_title"></h2>
         <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="post_complete_desc"></p>
