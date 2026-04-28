@@ -670,7 +670,7 @@
           <p class="mt-1 text-sm text-blue-800" data-i18n="expected_parent_access_desc"></p>
         </div>
         <p class="mt-4 text-sm leading-6 text-slate-600">You are setting up parent access for this profile. If this is not correct, please contact your club administrator. Please review and complete the child’s details first. Afterwards, you will add the parent information.</p>
-        <div class="mt-8 flex gap-3"><button onclick="go('parent-details')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button></div>
+        <div class="mt-8 flex gap-3"><button onclick="go('parent')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button></div>
       </div>
     </div>
   </section>
@@ -750,7 +750,7 @@
             </div>
           </div>
         </div>
-        <div class="mt-8 flex gap-3"><button onclick="go('parent-details')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button></div>
+        <div class="mt-8 flex gap-3"><button onclick="go('parent')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button></div>
       </div>
     </div>
   </section>
@@ -804,7 +804,7 @@
 
   <section id="parent-match" class="screen hidden">
     <div class="mx-auto max-w-5xl px-6 py-12">
-      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span class="text-emerald-600" data-i18n="step_parent"></span><span>›</span><span data-i18n="step_complete"></span></div><button onclick="go('parent-details')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
+      <div class="mb-10 flex items-center justify-between"><div class="flex gap-3 text-sm text-slate-500"><span class="text-emerald-600" data-i18n="step_access"></span><span>›</span><span class="text-emerald-600" data-i18n="step_child"></span><span>›</span><span class="text-emerald-600" data-i18n="step_parent"></span><span>›</span><span data-i18n="step_complete"></span></div><button onclick="go('parent')" class="text-sm text-slate-500 hover:text-slate-700" data-i18n="back"></button></div>
       <div class="max-w-2xl">
         <div class="mb-2 text-sm text-slate-400" data-i18n="check_parent_contact"></div>
         <h2 class="text-2xl font-semibold" data-i18n="check_parent_contact"></h2>
@@ -818,8 +818,8 @@
           </div>
         </div>
         <div class="mt-8 grid gap-4">
-          <button onclick="go('legal-parent')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50"><div class="text-base font-semibold" data-i18n="use_existing_contact"></div><div class="mt-1 text-sm text-slate-500" data-i18n="use_existing_contact_desc"></div></button>
-          <button onclick="go('legal-parent')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50"><div class="text-base font-semibold" data-i18n="create_new_parent_access"></div><div class="mt-1 text-sm text-slate-500" data-i18n="create_new_parent_access_desc"></div></button>
+          <button onclick="go('parent-details')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50"><div class="text-base font-semibold" data-i18n="use_existing_contact"></div><div class="mt-1 text-sm text-slate-500" data-i18n="use_existing_contact_desc"></div></button>
+          <button onclick="go('parent-details')" class="w-full rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-slate-300 hover:bg-slate-50"><div class="text-base font-semibold" data-i18n="create_new_parent_access"></div><div class="mt-1 text-sm text-slate-500" data-i18n="create_new_parent_access_desc"></div></button>
         </div>
       </div>
     </div>
@@ -833,7 +833,7 @@
         <h2 class="text-2xl font-semibold" data-i18n="confirm_access"></h2>
         <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="confirm_access_desc"></p>
         <label class="mt-8 flex items-start gap-3 text-sm text-slate-700"><input type="checkbox" class="mt-1" checked /><span data-i18n="confirm_access_checkbox"></span></label>
-        <div class="mt-8 flex gap-3"><button onclick="go('pre-self')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('complete-self')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="finish"></button></div>
+        <div class="mt-8 flex gap-3"><button onclick="go('pre-self')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('legal-self')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="finish"></button></div>
       </div>
     </div>
   </section>
@@ -849,7 +849,7 @@
           <label class="flex items-start gap-3 text-sm text-slate-700"><input type="checkbox" class="mt-1" checked /><span data-i18n="confirm_parent_checkbox_1"></span></label>
           <label class="flex items-start gap-3 text-sm text-slate-700"><input type="checkbox" class="mt-1" checked /><span data-i18n="confirm_parent_checkbox_2"></span></label>
         </div>
-        <div class="mt-8 flex gap-3"><button onclick="go('parent-match')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('complete-parent')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="finish"></button></div>
+        <div class="mt-8 flex gap-3"><button onclick="go('parent-match')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('legal-parent')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="finish"></button></div>
       </div>
     </div>
   </section>
@@ -934,7 +934,7 @@
         <p class="mt-4 text-sm leading-6 text-slate-600" data-i18n="already_self_detail"></p>
         <p class="mt-4 text-sm leading-6 text-slate-600" data-i18n="already_self_mismatch"></p>
         <p class="mt-4 text-sm leading-6 text-slate-600" data-i18n="contact_admin_access"></p>
-        <div class="mt-8 flex gap-3"><button onclick="go('routing')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('complete-self')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="continue_with_access"></button></div>
+        <div class="mt-8 flex gap-3"><button onclick="go('routing')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('legal-self')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="continue_with_access"></button></div>
       </div>
     </div>
   </section>
@@ -948,10 +948,9 @@
         <p class="mt-4 text-sm leading-6 text-slate-600" data-i18n="already_parent_detail"></p>
         <p class="mt-4 text-sm leading-6 text-slate-600" data-i18n="already_parent_mismatch"></p>
         <p class="mt-4 text-sm leading-6 text-slate-600" data-i18n="contact_admin_access"></p>
-        <div class="mt-8 flex gap-3"><button onclick="go('routing')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('complete-parent')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="continue_with_access"></button></div>
+        <div class="mt-8 flex gap-3"><button onclick="go('routing')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button><button onclick="go('legal-parent')" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="continue_with_access"></button></div>
       </div>
     </div>
   </section>
 </body>
 </html>
-
