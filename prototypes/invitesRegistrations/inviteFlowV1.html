@@ -49,7 +49,7 @@
         personal: 'Personal details', first_name: 'First name', last_name: 'Last name', birthdate: 'Date of birth', gender: 'Gender', phone: 'Phone', address: 'Address', street: 'Street and house number', zip: 'ZIP / Postal code', city: 'City', emergency: 'Emergency contact', emergency_name: 'Emergency contact name', emergency_phone: 'Emergency contact phone',
         parent_details_title: 'Enter parent details', parent_details_desc: 'Please complete your own parent or guardian details. We will then check if a matching parent contact already exists.', relationship: 'Relationship to child', mother: 'Mother', father: 'Father', guardian: 'Guardian',
         parent_identity_title: 'Use your existing profile?', parent_identity_desc: 'This account is already linked to the person below. Use this profile as the parent / guardian for Leana Winter?', use_my_profile: 'Use my existing profile', enter_different_parent: 'Enter different parent details',
-        parent_match_title: 'Existing parent contact', parent_match_desc: 'A matching parent contact may already exist. If so, the club can review this after setup.', possible_contact: 'Possible existing contact', use_existing: 'Use existing contact', create_new_parent: 'Create new parent contact',
+        parent_match_title: 'Is one of these parents you?', parent_match_desc: 'This child already has parent contacts linked. Please select your existing parent profile or create a new parent profile if none of them is you.', possible_contact: 'Already linked parent contacts', use_existing: 'This is me', create_new_parent: 'Create new parent profile',
         legal_self_title: 'Club terms and conditions', legal_self_desc: 'Please review and accept the club terms before completing the setup.', legal_self_check: 'I accept the club terms and conditions.',
         legal_parent_title: 'Club terms and conditions', legal_parent_desc: 'Please review and accept the club terms before completing the setup.', legal_parent_summary: 'Your parent access was confirmed earlier. This step only covers the general club terms.',
         already_title: 'Access already set up', already_self: 'Your account already has direct access to Leana Winter’s profile.', already_parent: 'Your account already has parent access for Leana Winter.', already_hint: 'If this is not the access you expected, please contact your club administrator.', go_club: 'Go to club', open_app: 'Open app',
@@ -89,7 +89,7 @@
         personal: 'Persönliche Angaben', first_name: 'Vorname', last_name: 'Nachname', birthdate: 'Geburtsdatum', gender: 'Geschlecht', phone: 'Telefon', address: 'Adresse', street: 'Straße und Hausnummer', zip: 'PLZ', city: 'Ort', emergency: 'Notfallkontakt', emergency_name: 'Name des Notfallkontakts', emergency_phone: 'Telefon des Notfallkontakts',
         parent_details_title: 'Eltern-Daten erfassen', parent_details_desc: 'Bitte ergänzen Sie Ihre eigenen Daten als Elternteil oder erziehungsberechtigte Person. Danach prüfen wir, ob bereits ein passender Elternkontakt vorhanden ist.', relationship: 'Beziehung zum Kind', mother: 'Mutter', father: 'Vater', guardian: 'Erziehungsberechtigte Person',
         parent_identity_title: 'Bestehendes Profil verwenden?', parent_identity_desc: 'Dieses Konto ist bereits mit der untenstehenden Person verknüpft. Soll dieses Profil als Elternteil / erziehungsberechtigte Person für Leana Winter verwendet werden?', use_my_profile: 'Mein bestehendes Profil verwenden', enter_different_parent: 'Andere Eltern-Daten eingeben',
-        parent_match_title: 'Bestehender Elternkontakt', parent_match_desc: 'Es kann bereits ein passender Elternkontakt vorhanden sein. Falls nötig, kann der Verein dies nach der Einrichtung prüfen.', possible_contact: 'Möglicher bestehender Kontakt', use_existing: 'Bestehenden Kontakt verwenden', create_new_parent: 'Neuen Elternkontakt anlegen',
+        parent_match_title: 'Sind Sie einer dieser Elternkontakte?', parent_match_desc: 'Für dieses Kind sind bereits Elternkontakte verknüpft. Bitte wählen Sie Ihr bestehendes Elternprofil aus oder erstellen Sie ein neues Elternprofil, falls keiner davon Sie sind.', possible_contact: 'Bereits verknüpfte Elternkontakte', use_existing: 'Das bin ich', create_new_parent: 'Neues Elternprofil erstellen',
         legal_self_title: 'Vereinsbedingungen', legal_self_desc: 'Bitte prüfen und akzeptieren Sie die Vereinsbedingungen, bevor die Einrichtung abgeschlossen wird.', legal_self_check: 'Ich akzeptiere die Vereinsbedingungen.',
         legal_parent_title: 'Vereinsbedingungen', legal_parent_desc: 'Bitte prüfen und akzeptieren Sie die Vereinsbedingungen, bevor die Einrichtung abgeschlossen wird.', legal_parent_summary: 'Der Elternzugang wurde bereits vorher bestätigt. In diesem Schritt geht es nur um die allgemeinen Vereinsbedingungen.',
         already_title: 'Zugang bereits eingerichtet', already_self: 'Ihr Konto hat bereits direkten Zugriff auf das Profil von Leana Winter.', already_parent: 'Ihr Konto hat bereits Elternzugang für Leana Winter.', already_hint: 'Falls dies nicht der erwartete Zugang ist, kontaktieren Sie bitte den Vereinsadministrator.', go_club: 'Zum Verein', open_app: 'App öffnen',
@@ -211,12 +211,25 @@
     }
 
     function routeParentForced() { state.loggedPerson = 'normal'; go('pre-parent-forced'); }
+    function routeParentNormal() { state.loggedPerson = 'normal'; go('pre-parent'); }
     function routeParentWithExistingPerson() { state.loggedPerson = 'has-person'; go('pre-parent'); }
+    function routeParentNoPersonWithExistingParents() { state.loggedPerson = 'no-person-existing-parents'; go('pre-parent'); }
     function parentIntroNext() { go('child-parent'); }
-    function afterChildParent() { state.loggedPerson === 'has-person' ? go('parent-identity') : go('parent-details'); }
+    function afterChildParent() {
+      if (state.loggedPerson === 'has-person') {
+        go('parent-identity');
+      } else if (state.loggedPerson === 'no-person-existing-parents') {
+        go('parent-existing-select');
+      } else {
+        go('parent-details');
+      }
+    }
 
     function runTests() {
       console.assert(typeof render === 'function', 'render should be defined before DOMContentLoaded');
+      console.assert(typeof afterChildParent === 'function', 'afterChildParent should exist');
+      console.assert(typeof routeParentNormal === 'function', 'normal parent route should exist');
+      console.assert(document.getElementById('parent-existing-select'), 'existing parent selection screen should exist');
       console.assert(i18n.de.legal_parent_summary.endsWith('.') || i18n.de.legal_parent_summary.endsWith('n.'), 'German legal_parent_summary should be valid text');
       console.assert(i18n.de.already_title, 'German i18n object should continue after legal_parent_summary');
       console.assert(i18n.en.done_self === 'Welcome to the club', 'Final page should be a welcome page');
@@ -343,6 +356,7 @@
             <button onclick="go('exception-adult')" class="card"><b data-i18n="case4"></b><span data-i18n="case4_desc"></span></button>
             <button onclick="go('pre-self-assumed')" class="card"><b data-i18n="case5"></b><span data-i18n="case5_desc"></span></button>
             <button onclick="go('decision')" class="card"><b data-i18n="case6"></b><span data-i18n="case6_desc"></span></button>
+            <button onclick="routeParentNoPersonWithExistingParents()" class="card"><b>Parent flow: no person, existing parents linked</b><span>Shows parent selection before parent details.</span></button>
             <button onclick="go('exception-wrong-user')" class="card sm:col-span-2"><b data-i18n="case7"></b><span data-i18n="case7_desc"></span></button>
           </div>
         </div>
@@ -354,7 +368,7 @@
       <h2 data-i18n="decision_title"></h2><p data-i18n="decision_desc"></p>
       <div class="mt-8 grid gap-4">
         <button onclick="go('pre-self')" class="option"><b data-i18n="self_title"></b><span data-i18n="self_desc"></span></button>
-        <button onclick="routeParentWithExistingPerson()" class="option"><b data-i18n="parent_title"></b><span data-i18n="parent_desc"></span></button>
+        <button onclick="routeParentNormal()" class="option"><b data-i18n="parent_title"></b><span data-i18n="parent_desc"></span></button>
       </div>
     </div></section>
 
@@ -367,13 +381,45 @@
     <section id="child-self" class="screen hidden page"><div class="wrap wide"><div class="top"><div class="steps" data-stepper="step_account,step_access,step_child,step_legal,step_done" data-active="2"></div><button onclick="go('pre-self')" data-i18n="back"></button></div><h2 data-i18n="child_title"></h2><p data-i18n="child_self_desc"></p><div id="child-form" class="form"></div><button onclick="go('legal-self')" class="primary mt-8" data-i18n="next"></button></div></section>
     <section id="child-parent" class="screen hidden page"><div class="wrap wide"><div class="top"><div class="steps" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="3"></div><button onclick="go('pre-parent')" data-i18n="back"></button></div><h2 data-i18n="child_title"></h2><p data-i18n="child_parent_desc"></p><div id="child-form-parent" class="form"></div><button onclick="afterChildParent()" class="primary mt-8" data-i18n="next"></button></div></section>
 
+    
+    <section id="parent-existing-select" class="screen hidden page">
+      <div class="wrap">
+        <div class="steps mb-8" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="4"></div>
+        <h2 data-i18n="parent_match_title"></h2>
+        <p data-i18n="parent_match_desc"></p>
+
+        <div class="panel mt-6">
+          <b data-i18n="possible_contact"></b>
+          <div class="mt-4 grid gap-3">
+            <button onclick="go('legal-parent')" class="option">
+              <b>Anna Müller</b>
+              <span>anna.mueller@example.com · Mother</span>
+              <span class="mt-2 font-medium text-emerald-700" data-i18n="use_existing"></span>
+            </button>
+            <button onclick="go('legal-parent')" class="option">
+              <b>Michael Winter</b>
+              <span>michael.winter@example.com · Father</span>
+              <span class="mt-2 font-medium text-emerald-700" data-i18n="use_existing"></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mt-8">
+          <button onclick="go('parent-details')" class="option w-full">
+            <b data-i18n="create_new_parent"></b>
+            <span>Create a new parent profile linked to your account.</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <section id="parent-identity" class="screen hidden page"><div class="wrap"><div class="steps mb-8" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="4"></div><h2 data-i18n="parent_identity_title"></h2><p data-i18n="parent_identity_desc"></p><div class="panel mt-6"><b>Claudia Wälti</b><p class="text-sm text-slate-500">test@test.ch</p></div><div class="mt-8 grid gap-4"><button onclick="go('legal-parent')" class="option"><b data-i18n="use_my_profile"></b></button><button onclick="go('parent-details')" class="option"><b data-i18n="enter_different_parent"></b></button></div></div></section>
 
     <section id="parent-details" class="screen hidden page"><div class="wrap wide"><div class="top"><div class="steps" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="4"></div><button onclick="go('child-parent')" data-i18n="back"></button></div><h2 data-i18n="parent_details_title"></h2><p data-i18n="parent_details_desc"></p><div id="parent-form" class="form"></div><button onclick="go('legal-parent')" class="primary mt-8" data-i18n="next"></button></div></section>
 
 
     <section id="legal-self" class="screen hidden page"><div class="wrap"><div class="steps mb-8" data-stepper="step_account,step_access,step_child,step_legal,step_done" data-active="3"></div><h2 data-i18n="legal_self_title"></h2><p data-i18n="legal_self_desc"></p><label class="mt-6 flex gap-3 text-sm"><input type="checkbox" checked /> <span data-i18n="legal_self_check"></span></label><button onclick="go('complete-self')" class="primary mt-8" data-i18n="finish"></button></div></section>
-    <section id="legal-parent" class="screen hidden page"><div class="wrap"><div class="steps mb-8" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="5"></div><h2 data-i18n="legal_parent_title"></h2><p data-i18n="legal_parent_desc"></p><div class="panel mt-6"><p data-i18n="legal_parent_summary"></p><p class="text-sm text-slate-500" data-i18n="parent_match_desc"></p><label><input type="checkbox" checked /> <span data-i18n="legal_self_check"></span></label></div><button onclick="go('complete-parent')" class="primary mt-8" data-i18n="finish"></button></div></section>
+    <section id="legal-parent" class="screen hidden page"><div class="wrap"><div class="steps mb-8" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="5"></div><h2 data-i18n="legal_parent_title"></h2><p data-i18n="legal_parent_desc"></p><div class="panel mt-6"><p data-i18n="legal_parent_summary"></p><label><input type="checkbox" checked /> <span data-i18n="legal_self_check"></span></label></div><button onclick="go('complete-parent')" class="primary mt-8" data-i18n="finish"></button></div></section>
 
     <section id="already-self" class="screen hidden page"><div class="wrap"><h2 data-i18n="already_title"></h2><p data-i18n="already_self"></p><p class="mt-3 text-sm text-slate-500" data-i18n="already_hint"></p><div class="mt-8 flex gap-3"><button onclick="go('start')" class="secondary" data-i18n="go_club"></button><button onclick="go('start')" class="primary" data-i18n="open_app"></button></div></div></section>
     <section id="already-parent" class="screen hidden page"><div class="wrap"><h2 data-i18n="already_title"></h2><p data-i18n="already_parent"></p><p class="mt-3 text-sm text-slate-500" data-i18n="already_hint"></p><div class="mt-8 flex gap-3"><button onclick="go('start')" class="secondary" data-i18n="go_club"></button><button onclick="go('start')" class="primary" data-i18n="open_app"></button></div></div></section>
@@ -400,14 +446,8 @@
     .card b, .option b { display:block; }
     .card span, .option span { display:block; margin-top:4px; color:rgb(100 116 139); font-size:14px; }
     .panel { border:1px solid rgb(226 232 240); background:rgb(248 250 252); border-radius:1rem; padding:1.25rem; }
-    .panel label { display:flex; gap:.75rem; margin-top:.75rem; font-size:14px; color:rgb(51 65 85); }
-    .hint { border:1px solid rgb(191 219 254); background:rgb(239 246 255); color:rgb(30 64 175); border-radius:1rem; padding:1rem; margin-bottom:1.5rem; }
-    .hint p { color:rgb(30 64 175); font-size:14px; }
-    .danger { border:1px solid rgb(254 202 202); background:white; border-radius:1.5rem; padding:2rem; box-shadow:0 1px 2px rgb(0 0 0 / .04); }
-    .danger h2 { color:rgb(127 29 29); }
-    .form { margin-top:2rem; display:grid; gap:2rem; }
-    .form h3 { font-size:14px; font-weight:650; color:rgb(30 41 59); margin-bottom:1rem; }
+    .panel label { display:flex; gap:10px; margin-top:8px; }
+    .hint { border:1px solid rgb(191 219 254); background:rgb(239 246 255); border-radius:1rem; padding:1rem; }
+    .danger { border:1px solid rgb(254 202 202); background:rgb(254 242 242); border-radius:1rem; padding:1.5rem; }
+    .form h3 { margin-top:24px; font-weight:600; }
   </style>
-</body>
-</html>
-
