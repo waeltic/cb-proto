@@ -1,1 +1,416 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generic Team Invite Flow</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <script>
+    const state = {
+      lang: 'en',
+      email: 'test@test.ch',
+      current: 'start',
+      loggedPerson: 'normal'
+    };
+
+    const i18n = {
+      en: {
+        brand: 'coachbetter', help: 'Help', back: 'Back', next: 'Continue', finish: 'Finish', close: 'Close',
+        step_account: 'Account', step_access: 'Access', step_profile: 'Profile', step_parent_confirm: 'Parent confirmation', step_child: 'Child profile', step_parent: 'Parent details', step_legal: 'Legal', step_done: 'Done',
+        invite_from: 'Invitation from', title_invite: 'Set up access for U13 Juniors',
+        intro_text: 'The club has invited you to set up team access. You can then view club, team and schedule information — either for yourself or as a parent / guardian.',
+        continue_sfb: 'Continue with SFB account', continue_email: 'Continue with email', existing_account: 'Existing account', new_account: 'New account',
+        what_next: 'What happens next?', what_next_desc: 'After signing in or creating an account, we check your account and guide you through the right setup flow.',
+        contact: 'If you received this invitation by mistake, please contact info@sfb-club.de.',
+        sign_in: 'Sign in with email', sign_in_desc: 'Enter your password to continue.', email: 'Email', password: 'Password', change_email: 'Change email', forgot_password: 'Forgot password?',
+        create_account: 'Create account', create_account_desc: 'Create a new account to set up access for this team.', terms_line: 'I agree to the Terms of Use and Privacy Policy.', terms_error: 'Please accept the terms to continue.',
+        routing_title: 'Prototype routing', routing_desc: 'In the real product, this decision is automatic. Here you can open each case manually.',
+        case1: 'User already has access in this team', case1_desc: 'User already has direct or parent access to a profile in this team.',
+        case2: 'User already has access in another team', case2_desc: 'Existing access outside this team. Additional profiles can still be connected.',
+        case3: 'User not linked with this team', case3_desc: 'Choose self or parent.',
+        case4: 'Account linked to different person — self not possible', case4_desc: 'Hard stop / ask admin.',
+        decision_title: 'Who should get access?', decision_desc: 'Please choose how this account should be linked for this team.',
+        self_title: 'For myself', self_desc: 'This account will be linked directly to your own profile in this team.',
+        parent_title: 'For my child', parent_desc: 'This account will be linked as parent access for a player profile.',
+        expected_parent_title: 'Parent access is expected', expected_parent_desc: 'This team is a youth team. Parent access is the recommended setup.',
+        pre_self_title: 'Set up direct access', pre_self_desc: 'You are about to set up direct access. Next, select or create the profile that should be linked to this account.',
+        pre_parent_title: 'Set up parent access', pre_parent_desc: 'You are about to link your account as a parent or guardian. If this is not correct, please contact your club administrator.',
+        pre_parent_next: 'Next, you will select the player profile first. Afterwards you will enter or confirm your own parent details.',
+        parent_confirm_title: 'Confirm parent access',
+        parent_confirm_1: 'I confirm that I am authorised to use this access as a parent or guardian.',
+        parent_confirm_2: 'I confirm that this account should be linked as parent access for the selected player profile.',
+        select_profile_title: 'Select an existing profile', select_profile_desc: 'To avoid duplicate profiles, please select an existing profile if possible.',
+        available_profiles: 'Available team profiles', use_existing: 'This is the correct profile', cannot_find_profile: 'I cannot find the correct profile',
+        create_profile_title: 'Create a new profile', create_profile_desc: 'Only create a new profile if no matching profile exists.', create_profile_warning: 'Please search carefully before creating a new profile. This helps the club avoid duplicates.',
+        child_title: 'Review player profile', child_self_desc: 'Please review and complete the details before setting up direct access.', child_parent_desc: 'Please review the player profile first. Parent details come next.',
+        personal: 'Personal details', first_name: 'First name', last_name: 'Last name', birthdate: 'Date of birth', gender: 'Gender', phone: 'Phone', address: 'Address', street: 'Street and house number', zip: 'ZIP / Postal code', city: 'City', emergency: 'Emergency contact', emergency_name: 'Emergency contact name', emergency_phone: 'Emergency contact phone',
+        parent_details_title: 'Enter parent details', parent_details_desc: 'Please complete your own parent or guardian details. We will then check if a matching parent contact already exists.', relationship: 'Relationship to child', mother: 'Mother', father: 'Father', guardian: 'Guardian',
+        parent_identity_title: 'Use your existing profile?', parent_identity_desc: 'This account is already linked to the person below. Use this profile as the parent / guardian?', use_my_profile: 'Use my existing profile', enter_different_parent: 'Enter different parent details',
+        parent_match_title: 'Is one of these parents you?', parent_match_desc: 'This player already has parent contacts linked. Please select your existing parent profile or create a new parent profile if none of them is you.', possible_contact: 'Already linked parent contacts', create_new_parent: 'Create new parent profile',
+        legal_self_title: 'Club terms and conditions', legal_self_desc: 'Please review and accept the club terms before completing the setup.', legal_self_check: 'I accept the club terms and conditions.',
+        legal_parent_title: 'Club terms and conditions', legal_parent_desc: 'Please review and accept the club terms before completing the setup.', legal_parent_summary: 'Your parent access was confirmed earlier. This step only covers the general club terms.',
+        already_title: 'Access already set up', already_self: 'Your account already has direct access to a profile in this team.', already_parent: 'Your account already has parent access to a player profile in this team.', already_hint: 'If this is not the access you expected, please contact your club administrator.', connected_to: 'Connected to', access_type: 'Access type', direct_access: 'Direct access', parent_access: 'Parent access', team_label: 'Team', connect_another: 'Connect another profile', connect_another_self_hint: 'You already have direct access. Additional access can be added as parent access for another player profile.', connect_another_parent_hint: 'You already have parent access. You can add another child or, if needed, set up direct access for yourself.', go_club: 'Go to club', open_app: 'Open app',
+        exception_title: 'Access not possible', exception_wrong: 'This account is already linked to another person and cannot be used for direct access to another profile.', exception_contact: 'Please use a different account or contact your club administrator.',
+        done_self: 'Welcome to the team', done_parent: 'Welcome to the team', done_desc: 'Your access has been set up successfully. You can now start using the team area.'
+      },
+      de: {
+        brand: 'coachbetter', help: 'Hilfe', back: 'Zurück', next: 'Weiter', finish: 'Abschließen', close: 'Schließen',
+        step_account: 'Konto', step_access: 'Zugang', step_profile: 'Profil', step_parent_confirm: 'Elternbestätigung', step_child: 'Spielerprofil', step_parent: 'Eltern-Daten', step_legal: 'Rechtliches', step_done: 'Fertig',
+        invite_from: 'Einladung von', title_invite: 'Zugang für U13 Junioren einrichten',
+        intro_text: 'Der Verein hat Sie eingeladen, den Teamzugang einzurichten. Danach können Sie Informationen zum Verein, zum Team und zu Terminen einsehen – entweder für sich selbst oder als Elternteil / erziehungsberechtigte Person.',
+        continue_sfb: 'Mit SFB-Konto fortfahren', continue_email: 'Mit E-Mail fortfahren', existing_account: 'Bestehendes Konto', new_account: 'Neues Konto',
+        what_next: 'Was passiert als Nächstes?', what_next_desc: 'Nach der Anmeldung oder Kontoerstellung prüfen wir Ihr Konto und führen Sie durch den passenden Ablauf.',
+        contact: 'Falls Sie diese Einladung irrtümlich erhalten haben, wenden Sie sich bitte an info@sfb-club.de.',
+        sign_in: 'Mit E-Mail anmelden', sign_in_desc: 'Geben Sie Ihr Passwort ein, um fortzufahren.', email: 'E-Mail', password: 'Passwort', change_email: 'E-Mail ändern', forgot_password: 'Passwort vergessen?',
+        create_account: 'Konto erstellen', create_account_desc: 'Erstellen Sie ein neues Konto, um den Zugang für dieses Team einzurichten.', terms_line: 'Ich stimme den Nutzungsbedingungen und der Datenschutzerklärung zu.', terms_error: 'Bitte akzeptieren Sie die Bedingungen, um fortzufahren.',
+        routing_title: 'Prototype Routing', routing_desc: 'Im echten Produkt wird diese Entscheidung automatisch getroffen. Hier können die Fälle manuell geöffnet werden.',
+        case1: 'Benutzer hat bereits Zugang in diesem Team', case1_desc: 'Der Benutzer hat bereits direkten Zugriff oder Elternzugang in diesem Team.',
+        case2: 'Benutzer hat bereits Zugang in einem anderen Team', case2_desc: 'Bestehender Zugang ausserhalb dieses Teams. Weitere Profile können trotzdem verbunden werden.',
+        case3: 'Benutzer nicht mit diesem Team verknüpft', case3_desc: 'Auswahl Self oder Elternteil.',
+        case4: 'Konto mit anderer Person verknüpft – Self nicht möglich', case4_desc: 'Stopp / Admin kontaktieren.',
+        decision_title: 'Für wen soll der Zugang eingerichtet werden?', decision_desc: 'Bitte wählen Sie, wie dieses Konto für dieses Team verknüpft werden soll.',
+        self_title: 'Für mich selbst', self_desc: 'Dieses Konto wird direkt mit Ihrem eigenen Profil in diesem Team verknüpft.',
+        parent_title: 'Für mein Kind', parent_desc: 'Dieses Konto wird als Elternzugang für ein Spielerprofil verknüpft.',
+        expected_parent_title: 'Elternzugang erwartet', expected_parent_desc: 'Dieses Team ist ein Jugendteam. Elternzugang ist der empfohlene Ablauf.',
+        pre_self_title: 'Direkten Zugang einrichten', pre_self_desc: 'Sie richten direkten Zugang ein. Als Nächstes wählen oder erstellen Sie das Profil, das mit diesem Konto verknüpft werden soll.',
+        pre_parent_title: 'Elternzugang einrichten', pre_parent_desc: 'Sie verknüpfen Ihr Konto als Elternteil oder erziehungsberechtigte Person. Falls das nicht korrekt ist, kontaktieren Sie bitte den Vereinsadministrator.',
+        pre_parent_next: 'Als Nächstes wählen Sie zuerst das Spielerprofil. Danach erfassen oder bestätigen Sie Ihre eigenen Eltern-Daten.',
+        parent_confirm_title: 'Elternzugang bestätigen',
+        parent_confirm_1: 'Ich bestätige, dass ich berechtigt bin, diesen Zugang als Elternteil oder erziehungsberechtigte Person zu nutzen.',
+        parent_confirm_2: 'Ich bestätige, dass dieses Konto als Elternzugang für das ausgewählte Spielerprofil verknüpft werden soll.',
+        select_profile_title: 'Bestehendes Profil auswählen', select_profile_desc: 'Um Duplikate zu vermeiden, wählen Sie wenn möglich ein bestehendes Profil aus.',
+        available_profiles: 'Verfügbare Teamprofile', use_existing: 'Das ist das richtige Profil', cannot_find_profile: 'Ich finde das richtige Profil nicht',
+        create_profile_title: 'Neues Profil erstellen', create_profile_desc: 'Nur erstellen, wenn kein passendes Profil existiert.', create_profile_warning: 'Bitte suchen Sie sorgfältig, bevor ein neues Profil erstellt wird. So vermeidet der Verein Duplikate.',
+        child_title: 'Spielerprofil prüfen', child_self_desc: 'Bitte prüfen und ergänzen Sie die Angaben, bevor der direkte Zugang eingerichtet wird.', child_parent_desc: 'Bitte prüfen Sie zuerst das Spielerprofil. Die Eltern-Daten folgen danach.',
+        personal: 'Persönliche Angaben', first_name: 'Vorname', last_name: 'Nachname', birthdate: 'Geburtsdatum', gender: 'Geschlecht', phone: 'Telefon', address: 'Adresse', street: 'Straße und Hausnummer', zip: 'PLZ', city: 'Ort', emergency: 'Notfallkontakt', emergency_name: 'Name des Notfallkontakts', emergency_phone: 'Telefon des Notfallkontakts',
+        parent_details_title: 'Eltern-Daten erfassen', parent_details_desc: 'Bitte ergänzen Sie Ihre eigenen Daten als Elternteil oder erziehungsberechtigte Person. Danach prüfen wir, ob bereits ein passender Elternkontakt vorhanden ist.', relationship: 'Beziehung zum Kind', mother: 'Mutter', father: 'Vater', guardian: 'Erziehungsberechtigte Person',
+        parent_identity_title: 'Bestehendes Profil verwenden?', parent_identity_desc: 'Dieses Konto ist bereits mit der untenstehenden Person verknüpft. Soll dieses Profil als Elternteil / erziehungsberechtigte Person verwendet werden?', use_my_profile: 'Mein bestehendes Profil verwenden', enter_different_parent: 'Andere Eltern-Daten eingeben',
+        parent_match_title: 'Sind Sie einer dieser Elternkontakte?', parent_match_desc: 'Für dieses Spielerprofil sind bereits Elternkontakte verknüpft. Bitte wählen Sie Ihr bestehendes Elternprofil aus oder erstellen Sie ein neues Elternprofil, falls keiner davon Sie sind.', possible_contact: 'Bereits verknüpfte Elternkontakte', create_new_parent: 'Neues Elternprofil erstellen',
+        legal_self_title: 'Vereinsbedingungen', legal_self_desc: 'Bitte prüfen und akzeptieren Sie die Vereinsbedingungen, bevor die Einrichtung abgeschlossen wird.', legal_self_check: 'Ich akzeptiere die Vereinsbedingungen.',
+        legal_parent_title: 'Vereinsbedingungen', legal_parent_desc: 'Bitte prüfen und akzeptieren Sie die Vereinsbedingungen, bevor die Einrichtung abgeschlossen wird.', legal_parent_summary: 'Der Elternzugang wurde bereits vorher bestätigt. In diesem Schritt geht es nur um die allgemeinen Vereinsbedingungen.',
+        already_title: 'Zugang bereits eingerichtet', already_self: 'Ihr Konto hat bereits direkten Zugriff auf ein Profil in diesem Team.', already_parent: 'Ihr Konto hat bereits Elternzugang für ein Spielerprofil in diesem Team.', already_hint: 'Falls dies nicht der erwartete Zugang ist, kontaktieren Sie bitte den Vereinsadministrator.', connected_to: 'Verbunden mit', access_type: 'Zugangsart', direct_access: 'Direkter Zugriff', parent_access: 'Elternzugang', team_label: 'Team', connect_another: 'Weiteres Profil verbinden', connect_another_self_hint: 'Sie haben bereits direkten Zugriff. Zusätzlicher Zugriff kann als Elternzugang für ein weiteres Spielerprofil hinzugefügt werden.', connect_another_parent_hint: 'Sie haben bereits Elternzugang. Sie können ein weiteres Kind hinzufügen oder – falls nötig – direkten Zugriff für sich selbst einrichten.', go_club: 'Zum Verein', open_app: 'App öffnen',
+        exception_title: 'Zugang nicht möglich', exception_wrong: 'Dieses Konto ist bereits mit einer anderen Person verknüpft und kann nicht für direkten Zugriff auf ein anderes Profil verwendet werden.', exception_contact: 'Bitte verwenden Sie ein anderes Konto oder kontaktieren Sie den Vereinsadministrator.',
+        done_self: 'Willkommen im Team', done_parent: 'Willkommen im Team', done_desc: 'Ihr Zugang wurde erfolgreich eingerichtet. Sie können jetzt den Teambereich nutzen.'
+      }
+    };
+
+    const $ = (id) => document.getElementById(id);
+    const t = (key) => (i18n[state.lang] && i18n[state.lang][key]) || key;
+
+    function input(label, value = '') {
+      return `<div><label class="mb-2 block text-sm font-medium">${t(label)}</label><input class="w-full rounded-xl border px-4 py-3" value="${value}" /></div>`;
+    }
+
+    function select(label, opts) {
+      return `<div><label class="mb-2 block text-sm font-medium">${t(label)}</label><select class="w-full rounded-xl border px-4 py-3">${opts.map(o => `<option>${t(o)}</option>`).join('')}</select></div>`;
+    }
+
+    function Stepper({ items, active }) {
+      return items.map((item, idx) => `
+        <span class="${idx <= active ? 'text-emerald-700 font-medium' : 'text-slate-400'}">${t(item)}</span>
+        ${idx < items.length - 1 ? '<span class="text-slate-300">›</span>' : ''}
+      `).join('');
+    }
+
+    function injectSteppers() {
+      document.querySelectorAll('[data-stepper]').forEach(el => {
+        const items = el.dataset.stepper.split(',');
+        const active = Number(el.dataset.active || 0);
+        el.innerHTML = Stepper({ items, active });
+      });
+    }
+
+    function renderForms() {
+      const child = `
+        <h3>${t('personal')}</h3>
+        <div class="grid gap-4 md:grid-cols-2">${input('first_name', 'Leana')}${input('last_name', 'Winter')}${input('birthdate', '2014-10-11')}${select('gender', ['gender'])}</div>
+        <h3>${t('email')} / ${t('phone')}</h3>
+        <div class="grid gap-4 md:grid-cols-2">${input('email', state.email)}${input('phone')}</div>
+        <h3>${t('emergency')}</h3>
+        <div class="grid gap-4 md:grid-cols-2">${input('emergency_name')}${input('emergency_phone')}</div>
+        <h3>${t('address')}</h3>
+        <div class="grid gap-4 md:grid-cols-2">${input('street', 'Teststrasse 1')}${input('zip', '8888')}${input('city', 'London')}</div>
+      `;
+
+      ['child-form', 'child-form-parent', 'new-profile-form'].forEach(id => {
+        const el = $(id);
+        if (el) el.innerHTML = child;
+      });
+
+      const parentForm = $('parent-form');
+      if (parentForm) {
+        parentForm.innerHTML = `
+          <h3>${t('personal')}</h3>
+          <div class="grid gap-4 md:grid-cols-2">${input('first_name')}${input('last_name')}${input('birthdate')}${select('gender', ['gender'])}</div>
+          <h3>${t('email')} / ${t('phone')}</h3>
+          <div class="grid gap-4 md:grid-cols-2">${input('email', state.email)}${input('phone')}</div>
+          <h3>${t('relationship')}</h3>
+          <div class="grid gap-4 md:grid-cols-2">${select('relationship', ['mother', 'father', 'guardian'])}${input('phone')}</div>
+          <h3>${t('address')}</h3>
+          <div class="grid gap-4 md:grid-cols-2">${input('street')}${input('zip')}${input('city')}</div>
+        `;
+      }
+    }
+
+    function render() {
+      document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+      ['entry-email', 'auth-email', 'setup-email'].forEach(id => {
+        const el = $(id);
+        if (el && document.activeElement !== el) el.value = state.email;
+      });
+      const loggedUser = $('logged-user');
+      if (loggedUser) loggedUser.textContent = state.email;
+      document.querySelectorAll('[data-lang-btn]').forEach(btn => {
+        btn.className = btn.dataset.langBtn === state.lang
+          ? 'rounded-full bg-slate-900 px-3 py-1.5 text-xs font-medium text-white'
+          : 'rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600';
+      });
+      injectSteppers();
+      renderForms();
+    }
+
+    function setLang(lang) {
+      state.lang = lang;
+      document.documentElement.lang = lang;
+      render();
+    }
+
+    function syncEmail(id) {
+      const el = $(id);
+      if (el && el.value) state.email = el.value;
+    }
+
+    function go(id) {
+      state.current = id;
+      document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+      const target = $(id);
+      if (target) target.classList.remove('hidden');
+      window.scrollTo(0, 0);
+      render();
+    }
+
+    function loginExisting() { syncEmail('entry-email'); go('auth-existing'); }
+    function createAccount() { syncEmail('entry-email'); go('account-setup'); }
+    function submitLogin() { syncEmail('auth-email'); go('routing'); }
+
+    function submitAccount() {
+      const checkbox = $('terms-checkbox');
+      const error = $('terms-error');
+      if (!checkbox || !checkbox.checked) {
+        if (error) error.classList.remove('hidden');
+        return;
+      }
+      if (error) error.classList.add('hidden');
+      syncEmail('setup-email');
+      go('routing');
+    }
+
+    function routeSelf() { state.loggedPerson = 'self'; go('pre-self'); }
+    function routeParentNormal() { state.loggedPerson = 'normal'; go('pre-parent'); }
+    function connectAnotherFromSelf() { state.loggedPerson = 'normal'; go('pre-parent'); }
+    function connectAnotherFromParent() { state.loggedPerson = 'normal'; go('decision'); }
+    function routeParentWithExistingPerson() { state.loggedPerson = 'has-person'; go('pre-parent'); }
+    function routeParentNoPersonWithExistingParents() { state.loggedPerson = 'no-person-existing-parents'; go('pre-parent'); }
+    function afterProfileSelected() { state.loggedPerson === 'self' ? go('child-self') : go('child-parent'); }
+    function afterChildParent() {
+      if (state.loggedPerson === 'has-person') go('parent-identity');
+      else if (state.loggedPerson === 'no-person-existing-parents') go('parent-existing-select');
+      else go('parent-details');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => render());
+  </script>
+
+  <header class="w-full border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+      <div class="text-lg font-semibold" data-i18n="brand"></div>
+      <div class="hidden flex-1 justify-center px-6 md:flex">
+        <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700">
+          <span>Signed in as</span> <span class="font-semibold" id="logged-user">test@test.ch</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="inline-flex items-center gap-2 rounded-full bg-slate-100 p-1">
+          <button type="button" data-lang-btn="de" onclick="setLang('de')">DE</button>
+          <button type="button" data-lang-btn="en" onclick="setLang('en')">EN</button>
+        </div>
+        <div class="text-sm text-slate-500" data-i18n="help"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="start" class="screen">
+      <div class="mx-auto max-w-5xl px-6 py-12">
+        <div class="mb-10 flex items-center gap-4">
+          <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-200 font-bold">SFB</div>
+          <div>
+            <div class="text-sm text-slate-500" data-i18n="invite_from"></div>
+            <div class="font-medium">Sportfreunde Burkhardsfelden e.V. · U13 Juniors</div>
+          </div>
+        </div>
+        <div class="max-w-xl">
+          <h1 class="text-3xl font-semibold" data-i18n="title_invite"></h1>
+          <p class="mt-5 leading-relaxed text-slate-600" data-i18n="intro_text"></p>
+          <div class="mt-8 space-y-6">
+            <div class="rounded-2xl border border-slate-200 bg-white p-5">
+              <button onclick="go('routing')" class="w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="continue_sfb"></button>
+            </div>
+            <div class="rounded-2xl border border-slate-200 bg-white p-5">
+              <div class="text-sm font-medium" data-i18n="continue_email"></div>
+              <input id="entry-email" class="mt-4 w-full rounded-xl border px-4 py-3" value="test@test.ch" />
+              <div class="mt-4 grid grid-cols-2 gap-3">
+                <button onclick="loginExisting()" class="rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="existing_account"></button>
+                <button onclick="createAccount()" class="rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="new_account"></button>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5">
+            <div class="text-sm font-medium" data-i18n="what_next"></div>
+            <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="what_next_desc"></p>
+          </div>
+          <p class="mt-10 text-sm text-slate-400" data-i18n="contact"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="auth-existing" class="screen hidden">
+      <div class="mx-auto max-w-5xl px-6 py-12">
+        <div class="max-w-md">
+          <h2 class="text-2xl font-semibold" data-i18n="sign_in"></h2>
+          <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="sign_in_desc"></p>
+          <div class="mt-8 rounded-2xl border border-slate-200 bg-white p-5">
+            <label class="mb-2 block text-sm font-medium" data-i18n="email"></label>
+            <input id="auth-email" class="w-full rounded-xl border px-4 py-3" value="test@test.ch" />
+            <label class="mb-2 mt-4 block text-sm font-medium" data-i18n="password"></label>
+            <input type="password" class="w-full rounded-xl border px-4 py-3" />
+            <div class="mt-2 flex justify-between text-sm text-slate-500">
+              <button onclick="go('start')" data-i18n="change_email"></button>
+              <button data-i18n="forgot_password"></button>
+            </div>
+            <button onclick="submitLogin()" class="mt-6 w-full rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="account-setup" class="screen hidden">
+      <div class="mx-auto max-w-5xl px-6 py-12">
+        <div class="max-w-md">
+          <h2 class="text-2xl font-semibold" data-i18n="create_account"></h2>
+          <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="create_account_desc"></p>
+          <div class="mt-8 space-y-4">
+            <input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="first_name" />
+            <input class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="last_name" />
+            <input id="setup-email" class="w-full rounded-xl border px-4 py-3" value="test@test.ch" />
+            <input type="password" class="w-full rounded-xl border px-4 py-3" data-i18n-placeholder="password" />
+          </div>
+          <label class="mt-4 flex items-start gap-3 text-xs text-slate-600">
+            <input id="terms-checkbox" type="checkbox" class="mt-1" />
+            <span data-i18n="terms_line"></span>
+          </label>
+          <p id="terms-error" class="mt-2 hidden text-xs text-red-600" data-i18n="terms_error"></p>
+          <div class="mt-8 flex gap-3">
+            <button onclick="go('start')" class="flex-1 rounded-xl border border-slate-300 bg-white py-3 text-sm font-medium text-slate-700" data-i18n="back"></button>
+            <button onclick="submitAccount()" class="flex-1 rounded-xl bg-emerald-600 py-3 text-sm font-medium text-white" data-i18n="next"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="routing" class="screen hidden">
+      <div class="mx-auto max-w-5xl px-6 py-12">
+        <div class="mb-10 flex items-center justify-between">
+          <div class="flex gap-3 text-sm" data-stepper="step_account,step_access,step_done" data-active="1"></div>
+          <button onclick="go('start')" class="text-sm text-slate-500" data-i18n="back"></button>
+        </div>
+        <div class="max-w-3xl">
+          <h2 class="text-2xl font-semibold" data-i18n="routing_title"></h2>
+          <p class="mt-2 text-sm leading-6 text-slate-600" data-i18n="routing_desc"></p>
+          <div class="mt-8 grid gap-4 sm:grid-cols-2">
+            <button onclick="go('already-self')" class="card"><b data-i18n="case1"></b><span data-i18n="case1_desc"></span></button>
+            <button onclick="go('already-parent')" class="card"><b data-i18n="case2"></b><span data-i18n="case2_desc"></span></button>
+            <button onclick="go('decision')" class="card"><b data-i18n="case3"></b><span data-i18n="case3_desc"></span></button>
+            <button onclick="go('exception-wrong-user')" class="card"><b data-i18n="case4"></b><span data-i18n="case4_desc"></span></button>
+            <button onclick="routeParentNoPersonWithExistingParents()" class="card sm:col-span-2"><b>Parent flow: no person, existing parents linked</b><span>Shows parent selection before parent details.</span></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="decision" class="screen hidden page"><div class="wrap">
+      <div class="top"><div class="steps" data-stepper="step_account,step_access,step_profile,step_legal,step_done" data-active="1"></div><button onclick="go('routing')" data-i18n="back"></button></div>
+      <h2 data-i18n="decision_title"></h2><p data-i18n="decision_desc"></p>
+      <div class="mt-8 grid gap-4">
+        <button onclick="routeSelf()" class="option"><b data-i18n="self_title"></b><span data-i18n="self_desc"></span></button>
+        <button onclick="routeParentNormal()" class="option"><b data-i18n="parent_title"></b><span data-i18n="parent_desc"></span></button>
+      </div>
+    </div></section>
+
+    <section id="pre-self" class="screen hidden page"><div class="wrap"><div class="steps mb-8" data-stepper="step_account,step_access,step_profile,step_legal,step_done" data-active="1"></div><h2 data-i18n="pre_self_title"></h2><p data-i18n="pre_self_desc"></p><button onclick="go('profile-select')" class="primary mt-8" data-i18n="next"></button></div></section>
+
+    <section id="pre-parent" class="screen hidden page"><div class="wrap"><div class="steps mb-8" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="2"></div><div class="hint"><b data-i18n="expected_parent_title"></b><p data-i18n="expected_parent_desc"></p></div><h2 class="mt-6" data-i18n="pre_parent_title"></h2><p data-i18n="pre_parent_desc"></p><p class="mt-2" data-i18n="pre_parent_next"></p><div class="panel mt-6"><b data-i18n="parent_confirm_title"></b><label><input type="checkbox" checked /> <span data-i18n="parent_confirm_1"></span></label><label><input type="checkbox" checked /> <span data-i18n="parent_confirm_2"></span></label></div><button onclick="go('profile-select')" class="primary mt-8" data-i18n="next"></button></div></section>
+
+    <section id="profile-select" class="screen hidden page"><div class="wrap">
+      <div class="top"><div class="steps" data-stepper="step_account,step_access,step_profile,step_legal,step_done" data-active="2"></div><button onclick="go('decision')" data-i18n="back"></button></div>
+      <h2 data-i18n="select_profile_title"></h2><p data-i18n="select_profile_desc"></p>
+      <div class="panel mt-6"><b data-i18n="available_profiles"></b>
+        <div class="mt-4 grid gap-3">
+          <button onclick="afterProfileSelected()" class="option"><b>Leana Winter</b><span>U13 Juniors · 11.10.2014</span><span class="mt-2 font-medium text-emerald-700" data-i18n="use_existing"></span></button>
+          <button onclick="afterProfileSelected()" class="option"><b>Mia Keller</b><span>U13 Juniors · 04.02.2014</span><span class="mt-2 font-medium text-emerald-700" data-i18n="use_existing"></span></button>
+          <div class="option opacity-60"><b>Noah Meier</b><span>Archived profile</span></div>
+        </div>
+      </div>
+      <div class="mt-8"><button onclick="go('create-profile')" class="option w-full"><b data-i18n="cannot_find_profile"></b><span data-i18n="create_profile_desc"></span></button></div>
+    </div></section>
+
+    <section id="create-profile" class="screen hidden page"><div class="wrap wide"><div class="top"><div class="steps" data-stepper="step_account,step_access,step_profile,step_legal,step_done" data-active="2"></div><button onclick="go('profile-select')" data-i18n="back"></button></div><h2 data-i18n="create_profile_title"></h2><p data-i18n="create_profile_desc"></p><div class="hint mt-6"><p data-i18n="create_profile_warning"></p></div><div id="new-profile-form" class="form"></div><button onclick="afterProfileSelected()" class="primary mt-8" data-i18n="next"></button></div></section>
+
+    <section id="child-self" class="screen hidden page"><div class="wrap wide"><div class="top"><div class="steps" data-stepper="step_account,step_access,step_profile,step_legal,step_done" data-active="2"></div><button onclick="go('profile-select')" data-i18n="back"></button></div><h2 data-i18n="child_title"></h2><p data-i18n="child_self_desc"></p><div id="child-form" class="form"></div><button onclick="go('legal-self')" class="primary mt-8" data-i18n="next"></button></div></section>
+    <section id="child-parent" class="screen hidden page"><div class="wrap wide"><div class="top"><div class="steps" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="3"></div><button onclick="go('profile-select')" data-i18n="back"></button></div><h2 data-i18n="child_title"></h2><p data-i18n="child_parent_desc"></p><div id="child-form-parent" class="form"></div><button onclick="afterChildParent()" class="primary mt-8" data-i18n="next"></button></div></section>
+
+    <section id="parent-existing-select" class="screen hidden page"><div class="wrap"><div class="steps mb-8" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="4"></div><h2 data-i18n="parent_match_title"></h2><p data-i18n="parent_match_desc"></p><div class="panel mt-6"><b data-i18n="possible_contact"></b><div class="mt-4 grid gap-3"><button onclick="go('legal-parent')" class="option"><b>Anna Müller</b><span>anna.mueller@example.com · Mother</span><span class="mt-2 font-medium text-emerald-700" data-i18n="use_existing"></span></button><button onclick="go('legal-parent')" class="option"><b>Michael Winter</b><span>michael.winter@example.com · Father</span><span class="mt-2 font-medium text-emerald-700" data-i18n="use_existing"></span></button></div></div><div class="mt-8"><button onclick="go('parent-details')" class="option w-full"><b data-i18n="create_new_parent"></b><span>Create a new parent profile linked to your account.</span></button></div></div></section>
+
+    <section id="parent-identity" class="screen hidden page"><div class="wrap"><div class="steps mb-8" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="4"></div><h2 data-i18n="parent_identity_title"></h2><p data-i18n="parent_identity_desc"></p><div class="panel mt-6"><b>Claudia Wälti</b><p class="text-sm text-slate-500">test@test.ch</p></div><div class="mt-8 grid gap-4"><button onclick="go('legal-parent')" class="option"><b data-i18n="use_my_profile"></b></button><button onclick="go('parent-details')" class="option"><b data-i18n="enter_different_parent"></b></button></div></div></section>
+
+    <section id="parent-details" class="screen hidden page"><div class="wrap wide"><div class="top"><div class="steps" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="4"></div><button onclick="go('child-parent')" data-i18n="back"></button></div><h2 data-i18n="parent_details_title"></h2><p data-i18n="parent_details_desc"></p><div id="parent-form" class="form"></div><button onclick="go('legal-parent')" class="primary mt-8" data-i18n="next"></button></div></section>
+
+    <section id="legal-self" class="screen hidden page"><div class="wrap"><div class="steps mb-8" data-stepper="step_account,step_access,step_profile,step_legal,step_done" data-active="3"></div><h2 data-i18n="legal_self_title"></h2><p data-i18n="legal_self_desc"></p><label class="mt-6 flex gap-3 text-sm"><input type="checkbox" checked /> <span data-i18n="legal_self_check"></span></label><button onclick="go('complete-self')" class="primary mt-8" data-i18n="finish"></button></div></section>
+    <section id="legal-parent" class="screen hidden page"><div class="wrap"><div class="steps mb-8" data-stepper="step_account,step_access,step_parent_confirm,step_child,step_parent,step_legal,step_done" data-active="5"></div><h2 data-i18n="legal_parent_title"></h2><p data-i18n="legal_parent_desc"></p><div class="panel mt-6"><p data-i18n="legal_parent_summary"></p><label><input type="checkbox" checked /> <span data-i18n="legal_self_check"></span></label></div><button onclick="go('complete-parent')" class="primary mt-8" data-i18n="finish"></button></div></section>
+
+    <section id="already-self" class="screen hidden page"><div class="wrap"><h2 data-i18n="already_title"></h2><p data-i18n="already_self"></p><div class="panel mt-6"><div class="grid gap-3 text-sm"><div class="flex justify-between gap-4"><span class="text-slate-500" data-i18n="connected_to"></span><strong>Leana Winter</strong></div><div class="flex justify-between gap-4"><span class="text-slate-500" data-i18n="access_type"></span><strong data-i18n="direct_access"></strong></div><div class="flex justify-between gap-4"><span class="text-slate-500" data-i18n="team_label"></span><strong>U13 Juniors</strong></div></div></div><p class="mt-4 text-sm text-slate-500" data-i18n="connect_another_self_hint"></p><p class="mt-3 text-sm text-slate-500" data-i18n="already_hint"></p><div class="mt-8 flex flex-wrap gap-3"><button onclick="go('start')" class="secondary" data-i18n="go_club"></button><button onclick="go('start')" class="primary" data-i18n="open_app"></button><button onclick="connectAnotherFromSelf()" class="secondary" data-i18n="connect_another"></button></div></div></section>
+
+    <section id="already-parent" class="screen hidden page"><div class="wrap"><h2 data-i18n="already_title"></h2><p data-i18n="already_parent"></p><div class="panel mt-6"><div class="grid gap-3 text-sm"><div class="flex justify-between gap-4"><span class="text-slate-500" data-i18n="connected_to"></span><strong>Leana Winter</strong></div><div class="flex justify-between gap-4"><span class="text-slate-500" data-i18n="access_type"></span><strong data-i18n="parent_access"></strong></div><div class="flex justify-between gap-4"><span class="text-slate-500" data-i18n="team_label"></span><strong>U13 Juniors</strong></div></div></div><p class="mt-4 text-sm text-slate-500" data-i18n="connect_another_parent_hint"></p><p class="mt-3 text-sm text-slate-500" data-i18n="already_hint"></p><div class="mt-8 flex flex-wrap gap-3"><button onclick="go('start')" class="secondary" data-i18n="go_club"></button><button onclick="go('start')" class="primary" data-i18n="open_app"></button><button onclick="connectAnotherFromParent()" class="secondary" data-i18n="connect_another"></button></div></div></section>
+
+    <section id="exception-wrong-user" class="screen hidden page"><div class="wrap"><div class="danger"><h2 data-i18n="exception_title"></h2><p data-i18n="exception_wrong"></p><p data-i18n="exception_contact"></p><button onclick="go('start')" class="secondary mt-8" data-i18n="close"></button></div></div></section>
+
+    <section id="complete-self" class="screen hidden page"><div class="wrap text-center"><h2 data-i18n="done_self"></h2><p data-i18n="done_desc"></p><div class="mt-8 flex gap-3 justify-center"><button onclick="go('start')" class="secondary" data-i18n="go_club"></button><button onclick="go('start')" class="primary" data-i18n="open_app"></button></div></div></section>
+    <section id="complete-parent" class="screen hidden page"><div class="wrap text-center"><h2 data-i18n="done_parent"></h2><p data-i18n="done_desc"></p><div class="mt-8 flex gap-3 justify-center"><button onclick="go('start')" class="secondary" data-i18n="go_club"></button><button onclick="go('start')" class="primary" data-i18n="open_app"></button></div></div></section>
+  </main>
+
+  <style>
+    .page { padding: 48px 24px; }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    .wrap.wide { max-width: 880px; }
+    .top { display:flex; justify-content:space-between; gap:24px; margin-bottom:40px; }
+    .steps { display:flex; gap:10px; flex-wrap:wrap; font-size:14px; }
+    h2 { font-size: 1.5rem; line-height:2rem; font-weight:650; }
+    p { color: rgb(71 85 105); line-height:1.6; margin-top:8px; }
+    .primary { border-radius:0.75rem; background:rgb(5 150 105); color:white; padding:0.75rem 1.25rem; font-size:14px; font-weight:600; display:inline-block; text-align:center; }
+    .secondary { border-radius:0.75rem; border:1px solid rgb(203 213 225); background:white; color:rgb(51 65 85); padding:0.75rem 1.25rem; font-size:14px; font-weight:600; display:inline-block; text-align:center; }
+    .card, .option { border:1px solid rgb(226 232 240); background:white; border-radius:1rem; padding:1.25rem; text-align:left; transition:.15s; width:100%; }
+    .card:hover, .option:hover { border-color:rgb(148 163 184); background:rgb(248 250 252); }
+    .card b, .option b { display:block; }
+    .card span, .option span { display:block; margin-top:4px; color:rgb(100 116 139); font-size:14px; }
+    .panel { border:1px solid rgb(226 232 240); background:rgb(248 250 252); border-radius:1rem; padding:1.25rem; }
+    .panel label { display:flex; gap:10px; margin-top:8px; }
+    .hint { border:1px solid rgb(191 219 254); background:rgb(239 246 255); border-radius:1rem; padding:1rem; }
+    .danger { border:1px solid rgb(254 202 202); background:rgb(254 242 242); border-radius:1rem; padding:1.5rem; }
+    .form h3 { margin-top:24px; margin-bottom:12px; font-weight:600; }
+  </style>
+</body>
+</html>
