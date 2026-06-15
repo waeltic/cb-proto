@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minor Protection Settings Prototype</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .modal-backdrop { background: rgba(15, 23, 42, .48); }
+    .soft-shadow { box-shadow: 0 18px 40px rgba(15,23,42,.10); }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-900">
+  <div id="app"></div>
+
+  <script>
+    const state = {
+      enabled: false,
+      age: null,
+      modalOpen: false,
+      modalStep: 1,
+      selectedAge: 18,
+      tab: 'settings',
+      toast: ''
+    };
+
+    const impact = {
+      minor: 128,
+      minorPlus: 94,
+      incompatible: 2,
+      missingBirthdate: 17,
+      losingRoles: [
+        { name: 'Emma Miller', avatar: 'EM', current: 'Club Admin', action: 'Administrative access will be removed' },
+        { name: 'Max Brown', avatar: 'MB', current: 'Coach Viewer', action: 'Coach viewer permission will be removed' }
+      ],
+      missing: [
+        { name: 'John Smith', role: 'Player', team: 'U15 Girls' },
+        { name: 'Sofia Keller', role: 'Player', team: 'U13 Boys' },
+        { name: 'David Brown', role: 'Coach', team: 'U17 Boys' },
+        { name: 'Mia Weber', role: 'Basic', team: '—' },
+        { name: 'Noah Fischer', role: 'Player', team: 'U11' }
+      ]
+    };
+
+    function setState(patch) { Object.assign(state, patch); render(); }
+    function openEnableWizard() { setState({ modalOpen: true, modalStep: 1, selectedAge: state.age || 18 }); }
+    function nextStep() { if (state.modalStep < 3) setState({ modalStep: state.modalStep + 1 }); }
+    function prevStep() { if (state.modalStep > 1) setState({ modalStep: state.modalStep - 1 }); else closeModal(); }
+    function closeModal() { setState({ modalOpen: false, modalStep: 1 }); }
+    function confirmEnable() {
+      setState({ enabled: true, age: Number(state.selectedAge), modalOpen: false, modalStep: 1, toast: 'Minor Protection has been enabled.' });
+      setTimeout(() => { state.toast = ''; render(); }, 2200);
+    }
+    function openRoleReview() { setState({ modalOpen: false, tab: 'role-review' }); }
+
+    function shell(content) {
+      return `
+        <div class="min-h-screen">
+          ${state.toast ? `<div class="fixed top-5 right-5 z-50 rounded-xl bg-emerald-600 text-white px-4 py-3 text-sm soft-shadow">${state.toast}</div>` : ''}
+          <header class="bg-white border-b border-slate-200 sticky top-0 z-30">
+            <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+              <div>
+                <div class="text-xs font-semibold text-indigo-600 uppercase tracking-wide">Club Settings</div>
+                <h1 class="text-xl font-semibold">FC Example</h1>
+              </div>
+              <button class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700">Save</button>
+            </div>
+          </header>
+          <main class="max-w-6xl mx-auto px-6 py-8">
+            <div class="grid grid-cols-12 gap-6">
+              <aside class="col-span-3">
+                <nav class="bg-white border border-slate-200 rounded-2xl p-2 soft-shadow">
+                  ${navItem('general','General','Club name, logo and language')}
+                  ${navItem('contact','Contact Information','Email, phone and website')}
+                  ${navItem('minor','Minor Protection','Safeguarding roles')}
+                  ${navItem('address','Address Information','Club address')}
+                  ${navItem('payments','Payments','Methods and invoices')}
+                </nav>
+              </aside>
+              <section class="col-span-9 space-y-6">${content}</section>
+            </div>
+          </main>
+        </div>`;
+    }
+
+    function navItem(key,title,sub){
+      const active=key==='minor';
+      return `<button class="w-full text-left rounded-xl p-3 ${active?'bg-indigo-50 text-indigo-900':'hover:bg-slate-50'}">
+        <div class="text-sm font-semibold">${title}</div>
+        <div class="text-xs ${active?'text-indigo-600':'text-slate-500'} mt-0.5">${sub}</div>
+      </button>`;
+    }
+
+    function settingsContent() {
+      return `
+        <div class="bg-white border border-slate-200 rounded-2xl soft-shadow overflow-hidden">
+          <div class="p-6 border-b border-slate-200 flex items-start justify-between gap-6">
+            <div>
+              <h2 class="text-lg font-semibold">Minor Protection</h2>
+              <p class="text-sm text-slate-600 mt-1 max-w-2xl">Protect minors by automatically applying age-based restrictions and parent access roles.</p>
+            </div>
+            <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${state.enabled ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-100 text-slate-600'}">${state.enabled ? 'Enabled' : 'Disabled'}</span>
+          </div>
+
+          <div class="p-6 space-y-6">
+            ${state.enabled ? enabledBlock() : disabledBlock()}
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          ${roleCard('Minor role', ['Restricts 1:1 chat access','Limits profile update permissions','Prevents elevated club permissions','Applies to users below minor age'])}
+          ${roleCard('Minor Plus role', ['Assigned to parents of minors','Allows permitted profile management','Supports parent-specific access','Removed when child is no longer minor'])}
+        </div>`;
+    }
+
+    function disabledBlock(){return `<div class="rounded-2xl border border-slate-200 bg-slate-50 p-5 flex items-start justify-between gap-6">
+      <div>
+        <div class="font-medium">Minor Protection is currently off</div>
+        <p class="text-sm text-slate-600 mt-1 max-w-2xl">No automatic Minor or Minor Plus roles are applied. Existing club and team permissions stay unchanged.</p>
+      </div>
+      <button onclick="openEnableWizard()" class="shrink-0 px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700">Enable Minor Protection</button>
+    </div>`;}
+
+    function enabledBlock(){return `<div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+      <div class="flex items-start justify-between gap-6">
+        <div>
+          <div class="font-medium text-emerald-950">Minor Protection is enabled</div>
+          <p class="text-sm text-emerald-800 mt-1">Users below ${state.age} years automatically receive the Minor role. Parents with access to a minor account automatically receive the Minor Plus role.</p>
+        </div>
+        <button onclick="openEnableWizard()" class="shrink-0 px-4 py-2 rounded-lg border border-emerald-300 bg-white text-emerald-800 text-sm font-medium hover:bg-emerald-50">Change age</button>
+      </div>
+      <div class="mt-5 grid grid-cols-3 gap-3">
+        <div class="rounded-xl bg-white border border-emerald-100 p-4"><div class="text-xl font-semibold">Below ${state.age}</div><div class="text-xs text-slate-500">Minor threshold</div></div>
+        <div class="rounded-xl bg-white border border-emerald-100 p-4"><div class="text-xl font-semibold">131</div><div class="text-xs text-slate-500">Minor users</div></div>
+        <div class="rounded-xl bg-white border border-emerald-100 p-4"><div class="text-xl font-semibold">97</div><div class="text-xs text-slate-500">Minor Plus users</div></div>
+      </div>
+    </div>`;}
+
+    function roleCard(title,items){return `<div class="bg-white border border-slate-200 rounded-2xl p-5"><h3 class="font-semibold">${title}</h3><ul class="mt-3 space-y-2 text-sm text-slate-600">${items.map(i=>`<li class="flex gap-2"><span class="text-emerald-600">✓</span><span>${i}</span></li>`).join('')}</ul></div>`;}
+
+    function wizardModal(){
+      const titles = {1:'Enable Minor Protection',2:'Review impact',3:'Confirm changes'};
+      return `<div class="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-6">
+        <div class="bg-white rounded-2xl soft-shadow w-full max-w-2xl max-h-[88vh] overflow-hidden flex flex-col">
+          <div class="p-6 border-b border-slate-200">
+            <div class="flex items-start justify-between gap-4">
+              <div><h2 class="text-lg font-semibold">${titles[state.modalStep]}</h2><p class="text-sm text-slate-600 mt-1">Step ${state.modalStep} of 3</p></div>
+              <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 text-xl leading-none">×</button>
+            </div>
+            <div class="mt-5 grid grid-cols-3 gap-2">
+              ${[1,2,3].map(s=>`<div class="h-1.5 rounded-full ${s<=state.modalStep?'bg-indigo-600':'bg-slate-200'}"></div>`).join('')}
+            </div>
+          </div>
+          <div class="p-6 overflow-y-auto">
+            ${state.modalStep===1 ? ageStep() : state.modalStep===2 ? impactStep() : confirmStep()}
+          </div>
+          <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-between gap-3">
+            <button onclick="prevStep()" class="px-4 py-2 rounded-lg border border-slate-300 bg-white text-sm font-medium hover:bg-slate-50">${state.modalStep===1?'Cancel':'Back'}</button>
+            ${state.modalStep<3 ? `<button onclick="nextStep()" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700">Next</button>` : `<button onclick="confirmEnable()" class="px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium hover:bg-indigo-700">Save and enable</button>`}
+          </div>
+        </div>
+      </div>`;
+    }
+
+    function ageStep(){return `<div class="space-y-5">
+      <p class="text-sm text-slate-600">Select the age from which the minor role is no longer applied. Users younger than this age will be treated as minors.</p>
+      <label class="block max-w-xs">
+        <span class="text-sm font-medium">Minor age threshold</span>
+        <select onchange="setState({selectedAge:this.value})" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          ${[14,15,16,17,18,19,20,21].map(age=>`<option value="${age}" ${String(age)===String(state.selectedAge)?'selected':''}>Below ${age} years</option>`).join('')}
+        </select>
+      </label>
+      <div class="rounded-xl border border-slate-200 bg-slate-50 p-4">
+        <div class="font-medium text-sm">Roles used by Minor Protection</div>
+        <p class="text-sm text-slate-600 mt-2"><b>Minor</b> mainly prevents 1:1 chats and restricts selected profile update or editing rights.</p>
+        <p class="text-sm text-slate-600 mt-2"><b>Minor Plus</b> is assigned when a parent has access to a minor account.</p>
+      </div>
+    </div>`;}
+
+    function impactStep(){return `<div class="space-y-5">
+      <div class="rounded-xl bg-indigo-50 border border-indigo-100 p-4">
+        <div class="font-medium text-indigo-950">Impact for threshold: below ${state.selectedAge} years</div>
+        <div class="mt-3 grid grid-cols-2 gap-3 text-sm">
+          <div class="bg-white rounded-lg p-3 border border-indigo-100"><b>${impact.minor}</b><br><span class="text-slate-600">users receive Minor role</span></div>
+          <div class="bg-white rounded-lg p-3 border border-indigo-100"><b>${impact.minorPlus}</b><br><span class="text-slate-600">users receive Minor Plus role</span></div>
+          <div class="bg-white rounded-lg p-3 border border-amber-200"><b>${impact.incompatible}</b><br><span class="text-slate-600">users lose incompatible roles</span></div>
+          <div class="bg-white rounded-lg p-3 border border-slate-200"><b>${impact.missingBirthdate}</b><br><span class="text-slate-600">users require review</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="font-medium">Users losing elevated roles</div>
+        <p class="text-sm text-slate-600 mt-1">Only users who lose major roles are listed. All other changes are shown as totals.</p>
+        <div class="mt-3 space-y-2">${impact.losingRoles.map(u=>`<div class="rounded-xl border border-amber-200 bg-amber-50 p-3 flex gap-3"><div class="h-9 w-9 rounded-full bg-white border border-amber-200 flex items-center justify-center text-xs font-semibold">${u.avatar}</div><div class="flex-1"><div class="text-sm font-semibold">${u.name}</div><div class="text-xs text-slate-600 mt-0.5">Current role: ${u.current}</div><div class="text-xs text-amber-800 mt-1">${u.action}</div></div></div>`).join('')}</div>
+      </div>
+      <div class="rounded-xl border border-slate-200 p-4 flex items-start justify-between gap-4">
+        <div><div class="font-medium">Missing birthdates</div><p class="text-sm text-slate-600 mt-1">${impact.missingBirthdate} users cannot be evaluated because no birthdate is available.</p></div>
+        <button onclick="openRoleReview()" class="shrink-0 px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium hover:bg-slate-50">Review users</button>
+      </div>
+    </div>`;}
+
+    function confirmStep(){return `<div class="space-y-5">
+      <div class="rounded-xl border border-amber-200 bg-amber-50 p-4">
+        <div class="font-medium text-amber-950">Are you sure?</div>
+        <p class="text-sm text-amber-900 mt-2">This will enable Minor Protection with the threshold <b>below ${state.selectedAge} years</b> and apply the automatic role changes shown in the previous step.</p>
+      </div>
+      <div class="rounded-xl border border-slate-200 p-4 text-sm text-slate-700 space-y-2">
+        <div>• ${impact.minor} users will receive Minor role</div>
+        <div>• ${impact.minorPlus} users will receive Minor Plus role</div>
+        <div>• ${impact.incompatible} users will lose incompatible elevated roles</div>
+        <div>• ${impact.missingBirthdate} users require birthdate review</div>
+      </div>
+      <p class="text-sm text-slate-600">After saving, the settings page will only show the enabled status and the current threshold. The affected user list is not shown permanently.</p>
+    </div>`;}
+
+    function roleReviewPage(){return `<div class="bg-white border border-slate-200 rounded-2xl soft-shadow"><div class="p-6 border-b border-slate-200 flex items-center justify-between"><div><h2 class="text-lg font-semibold">Role Review Required</h2><p class="text-sm text-slate-600 mt-1">Filtered people list for users that need data cleanup before Minor Protection can evaluate them.</p></div><button onclick="setState({tab:'settings',modalOpen:true,modalStep:2})" class="px-3 py-2 rounded-lg border border-slate-300 text-sm font-medium">Back to impact</button></div><div class="p-6"><div class="flex gap-3 mb-4"><span class="inline-flex items-center rounded-full bg-indigo-50 text-indigo-700 px-3 py-1 text-xs font-medium">Role review required</span><span class="inline-flex items-center rounded-full bg-slate-100 text-slate-700 px-3 py-1 text-xs font-medium">Missing birthdate</span></div><table class="w-full text-sm"><thead><tr class="text-left text-xs text-slate-500 border-b border-slate-200"><th class="py-3 font-medium">Name</th><th class="py-3 font-medium">Birthdate</th><th class="py-3 font-medium">Current role</th><th class="py-3 font-medium">Team</th><th class="py-3 font-medium">Issue</th></tr></thead><tbody>${impact.missing.map(u=>`<tr class="border-b border-slate-100"><td class="py-3 font-medium">${u.name}</td><td class="py-3 text-slate-500">—</td><td class="py-3">${u.role}</td><td class="py-3 text-slate-600">${u.team}</td><td class="py-3"><span class="rounded-full bg-amber-50 text-amber-700 px-2 py-1 text-xs">Missing birthdate</span></td></tr>`).join('')}</tbody></table></div></div>`;}
+
+    function render(){
+      const content=state.tab==='role-review'?roleReviewPage():settingsContent();
+      document.getElementById('app').innerHTML=shell(content)+(state.modalOpen?wizardModal():'');
+    }
+    render();
+  </script>
+</body>
+</html>
