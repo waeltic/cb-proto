@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout Summary v3 — Adapted Header</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f0ee; padding: 1.5rem 1rem; }
+
+.pm-selector { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.pm-btn { font-size: 12px; padding: 6px 14px; border-radius: 20px; border: 1.5px solid #d0d0cb; background: white; color: #555; cursor: pointer; }
+.pm-btn.active { border-color: #00a693; background: #f0fcfb; color: #007a6c; font-weight: 500; }
+
+.page { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; max-width: 780px; margin: 0 auto; }
+.col-label { font-size: 11px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.07em; text-align: center; margin-bottom: 8px; }
+
+.summary-card { background: white; border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 18px; }
+.sum-title { font-size: 18px; font-weight: 700; color: #1a1a1a; margin-bottom: 14px; }
+
+/* NEW HEADER — two columns: today | later */
+.payment-overview { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid #e8e8e4; border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+.po-col { padding: 12px 14px; }
+.po-col:first-child { border-right: 1px solid #e8e8e4; }
+.po-label { font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+.po-amount { font-size: 20px; font-weight: 700; color: #1a1a1a; line-height: 1.1; }
+.po-amount.none { font-size: 15px; color: #00a693; }
+.po-sub { font-size: 11px; color: #888; margin-top: 3px; }
+.po-sub strong { color: #1a1a1a; }
+
+.product-name-row { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.product-type-icon { font-size: 14px; color: #888; }
+.product-name { font-size: 13px; color: #555; }
+
+/* Section blocks — same as admin view */
+.section-block { border: 1px solid #e8e8e4; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
+.section-block-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+.section-block-title { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+.section-block-amount { font-size: 16px; font-weight: 700; color: #1a1a1a; }
+.section-block-meta { font-size: 12px; color: #888; margin-bottom: 10px; display: flex; align-items: center; gap: 4px; }
+.details-toggle { font-size: 13px; font-weight: 500; color: #1a1a1a; cursor: pointer; display: flex; align-items: center; gap: 4px; margin-bottom: 8px; user-select: none; }
+.details-toggle:hover { color: #00a693; }
+.details-content { background: #f8f8f6; border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+.detail-row { display: flex; justify-content: space-between; font-size: 13px; color: #555; padding: 3px 0; }
+.detail-row.total { font-weight: 600; color: #1a1a1a; border-top: 1px solid #e0e0db; margin-top: 6px; padding-top: 7px; }
+.detail-row.plan-total { font-weight: 600; color: #1a1a1a; padding-top: 4px; }
+.pm-note { display: flex; align-items: flex-start; gap: 7px; padding: 8px 10px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
+.pm-note.card { background: #f0fdf4; color: #166534; }
+.pm-note.sepa { background: #eff6ff; color: #1e40af; }
+.pm-note.transfer { background: #fafaf8; color: #555; border: 1px solid #e8e8e4; }
+.pm-note.cash { background: #fafaf8; color: #555; border: 1px solid #e8e8e4; }
+.pm-note-icon { font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.view-schedule { font-size: 12px; color: #00a693; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; margin-top: 6px; background: none; border: none; padding: 0; text-decoration: underline; }
+
+/* Commitment */
+.commitment { background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 10px; padding: 12px 14px; margin-bottom: 14px; }
+.commitment-title { font-size: 12px; font-weight: 600; color: #92400e; margin-bottom: 4px; }
+.commitment-text { font-size: 12px; color: #78350f; line-height: 1.6; }
+
+/* Discount + CTA */
+.discount-row { display: flex; gap: 8px; margin-bottom: 14px; }
+.discount-input { flex: 1; height: 38px; border: 1px solid #d8d8d4; border-radius: 8px; padding: 0 12px; font-size: 13px; outline: none; }
+.discount-input:focus { border-color: #00a693; }
+.discount-btn { height: 38px; padding: 0 16px; border: 1.5px solid #1a1a1a; border-radius: 8px; background: white; font-size: 13px; font-weight: 500; cursor: pointer; }
+.cta-btn { width: 100%; height: 48px; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; color: white; cursor: pointer; background: #00a693; }
+.cta-btn:hover { background: #008f7e; }
+.cta-legal { font-size: 11px; color: #888; text-align: center; margin-top: 8px; line-height: 1.6; }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="pm-selector">
+  <button class="pm-btn active" onclick="setMethod('card',this)">💳 Card</button>
+  <button class="pm-btn" onclick="setMethod('sepa',this)">🏦 SEPA Direct Debit</button>
+  <button class="pm-btn" onclick="setMethod('transfer',this)">🏛 Bank Transfer</button>
+  <button class="pm-btn" onclick="setMethod('cash',this)">💵 Cash</button>
+</div>
+
+<div class="page">
+
+  <!-- WITH INITIAL PAYMENT -->
+  <div>
+    <div class="col-label">With initial payment / fee</div>
+    <div class="summary-card">
+      <div class="sum-title">Summary</div>
+
+      <!-- NEW HEADER -->
+      <div class="payment-overview">
+        <div class="po-col">
+          <div class="po-label">Pay today</div>
+          <div class="po-amount">EUR 6.11</div>
+          <div class="po-sub">Initial payment</div>
+        </div>
+        <div class="po-col">
+          <div class="po-label">Coming up</div>
+          <div class="po-amount">EUR 41.52</div>
+          <div class="po-sub">× 2 installments · <strong>EUR 89.14</strong> total</div>
+        </div>
+      </div>
+
+      <div class="product-name-row">
+        <span class="product-type-icon">⬛</span>
+        <span class="product-name">Product Elda — bankaccount · installment</span>
+      </div>
+
+      <!-- Initial payment block -->
+      <div class="section-block">
+        <div class="section-block-header">
+          <div class="section-block-title">Initial payment</div>
+          <div class="section-block-amount">EUR 6.11</div>
+        </div>
+        <div class="section-block-meta">📅 Invoice date: 07/21/2026 · One time fee</div>
+        <div class="details-toggle" onclick="toggle('detA1')">Details ∧</div>
+        <div id="detA1" class="details-content">
+          <div class="detail-row"><span>Deposit</span><span>EUR 5.00</span></div>
+          <div class="detail-row"><span>Tax (11.01%)</span><span>EUR 0.55</span></div>
+          <div class="detail-row"><span>Transaction costs (10%)</span><span>EUR 0.56</span></div>
+          <div class="detail-row total"><span>Total</span><span>EUR 6.11</span></div>
+        </div>
+        <div class="pm-note card" id="pmA1">
+          <span class="pm-note-icon">⚡</span>
+          <span>Charged to your card immediately after confirming.</span>
+        </div>
+      </div>
+
+      <!-- Installment plan block -->
+      <div class="section-block">
+        <div class="section-block-header">
+          <div class="section-block-title">Installment plan</div>
+          <div class="section-block-amount">EUR 89.14</div>
+        </div>
+        <div class="section-block-meta">📅 2 bi-weekly installments from 07/21/2026</div>
+        <div class="details-toggle" onclick="toggle('detA2')">Details ∧</div>
+        <div id="detA2" class="details-content">
+          <div class="detail-row"><span>Amount per installment</span><span>EUR 34.00</span></div>
+          <div class="detail-row"><span>Tax (11.01%)</span><span>EUR 3.74</span></div>
+          <div class="detail-row"><span>Transaction costs (10%)</span><span>EUR 3.77</span></div>
+          <div class="detail-row total"><span>Total per installment</span><span>EUR 41.52</span></div>
+          <div class="detail-row plan-total"><span>Installment plan total</span><span>EUR 89.14</span></div>
+        </div>
+        <button class="view-schedule">📅 View installments schedule</button>
+        <div class="pm-note card" id="pmA2" style="margin-top:8px;">
+          <span class="pm-note-icon">🔄</span>
+          <span>Your card will be charged automatically for each installment.</span>
+        </div>
+      </div>
+
+      <div class="commitment">
+        <div class="commitment-title">By confirming you agree to pay in full</div>
+        <div class="commitment-text" id="commitA">You will be charged <strong>EUR 6.11 today</strong> and commit to <strong>2 installments of EUR 41.52</strong> (total EUR 89.14) starting 07/21/2026. Your registration is complete only after confirming.</div>
+      </div>
+
+      <div class="discount-row">
+        <input class="discount-input" type="text" placeholder="Discount code">
+        <button class="discount-btn">Redeem</button>
+      </div>
+      <button class="cta-btn" id="ctaA">Pay EUR 6.11 & complete registration</button>
+      <div class="cta-legal" id="legalA">You confirm to pay EUR 6.11 now and EUR 89.14 in 2 installments. Your registration is binding upon confirmation.</div>
+    </div>
+  </div>
+
+  <!-- WITHOUT INITIAL PAYMENT -->
+  <div>
+    <div class="col-label">Without initial payment</div>
+    <div class="summary-card">
+      <div class="sum-title">Summary</div>
+
+      <!-- NEW HEADER -->
+      <div class="payment-overview">
+        <div class="po-col">
+          <div class="po-label">Pay today</div>
+          <div class="po-amount none">Nothing due</div>
+          <div class="po-sub">No immediate charge</div>
+        </div>
+        <div class="po-col">
+          <div class="po-label">Coming up</div>
+          <div class="po-amount">EUR 41.52</div>
+          <div class="po-sub">× 2 installments · <strong>EUR 89.14</strong> total</div>
+        </div>
+      </div>
+
+      <div class="product-name-row">
+        <span class="product-type-icon">⬛</span>
+        <span class="product-name">Product Elda — bankaccount · installment</span>
+      </div>
+
+      <!-- Installment plan block -->
+      <div class="section-block">
+        <div class="section-block-header">
+          <div class="section-block-title">Installment plan</div>
+          <div class="section-block-amount">EUR 89.14</div>
+        </div>
+        <div class="section-block-meta">📅 2 bi-weekly installments from 07/21/2026</div>
+        <div class="details-toggle" onclick="toggle('detB1')">Details ∧</div>
+        <div id="detB1" class="details-content">
+          <div class="detail-row"><span>Amount per installment</span><span>EUR 34.00</span></div>
+          <div class="detail-row"><span>Tax (11.01%)</span><span>EUR 3.74</span></div>
+          <div class="detail-row"><span>Transaction costs (10%)</span><span>EUR 3.77</span></div>
+          <div class="detail-row total"><span>Total per installment</span><span>EUR 41.52</span></div>
+          <div class="detail-row plan-total"><span>Installment plan total</span><span>EUR 89.14</span></div>
+        </div>
+        <button class="view-schedule">📅 View installments schedule</button>
+        <div class="pm-note card" id="pmB1" style="margin-top:8px;">
+          <span class="pm-note-icon">🔄</span>
+          <span>Your card will be charged automatically for each installment.</span>
+        </div>
+      </div>
+
+      <div class="commitment">
+        <div class="commitment-title">By confirming you agree to pay in full</div>
+        <div class="commitment-text" id="commitB">You commit to <strong>2 installments of EUR 41.52</strong> (total EUR 89.14) starting 07/21/2026. Nothing is charged today. Your registration is complete only after confirming.</div>
+      </div>
+
+      <div class="discount-row">
+        <input class="discount-input" type="text" placeholder="Discount code">
+        <button class="discount-btn">Redeem</button>
+      </div>
+      <button class="cta-btn" id="ctaB">Complete registration</button>
+      <div class="cta-legal" id="legalB">Nothing is charged today. You confirm to pay EUR 89.14 in 2 installments starting 07/21/2026. Your registration is binding upon confirmation.</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function toggle(id) {
+  const el = document.getElementById(id);
+  const btn = el.previousElementSibling;
+  el.classList.toggle('hidden');
+  btn.textContent = el.classList.contains('hidden') ? 'Details ∨' : 'Details ∧';
+}
+
+const methods = {
+  card: {
+    pmA1: { cls:'card', icon:'⚡', text:'Charged to your card immediately after confirming.' },
+    pmA2: { cls:'card', icon:'🔄', text:'Your card will be charged automatically for each installment.' },
+    pmB1: { cls:'card', icon:'🔄', text:'Your card will be charged automatically for each installment.' },
+    ctaA: 'Pay EUR 6.11 & complete registration',
+    ctaB: 'Complete registration',
+    legalA: 'You confirm to pay EUR 6.11 now and EUR 89.14 in 2 installments. Your registration is binding upon confirmation.',
+    legalB: 'Nothing is charged today. You confirm to pay EUR 89.14 in 2 installments starting 07/21/2026. Your registration is binding upon confirmation.',
+    commitA: 'You will be charged <strong>EUR 6.11 today</strong> and commit to <strong>2 installments of EUR 41.52</strong> (total EUR 89.14) starting 07/21/2026. Your registration is complete only after confirming.',
+    commitB: 'You commit to <strong>2 installments of EUR 41.52</strong> (total EUR 89.14) starting 07/21/2026. Nothing is charged today. Your registration is complete only after confirming.'
+  },
+  sepa: {
+    pmA1: { cls:'sepa', icon:'🏦', text:'Collected via SEPA direct debit once processed by your club.' },
+    pmA2: { cls:'sepa', icon:'🔄', text:'Each installment collected via SEPA direct debit once processed by your club.' },
+    pmB1: { cls:'sepa', icon:'🔄', text:'Each installment collected via SEPA direct debit once processed by your club.' },
+    ctaA: 'Authorize & complete registration',
+    ctaB: 'Authorize & complete registration',
+    legalA: 'You authorize SEPA direct debit of EUR 6.11 now and EUR 89.14 in 2 installments. Collection is processed by your club.',
+    legalB: 'You authorize SEPA direct debit of EUR 89.14 in 2 installments starting 07/21/2026. Collection is processed by your club.',
+    commitA: 'You authorize your club to collect <strong>EUR 6.11 now</strong> and <strong>2 installments of EUR 41.52</strong> (total EUR 89.14) via SEPA direct debit. Your registration is complete only after confirming.',
+    commitB: 'You authorize your club to collect <strong>2 installments of EUR 41.52</strong> (total EUR 89.14) via SEPA direct debit starting 07/21/2026. Your registration is complete only after confirming.'
+  },
+  transfer: {
+    pmA1: { cls:'transfer', icon:'🏛', text:'You will receive an invoice by email. Please transfer the amount to your club.' },
+    pmA2: { cls:'transfer', icon:'📄', text:'You will receive an invoice for each installment to transfer manually.' },
+    pmB1: { cls:'transfer', icon:'📄', text:'You will receive an invoice for each installment to transfer manually.' },
+    ctaA: 'Complete registration',
+    ctaB: 'Complete registration',
+    legalA: 'You commit to paying EUR 6.11 now and EUR 89.14 in 2 installments via bank transfer. Invoices will be sent by email.',
+    legalB: 'You commit to paying EUR 89.14 in 2 installments via bank transfer. Invoices will be sent by email.',
+    commitA: 'You commit to paying <strong>EUR 6.11 now</strong> and <strong>2 installments of EUR 41.52</strong> (total EUR 89.14) via bank transfer. Invoices will be sent by email. Your registration is complete only after confirming.',
+    commitB: 'You commit to paying <strong>2 installments of EUR 41.52</strong> (total EUR 89.14) via bank transfer starting 07/21/2026. Invoices will be sent by email. Your registration is complete only after confirming.'
+  },
+  cash: {
+    pmA1: { cls:'cash', icon:'💵', text:'Pay this amount directly to your club.' },
+    pmA2: { cls:'cash', icon:'📄', text:'Your club will collect each installment directly.' },
+    pmB1: { cls:'cash', icon:'📄', text:'Your club will collect each installment directly.' },
+    ctaA: 'Complete registration',
+    ctaB: 'Complete registration',
+    legalA: 'You commit to paying EUR 6.11 now and EUR 89.14 in 2 installments directly to your club.',
+    legalB: 'You commit to paying EUR 89.14 in 2 installments directly to your club starting 07/21/2026.',
+    commitA: 'You commit to paying <strong>EUR 6.11 now</strong> and <strong>2 installments of EUR 41.52</strong> (total EUR 89.14) directly to your club. Your registration is complete only after confirming.',
+    commitB: 'You commit to paying <strong>2 installments of EUR 41.52</strong> (total EUR 89.14) directly to your club starting 07/21/2026. Your registration is complete only after confirming.'
+  }
+};
+
+function setMethod(m, btn) {
+  document.querySelectorAll('.pm-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const d = methods[m];
+  ['pmA1','pmA2','pmB1'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el && d[id]) {
+      el.className = 'pm-note ' + d[id].cls;
+      el.innerHTML = `<span class="pm-note-icon">${d[id].icon}</span><span>${d[id].text}</span>`;
+    }
+  });
+  document.getElementById('ctaA').textContent = d.ctaA;
+  document.getElementById('ctaB').textContent = d.ctaB;
+  document.getElementById('legalA').textContent = d.legalA;
+  document.getElementById('legalB').textContent = d.legalB;
+  document.getElementById('commitA').innerHTML = d.commitA;
+  document.getElementById('commitB').innerHTML = d.commitB;
+}
+</script>
+</body>
+</html>
