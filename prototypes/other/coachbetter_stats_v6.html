@@ -1,0 +1,326 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+.dash { padding: 1rem 0; font-family: var(--font-sans); font-size: 13px; }
+.top-bar { display: flex; flex-wrap: wrap; gap: 0; border: 0.5px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+.top-stat { flex: 1; min-width: 90px; padding: 10px 14px; border-right: 0.5px solid var(--border); }
+.top-stat:last-child { border-right: none; }
+.top-stat .tl { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; white-space: nowrap; }
+.top-stat .tv { font-size: 19px; font-weight: 500; color: var(--text-primary); line-height: 1; }
+.top-stat .ts { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+.up { color: #0ca30c; font-size: 10px; }
+.dn { color: #e34948; font-size: 10px; }
+.main-grid { display: grid; grid-template-columns: 220px 1fr; gap: 10px; margin-bottom: 12px; }
+.world-col { display: flex; flex-direction: column; gap: 8px; }
+.world-block { border: 0.5px solid var(--border); border-radius: 10px; padding: 10px 12px; flex: 1; }
+.world-block-title { font-size: 10px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 5px; }
+.badge { display: inline-block; font-size: 9px; padding: 1px 5px; border-radius: 8px; }
+.badge-new { background: #E6F1FB; color: #0C447C; }
+.badge-old { background: #FAEEDA; color: #633806; }
+.badge-ok  { background: #EAF3DE; color: #27500A; }
+.badge-na  { background: var(--surface-1); color: var(--text-muted); border: 0.5px solid var(--border); }
+.wrow { display: flex; justify-content: space-between; align-items: baseline; padding: 3px 0; border-bottom: 0.5px solid var(--border); }
+.wrow:last-child { border-bottom: none; }
+.wrow .wl { font-size: 11px; color: var(--text-secondary); }
+.wrow .wv { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.wrow .wsub { font-size: 10px; color: var(--text-muted); margin-left: 4px; }
+.wrow .wna { font-size: 11px; color: var(--text-muted); font-style: italic; }
+.chart-col { border: 0.5px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+.chart-col-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 6px; }
+.pill-group { display: flex; gap: 4px; }
+.pill { font-size: 10px; padding: 3px 10px; border-radius: 20px; border: 0.5px solid var(--border-strong); background: var(--surface-2); color: var(--text-secondary); cursor: pointer; }
+.pill.active { background: var(--surface-1); color: var(--text-primary); border-color: var(--border-stronger); font-weight: 500; }
+.toggle-group { display: flex; border: 0.5px solid var(--border-strong); border-radius: var(--radius); overflow: hidden; }
+.toggle-btn { font-size: 10px; padding: 2px 8px; background: var(--surface-2); color: var(--text-secondary); border: none; cursor: pointer; }
+.toggle-btn.active { background: var(--surface-1); color: var(--text-primary); font-weight: 500; }
+.toggle-btn:not(:last-child) { border-right: 0.5px solid var(--border-strong); }
+.charts-area { display: flex; flex-direction: column; gap: 8px; }
+.mini-chart-card { background: var(--surface-1); border-radius: var(--radius); padding: 8px 10px; }
+.mini-chart-title { font-size: 10px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+.mini-chart-wrap { position: relative; width: 100%; height: 80px; }
+.legend { display: flex; gap: 8px; }
+.li { display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text-secondary); }
+.ld { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
+.na-note { font-size: 10px; color: var(--text-muted); font-style: italic; }
+.coming-soon { background: var(--surface-1); border-radius: var(--radius); padding: 20px; text-align: center; border: 0.5px dashed var(--border-strong); }
+.coming-soon .cs-title { font-size: 12px; font-weight: 500; color: var(--text-secondary); margin-bottom: 4px; }
+.coming-soon .cs-sub { font-size: 11px; color: var(--text-muted); }
+.drill-section { border: 0.5px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+.drill-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px; }
+.drill-title { font-size: 11px; font-weight: 500; color: var(--text-primary); }
+.filter-row { display: flex; gap: 5px; flex-wrap: wrap; }
+.filter-btn { font-size: 10px; padding: 2px 8px; border-radius: 20px; border: 0.5px solid var(--border-strong); background: var(--surface-2); color: var(--text-secondary); cursor: pointer; }
+.filter-btn.active { background: var(--surface-1); color: var(--text-primary); border-color: var(--border-stronger); font-weight: 500; }
+.club-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+.chip { font-size: 11px; padding: 3px 9px; border-radius: 20px; border: 0.5px solid var(--border-strong); background: var(--surface-2); color: var(--text-secondary); cursor: pointer; }
+.chip.selected { border-color: #2a78d6; background: #E6F1FB; color: #0C447C; }
+.detail-panel { display: none; background: var(--surface-1); border-radius: var(--radius); padding: 10px; }
+.detail-panel.visible { display: block; }
+.detail-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.detail-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+.detail-stats { display: flex; flex-wrap: wrap; gap: 5px; }
+.ds { background: var(--surface-2); border-radius: var(--radius); padding: 5px 9px; text-align: center; flex: 1; min-width: 65px; }
+.ds .dv { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+.ds .dl { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+</style>
+
+<div class="dash">
+  <h2 class="sr-only">Coachbetter internal platform statistics</h2>
+
+  <div class="top-bar">
+    <div class="top-stat">
+      <div class="tl">Total clubs</div>
+      <div class="tv">265</div>
+      <div class="ts"><span class="up">+8 new</span> · <span class="dn">−3 cancelled</span> 30d</div>
+    </div>
+    <div class="top-stat">
+      <div class="tl">Total teams</div>
+      <div class="tv">1,842</div>
+      <div class="ts">across all clubs</div>
+    </div>
+    <div class="top-stat">
+      <div class="tl">Total users</div>
+      <div class="tv">6,122</div>
+      <div class="ts">platform-wide</div>
+    </div>
+    <div class="top-stat">
+      <div class="tl">Active 30d</div>
+      <div class="tv">1,893</div>
+      <div class="ts">token-based · today</div>
+    </div>
+    <div class="top-stat">
+      <div class="tl">Active 12m</div>
+      <div class="tv">4,210</div>
+      <div class="ts">token-based · today</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="world-col">
+      <div class="world-block">
+        <div class="world-block-title"><span class="badge badge-new">New world</span></div>
+        <div class="wrow"><span class="wl">Orgs</span><span class="wv">38</span></div>
+        <div class="wrow"><span class="wl">Clubs</span><span class="wv">51</span></div>
+        <div class="wrow"><span class="wl">Teams</span><span class="wv">284</span></div>
+        <div class="wrow"><span class="wl">Profiles</span><span class="wv">5,870</span></div>
+        <div class="wrow"><span class="wl">Linked to user</span><span class="wv">3,841 <span class="wsub">65%</span></span></div>
+        <div class="wrow"><span class="wl">Active 30d</span><span class="wv">748 <span class="wsub">today</span></span></div>
+        <div class="wrow"><span class="wl">Active 12m</span><span class="wv">2,104 <span class="wsub">today</span></span></div>
+      </div>
+      <div class="world-block">
+        <div class="world-block-title"><span class="badge badge-old">Old world</span></div>
+        <div class="wrow"><span class="wl">Clubs</span><span class="wv">214</span></div>
+        <div class="wrow"><span class="wl">Active sub</span><span class="wv">143</span></div>
+        <div class="wrow"><span class="wl">Trial</span><span class="wv">51</span></div>
+        <div class="wrow"><span class="wl">Inactive</span><span class="wv">71</span></div>
+        <div class="wrow"><span class="wl">Teams</span><span class="wv">1,558</span></div>
+        <div class="wrow"><span class="wl">Players</span><span class="wv">18,430</span></div>
+        <div class="wrow"><span class="wl">Coaches</span><span class="wv">1,204</span></div>
+        <div class="wrow"><span class="wl">Linked to user</span><span class="wv">2,108 <span class="wsub">11%</span></span></div>
+        <div class="wrow"><span class="wl">Active 30d</span><span class="wv">1,145 <span class="wsub">today</span></span></div>
+        <div class="wrow"><span class="wl">Active 12m</span><span class="wv">2,106 <span class="wsub">today</span></span></div>
+      </div>
+    </div>
+
+    <div class="chart-col">
+      <div class="chart-col-header">
+        <div class="pill-group">
+          <button class="pill active" onclick="switchCat('growth',this)">Growth</button>
+          <button class="pill" onclick="switchCat('engagement',this)">Engagement</button>
+          <button class="pill" onclick="switchCat('billing',this)">Billing</button>
+        </div>
+        <div class="toggle-group">
+          <button class="toggle-btn active" id="btnNew" onclick="switchView('new')">New / month</button>
+          <button class="toggle-btn" id="btnTotal" onclick="switchView('total')">Cumulative</button>
+        </div>
+      </div>
+      <div class="charts-area" id="chartsArea"></div>
+    </div>
+  </div>
+
+  <div class="drill-section">
+    <div class="drill-header">
+      <div class="drill-title">Club / org drill-down</div>
+      <div class="filter-row">
+        <button class="filter-btn active" onclick="filterChips('all',this)">All</button>
+        <button class="filter-btn" onclick="filterChips('new',this)">New world</button>
+        <button class="filter-btn" onclick="filterChips('old',this)">Old world</button>
+      </div>
+    </div>
+    <div class="club-chips" id="clubChips"></div>
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-top">
+        <span class="detail-name" id="detailName"></span>
+        <span id="detailBadge"></span>
+      </div>
+      <div class="detail-stats" id="detailStats"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const months = ['Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul'];
+
+const series = {
+  new: {
+    clubsNew:      [2,3,2,4,3,5,4,6,5,7,6,4],
+    clubsCancelled:[0,1,0,1,1,0,1,0,1,0,1,2],
+    usersNew:      [38,42,40,48,44,52,50,58,54,62,58,52],
+    news:          [42,58,51,67,61,74,69,82,76,88,81,72],
+    events:        [28,34,31,39,36,44,41,48,45,52,49,44],
+    messages:      [310,420,380,460,430,510,480,560,530,600,570,520],
+    invoices:      [124,158,142,176,161,192,180,208,196,220,210,188],
+    products:      [8,12,10,14,12,16,14,18,16,20,18,14],
+  },
+  total: {
+    clubsNew:      [220,223,225,229,232,237,241,247,252,259,265,269],
+    clubsCancelled:[14,15,15,16,17,17,18,18,19,19,20,22],
+    usersNew:      [5480,5522,5562,5610,5654,5706,5756,5814,5868,5930,5988,6040],
+    news:          [1240,1298,1349,1416,1477,1551,1620,1702,1778,1866,1947,2019],
+    events:        [820,854,885,924,960,1004,1045,1093,1138,1190,1239,1283],
+    messages:      [8400,8820,9200,9660,10090,10600,11080,11640,12170,12770,13340,13860],
+    invoices:      [3240,3398,3540,3716,3877,4069,4249,4457,4653,4873,5083,5271],
+    products:      [180,192,202,216,228,244,258,276,292,312,330,344],
+  }
+};
+
+const cats = {
+  growth: [
+    { key: 'clubsNew', key2: 'clubsCancelled', label: 'New clubs', l2: 'Cancelled', c: '#2a78d6', c2: '#e34948' },
+    { key: 'usersNew', label: 'New users', c: '#1baf7a' },
+    { type: 'na', label: 'Active users over time', note: 'Not yet available — requires historical snapshots. Active 30d and 12m are available as today\'s snapshot above.' }
+  ],
+  engagement: [
+    { key: 'news',     label: 'News created',   c: '#4a3aa7' },
+    { key: 'events',   label: 'Events created', c: '#1baf7a' },
+    { key: 'messages', label: 'Messages sent',  c: '#eda100' },
+  ],
+  billing: [
+    { key: 'invoices', label: 'Invoices created',  c: '#2a78d6' },
+    { key: 'products', label: 'Products created',  c: '#e87ba4' },
+  ]
+};
+
+let view = 'new', cat = 'growth', charts = {};
+
+function makeChart(id, def) {
+  if (charts[id]) charts[id].destroy();
+  const d = series[view];
+  const ds = [{ label: def.label, data: d[def.key], backgroundColor: def.c + 'cc', borderRadius: 3, borderSkipped: false }];
+  if (def.key2) ds.push({ label: def.l2, data: d[def.key2], backgroundColor: def.c2 + 'cc', borderRadius: 3, borderSkipped: false });
+  charts[id] = new Chart(document.getElementById(id), {
+    type: 'bar',
+    data: { labels: months, datasets: ds },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { mode: 'index', intersect: false } },
+      scales: {
+        x: { grid: { display: false }, ticks: { font: { size: 9 }, color: '#898781', autoSkip: false, maxRotation: 0 } },
+        y: { grid: { color: '#e1e0d9' }, ticks: { font: { size: 9 }, color: '#898781' }, beginAtZero: true }
+      }
+    }
+  });
+}
+
+function renderCharts() {
+  const area = document.getElementById('chartsArea');
+  Object.values(charts).forEach(c => c.destroy());
+  charts = {};
+  area.innerHTML = '';
+  cats[cat].forEach((def, i) => {
+    if (def.type === 'na') {
+      area.innerHTML += `<div class="coming-soon">
+        <div class="cs-title"><i class="ti ti-clock" aria-hidden="true" style="font-size:14px;vertical-align:-2px;margin-right:4px;"></i>${def.label}</div>
+        <div class="cs-sub">${def.note}</div>
+      </div>`;
+      return;
+    }
+    const id = `chart_${i}`;
+    let legend = `<span class="li"><span class="ld" style="background:${def.c}"></span>${def.label}</span>`;
+    if (def.key2) legend += `<span class="li"><span class="ld" style="background:${def.c2}"></span>${def.l2}</span>`;
+    area.innerHTML += `<div class="mini-chart-card">
+      <div class="mini-chart-title"><div class="legend">${legend}</div></div>
+      <div class="mini-chart-wrap"><canvas id="${id}" role="img" aria-label="${def.label} over 12 months"></canvas></div>
+    </div>`;
+  });
+  cats[cat].forEach((def, i) => {
+    if (def.type === 'na') return;
+    makeChart(`chart_${i}`, def);
+  });
+}
+
+function switchCat(c, btn) {
+  cat = c;
+  document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCharts();
+}
+
+function switchView(v) {
+  view = v;
+  document.getElementById('btnNew').classList.toggle('active', v === 'new');
+  document.getElementById('btnTotal').classList.toggle('active', v === 'total');
+  renderCharts();
+}
+
+renderCharts();
+
+const clubs = [
+  { name: 'FC München Nord',    type: 'new', org: 'FC München e.V.', users: 24, a30: 18, a12: 22, profiles: 312, linked: 210, news: 18, events: 12, invoices: 48  },
+  { name: 'SV Zürich West',     type: 'new', org: 'SV Zürich',       users: 31, a30: 14, a12: 28, profiles: 280, linked: 195, news: 24, events: 8,  invoices: 62  },
+  { name: 'TSG Heidelberg',     type: 'new', org: 'TSG Heidelberg',  users: 12, a30: 2,  a12: 9,  profiles: 145, linked: 88,  news: 3,  events: 2,  invoices: 18  },
+  { name: 'FC Basel 1893',      type: 'new', org: 'FC Basel',        users: 8,  a30: 0,  a12: 1,  profiles: 90,  linked: 42,  news: 0,  events: 0,  invoices: 0   },
+  { name: 'VfB Stuttgart West', type: 'new', org: 'VfB Stuttgart',   users: 19, a30: 11, a12: 17, profiles: 210, linked: 140, news: 11, events: 9,  invoices: 34  },
+  { name: 'SV Hamburg Classic', type: 'old', sub: 'active',          users: 45, a30: 31, a12: 41, profiles: 820, linked: 380, news: 62, events: 88, invoices: 210 },
+  { name: 'Sportfreunde Köln',  type: 'old', sub: 'active',          users: 18, a30: 12, a12: 16, profiles: 340, linked: 155, news: 28, events: 34, invoices: 88  },
+  { name: 'TuS Dortmund 08',    type: 'old', sub: 'trial',           users: 9,  a30: 1,  a12: 3,  profiles: 120, linked: 48,  news: 2,  events: 4,  invoices: 8   },
+  { name: 'FC Hannover Mitte',  type: 'old', sub: 'inactive',        users: 22, a30: 0,  a12: 0,  profiles: 410, linked: 95,  news: 0,  events: 0,  invoices: 0   },
+  { name: 'SG Frankfurt Ost',   type: 'old', sub: 'active',          users: 14, a30: 9,  a12: 13, profiles: 290, linked: 130, news: 19, events: 22, invoices: 54  },
+];
+
+let selected = null;
+
+function renderChips(f) {
+  const filtered = clubs.filter(c => f === 'all' || c.type === f);
+  document.getElementById('clubChips').innerHTML = filtered.map(c => {
+    const sel = selected === c.name ? ' selected' : '';
+    return `<button class="chip${sel}" onclick="selectClub('${c.name}')">${c.name}</button>`;
+  }).join('');
+}
+
+function selectClub(name) {
+  selected = selected === name ? null : name;
+  const f = document.querySelector('.filter-btn.active').textContent.toLowerCase().replace(' world','').trim();
+  renderChips(f);
+  const panel = document.getElementById('detailPanel');
+  if (!selected) { panel.className = 'detail-panel'; return; }
+  const c = clubs.find(x => x.name === name);
+  panel.className = 'detail-panel visible';
+  document.getElementById('detailName').textContent = c.name;
+  document.getElementById('detailBadge').innerHTML = c.type === 'new'
+    ? `<span class="badge badge-new">${c.org}</span>`
+    : `<span class="badge badge-old">${c.sub}</span>`;
+  document.getElementById('detailStats').innerHTML = [
+    { v: c.profiles,  l: 'Profiles' },
+    { v: c.linked,    l: 'Linked' },
+    { v: c.users,     l: 'Users' },
+    { v: c.a30,       l: 'Active 30d' },
+    { v: c.a12,       l: 'Active 12m' },
+    { v: Math.round(c.a30/c.users*100)+'%', l: 'Adoption' },
+    { v: c.news,      l: 'News 30d' },
+    { v: c.events,    l: 'Events 30d' },
+    { v: c.invoices,  l: 'Invoices 30d' },
+  ].map(s => `<div class="ds"><div class="dv">${s.v}</div><div class="dl">${s.l}</div></div>`).join('');
+}
+
+function filterChips(f, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selected = null;
+  document.getElementById('detailPanel').className = 'detail-panel';
+  renderChips(f);
+}
+
+renderChips('all');
+</script>
