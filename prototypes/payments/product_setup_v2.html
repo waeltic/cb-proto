@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Setup — coachbetter</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --teal: #00a693;
+  --teal-light: #e6f7f5;
+  --teal-dark: #007a6c;
+  --ink: #1a1a1a;
+  --ink-2: #444;
+  --ink-3: #777;
+  --ink-4: #aaa;
+  --border: #e4e4e0;
+  --border-strong: #ccccc8;
+  --bg: #f2f2ef;
+  --surface: #ffffff;
+  --surface-2: #f8f8f6;
+  --amber: #c45c00;
+  --amber-light: #fff3e0;
+  --blue: #1a5fa8;
+  --blue-light: #e6f0fb;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.07), 0 4px 12px rgba(0,0,0,0.04);
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.5; min-height: 100vh; }
+
+/* Top bar */
+.topbar { background: white; border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+.topbar-title { font-size: 13px; color: var(--ink-3); display: flex; align-items: center; gap: 6px; }
+.topbar-title strong { color: var(--ink); }
+.topbar-close { background: none; border: none; cursor: pointer; color: var(--ink-3); font-size: 18px; line-height: 1; padding: 4px; border-radius: 6px; }
+.topbar-close:hover { background: var(--surface-2); color: var(--ink); }
+
+/* Stepper */
+.stepper-wrap { background: white; border-bottom: 1px solid var(--border); padding: 0 1.5rem; }
+.stepper { display: flex; max-width: 680px; margin: 0 auto; }
+.s-tab { flex: 1; display: flex; align-items: center; gap: 10px; padding: 14px 0; border-bottom: 2px solid transparent; cursor: pointer; }
+.s-tab.active { border-bottom-color: var(--teal); }
+.s-tab.done { border-bottom-color: var(--border); }
+.s-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; transition: all 0.2s; }
+.s-tab.done .s-num { background: var(--teal-light); color: var(--teal-dark); }
+.s-tab.active .s-num { background: var(--teal); color: white; }
+.s-tab.todo .s-num { background: var(--surface-2); color: var(--ink-4); border: 1px solid var(--border); }
+.s-info .s-step-label { font-size: 11px; color: var(--ink-4); text-transform: uppercase; letter-spacing: 0.05em; }
+.s-tab.active .s-step-label { color: var(--teal-dark); }
+.s-tab.done .s-step-label { color: var(--ink-4); }
+.s-info .s-step-name { font-size: 13px; font-weight: 500; color: var(--ink-3); }
+.s-tab.active .s-step-name { color: var(--ink); }
+.s-sep { color: var(--border-strong); font-size: 16px; padding: 0 4px; align-self: center; }
+
+/* Main layout */
+.main { max-width: 720px; margin: 0 auto; padding: 1.5rem 1.5rem 6rem; }
+
+/* Section group */
+.group { background: white; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 12px; }
+.group-header { padding: 14px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.group-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.gi-ink { background: var(--ink); }
+.gi-teal { background: var(--teal-light); }
+.gi-amber { background: var(--amber-light); }
+.gi-blue { background: var(--blue-light); }
+.group-header-text .ght { font-size: 13px; font-weight: 600; color: var(--ink); }
+.group-header-text .ghs { font-size: 12px; color: var(--ink-3); margin-top: 1px; }
+.group-body { padding: 18px 20px; }
+
+/* Fields */
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+.fl { font-size: 12px; font-weight: 500; color: var(--ink-2); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.req { color: #c0392b; font-size: 11px; }
+.badge-lock { font-size: 10px; padding: 1px 6px; border-radius: 6px; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; font-weight: 400; }
+.badge-opt { font-size: 10px; padding: 1px 6px; border-radius: 6px; background: var(--surface-2); color: var(--ink-4); border: 1px solid var(--border); font-weight: 400; }
+.badge-only { font-size: 10px; padding: 1px 6px; border-radius: 6px; background: var(--teal-light); color: var(--teal-dark); font-weight: 400; }
+.fh { font-size: 11px; color: var(--ink-4); margin-top: 5px; line-height: 1.5; }
+input[type=text], select, textarea { width: 100%; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); font-size: 13px; color: var(--ink); background: white; font-family: inherit; outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+input[type=text] { height: 38px; padding: 0 12px; }
+select { height: 38px; padding: 0 12px; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23aaa' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+textarea { padding: 10px 12px; resize: none; min-height: 72px; }
+input:focus, select:focus, textarea:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(0,166,147,0.12); }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Type toggle */
+.type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.type-card { border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px; cursor: pointer; transition: all 0.15s; position: relative; }
+.type-card:hover { border-color: var(--border-strong); }
+.type-card.on { border-color: var(--teal); background: var(--teal-light); }
+.type-card .tc-check { position: absolute; top: 12px; right: 12px; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border-strong); background: white; display: flex; align-items: center; justify-content: center; font-size: 11px; color: transparent; }
+.type-card.on .tc-check { background: var(--teal); border-color: var(--teal); color: white; }
+.tc-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.type-card.on .tc-title { color: var(--teal-dark); }
+.tc-desc { font-size: 12px; color: var(--ink-3); line-height: 1.5; }
+.tc-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+.tc-tag { font-size: 10px; padding: 2px 8px; border-radius: 20px; background: var(--surface-2); color: var(--ink-3); border: 1px solid var(--border); }
+.type-card.on .tc-tag { background: white; color: var(--teal-dark); border-color: var(--teal-light); }
+
+/* Category pills */
+.pill-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill { font-size: 12px; padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border-strong); background: white; color: var(--ink-3); cursor: pointer; transition: all 0.12s; }
+.pill:hover { border-color: var(--ink-3); color: var(--ink); }
+.pill.on { background: var(--ink); color: white; border-color: var(--ink); }
+
+/* Image upload */
+.img-upload { border: 1.5px dashed var(--border-strong); border-radius: var(--radius); padding: 20px; text-align: center; cursor: pointer; transition: border-color 0.15s; background: var(--surface-2); }
+.img-upload:hover { border-color: var(--teal); }
+.img-upload .iu-icon { font-size: 22px; margin-bottom: 6px; color: var(--ink-4); }
+.img-upload .iu-text { font-size: 12px; color: var(--ink-3); }
+.img-upload .iu-sub { font-size: 11px; color: var(--ink-4); margin-top: 2px; }
+
+/* Billing questions */
+.q-label { font-size: 12px; font-weight: 600; color: var(--ink-2); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.05em; }
+.q-grid { display: grid; gap: 8px; }
+.q-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.q-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.q-card { border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; cursor: pointer; transition: all 0.15s; }
+.q-card:hover { border-color: var(--border-strong); }
+.q-card.on { border-color: var(--teal); background: var(--teal-light); }
+.qc-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 3px; }
+.q-card.on .qc-title { color: var(--teal-dark); }
+.qc-ex { font-size: 11px; color: var(--ink-4); line-height: 1.4; }
+.q-card.on .qc-ex { color: var(--teal-dark); opacity: 0.8; }
+
+/* Sub question */
+.sub-q { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.period-opts { display: grid; grid-template-columns: 1fr 120px; gap: 10px; margin-top: 10px; }
+
+/* Preview */
+.preview { border-radius: var(--radius-sm); overflow: hidden; margin-top: 14px; border: 1px solid var(--border); }
+.preview-head { padding: 8px 14px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.preview-body { padding: 10px 14px; font-size: 12px; line-height: 1.6; }
+.preview-bar-outer { height: 22px; border-radius: 4px; overflow: hidden; background: rgba(0,0,0,0.06); margin: 8px 0 4px; display: flex; }
+.bar-seg { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; }
+.preview-note { font-size: 11px; opacity: 0.75; margin-top: 4px; }
+.prev-teal .preview-head { background: var(--teal); color: white; }
+.prev-teal .preview-body { background: var(--teal-light); color: var(--teal-dark); }
+.prev-amber .preview-head { background: var(--amber); color: white; }
+.prev-amber .preview-body { background: var(--amber-light); color: var(--amber); }
+.prev-blue .preview-head { background: var(--blue); color: white; }
+.prev-blue .preview-body { background: var(--blue-light); color: var(--blue); }
+
+/* Info / warn box */
+.info-box { background: var(--blue-light); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; color: var(--blue); line-height: 1.6; display: flex; gap: 8px; margin-top: 10px; }
+.warn-box { background: var(--amber-light); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12px; color: var(--amber); line-height: 1.6; display: flex; gap: 8px; margin-top: 10px; }
+
+/* Footer */
+.footer { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 1px solid var(--border); padding: 12px 1.5rem; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
+.footer-left { font-size: 12px; color: var(--ink-4); }
+.footer-right { display: flex; gap: 8px; }
+.btn { height: 38px; padding: 0 20px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid var(--border-strong); background: white; color: var(--ink); font-family: inherit; transition: all 0.15s; }
+.btn:hover { background: var(--surface-2); }
+.btn-primary { background: var(--teal); color: white; border-color: var(--teal); }
+.btn-primary:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+
+.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="topbar-title">
+    Products & Billing <span style="color:var(--border-strong);">›</span> <strong>New product</strong>
+  </div>
+  <button class="topbar-close">✕</button>
+</div>
+
+<!-- Stepper -->
+<div class="stepper-wrap">
+  <div class="stepper">
+    <div class="s-tab active">
+      <div class="s-num">1</div>
+      <div class="s-info">
+        <div class="s-step-label">Step 1</div>
+        <div class="s-step-name">Product details</div>
+      </div>
+    </div>
+    <span class="s-sep">›</span>
+    <div class="s-tab todo" id="step2-tab">
+      <div class="s-num">2</div>
+      <div class="s-info">
+        <div class="s-step-label">Step 2</div>
+        <div class="s-step-name" id="step2-name">Pricing type</div>
+      </div>
+    </div>
+    <span class="s-sep" id="sep2" style="display:none;">›</span>
+    <div class="s-tab todo" id="step3-tab" style="display:none;">
+      <div class="s-num">3</div>
+      <div class="s-info">
+        <div class="s-step-label">Step 3</div>
+        <div class="s-step-name">Payment options</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- GROUP 1: What is this product? -->
+  <div class="group">
+    <div class="group-header">
+      <div class="group-icon gi-ink" style="color:white;font-size:13px;">①</div>
+      <div class="group-header-text">
+        <div class="ght">What is this product?</div>
+        <div class="ghs">Set the type, name, and category — these cannot be changed after saving</div>
+      </div>
+    </div>
+    <div class="group-body">
+
+      <div class="field">
+        <div class="fl">Type <span class="req">*</span> <span class="badge-lock" id="lock-badge" style="display:none;">Locked after save</span></div>
+        <div class="type-grid">
+          <div class="type-card" id="t-product" onclick="setType('product')">
+            <div class="tc-check" id="tc-product">✓</div>
+            <div class="tc-title">Product</div>
+            <div class="tc-desc">Camps, events, equipment, courses. Available to all contacts.</div>
+            <div class="tc-tags">
+              <span class="tc-tag">Event</span>
+              <span class="tc-tag">Camp</span>
+              <span class="tc-tag">Course</span>
+              <span class="tc-tag">Equipment</span>
+            </div>
+          </div>
+          <div class="type-card on" id="t-due" onclick="setType('due')">
+            <div class="tc-check" id="tc-due">✓</div>
+            <div class="tc-title">Membership due</div>
+            <div class="tc-desc">For members only. Bound to membership — ends when membership ends.</div>
+            <div class="tc-tags">
+              <span class="tc-tag">Annual fee</span>
+              <span class="tc-tag">Subscription</span>
+              <span class="tc-tag">Joining fee</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="fl">Name <span class="req">*</span></div>
+        <input type="text" value="Jahresbeitrag 2027" placeholder="e.g. Annual membership fee 2027">
+      </div>
+
+      <div class="field" id="f-cat-product" style="display:none;">
+        <div class="fl">Category <span class="req">*</span></div>
+        <div class="pill-group">
+          <div class="pill on">Event</div>
+          <div class="pill">Course</div>
+          <div class="pill">Camp</div>
+          <div class="pill">Equipment</div>
+          <div class="pill">Other</div>
+        </div>
+      </div>
+      <div class="field" id="f-cat-due">
+        <div class="fl">Category</div>
+        <div class="pill-group">
+          <div class="pill on">Membership</div>
+        </div>
+        <div class="fh">Membership dues always use the Membership category.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GROUP 2: Details & routing -->
+  <div class="group">
+    <div class="group-header">
+      <div class="group-icon gi-teal" style="font-size:13px;">②</div>
+      <div class="group-header-text">
+        <div class="ght">Details & routing</div>
+        <div class="ghs">Description, image, tax, bank account and department scope</div>
+      </div>
+    </div>
+    <div class="group-body">
+
+      <div class="g2" style="margin-bottom:16px;">
+        <div class="field" style="margin:0;">
+          <div class="fl">Description <span class="badge-opt">Optional</span></div>
+          <textarea placeholder="Describe this product for admins and members…"></textarea>
+        </div>
+        <div>
+          <div class="fl">Product image <span class="badge-opt">Optional</span></div>
+          <div class="img-upload">
+            <div class="iu-icon">🖼</div>
+            <div class="iu-text">Drop an image or <span style="color:var(--teal);text-decoration:underline;cursor:pointer;">browse</span></div>
+            <div class="iu-sub">PNG, JPG up to 2MB · Not shown on invoices</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="g2" style="margin-bottom:16px;">
+        <div class="field" style="margin:0;">
+          <div class="fl">Tax rate <span class="req">*</span></div>
+          <select><option>Select tax rate</option><option selected>VAT 8%</option><option>VAT 19%</option><option>Tax exempt</option></select>
+          <div class="fh">Applies to all payment options on this product.</div>
+        </div>
+        <div class="field" style="margin:0;">
+          <div class="fl">Bank account <span class="req">*</span></div>
+          <select><option selected>Main account (DE12 3456 ···)</option><option>Department account</option></select>
+        </div>
+      </div>
+
+      <div class="field" style="margin:0;">
+        <div class="fl">Department <span class="badge-opt">Optional</span></div>
+        <select>
+          <option selected>No department — applies to whole club</option>
+          <option>Football</option>
+          <option>Tennis</option>
+          <option>Basketball</option>
+        </select>
+        <div class="fh" id="dept-hint-product" style="display:none;">
+          Organisational tag only — used for filtering and access. No effect on billing.
+        </div>
+        <div class="fh" id="dept-hint-due">
+          For membership dues, selecting a department links this due to the department membership. The due ends automatically when the member leaves the department.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GROUP 3: How is this charged? -->
+  <div class="group">
+    <div class="group-header">
+      <div class="group-icon gi-blue" style="font-size:13px;">③</div>
+      <div class="group-header-text">
+        <div class="ght">How is this charged?</div>
+        <div class="ghs">These two choices define what invoices look like and when they are created</div>
+      </div>
+    </div>
+    <div class="group-body">
+
+      <!-- Q1 -->
+      <div class="field">
+        <div class="q-label">How often is this charged?</div>
+        <div class="q-grid cols-3">
+          <div class="q-card on" id="q1-once" onclick="setQ1('once')">
+            <div class="qc-title">Once</div>
+            <div class="qc-ex">One invoice per assignment</div>
+          </div>
+          <div class="q-card" id="q1-rec" onclick="setQ1('rec')">
+            <div class="qc-title">Recurring</div>
+            <div class="qc-ex">New invoice each billing cycle</div>
+          </div>
+          <div class="q-card" id="q1-both" onclick="setQ1('both')">
+            <div class="qc-title">Both</div>
+            <div class="qc-ex">Admin chooses at assignment</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q2 — only when once or both -->
+      <div class="sub-q" id="q2-wrap">
+        <div class="q-label">What does one payment cover?</div>
+        <div class="q-grid cols-2">
+          <div class="q-card on" id="q2-period" onclick="setQ2('period')">
+            <div class="qc-title">A defined time period</div>
+            <div class="qc-ex">e.g. calendar year 2027 or club year</div>
+          </div>
+          <div class="q-card" id="q2-none" onclick="setQ2('none')">
+            <div class="qc-title">No period</div>
+            <div class="qc-ex">One-time charge, e.g. joining fee</div>
+          </div>
+        </div>
+
+        <!-- Period sub-options -->
+        <div id="period-opts" style="margin-top:12px;">
+          <div class="period-opts">
+            <div class="field" style="margin:0;">
+              <div class="fl">Period type <span class="req">*</span></div>
+              <select>
+                <option selected>Calendar year (01 Jan – 31 Dec)</option>
+                <option>Club year (set in club settings)</option>
+              </select>
+              <div class="fh">Club year is defined in Club Settings, e.g. 01 Jun – 31 May.</div>
+            </div>
+            <div class="field" style="margin:0;">
+              <div class="fl">Year <span class="req">*</span></div>
+              <input type="text" value="2027">
+              <div class="fh">Adjustable at assignment.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live preview -->
+      <div class="preview prev-teal" id="preview">
+        <div class="preview-head" id="prev-head">What invoices will look like</div>
+        <div class="preview-body">
+          <div id="prev-text">One invoice per assignment covering the full period. If a member joins mid-year the period start is adjusted to their membership date automatically.</div>
+          <div class="preview-bar-outer" id="prev-bar">
+            <div class="bar-seg" style="width:100%;background:rgba(0,166,147,0.25);color:var(--teal-dark);">01 Jan 2027 ———————————— 31 Dec 2027</div>
+          </div>
+          <div class="preview-note" id="prev-note">Mid-year example: period shortened to membership start date. Price unchanged — apply a manual discount if needed.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-left" id="footer-hint">Step 1 of 3 — Membership due · Annual fee · Calendar year 2027</div>
+  <div class="footer-right">
+    <button class="btn">Cancel</button>
+    <button class="btn btn-primary">Save & continue →</button>
+  </div>
+</div>
+
+<script>
+let type = 'due', q1 = 'once', q2 = 'period';
+
+function setType(t) {
+  type = t;
+  document.getElementById('t-product').classList.toggle('on', t==='product');
+  document.getElementById('t-due').classList.toggle('on', t==='due');
+  document.getElementById('tc-product').textContent = t==='product' ? '✓' : '';
+  document.getElementById('tc-due').textContent = t==='due' ? '✓' : '';
+  document.getElementById('f-cat-product').style.display = t==='product' ? 'block' : 'none';
+  document.getElementById('f-cat-due').style.display = t==='due' ? 'block' : 'none';
+  document.getElementById('dept-hint-product').style.display = t==='product' ? 'block' : 'none';
+  document.getElementById('dept-hint-due').style.display = t==='due' ? 'block' : 'none';
+  const hasPricingStep = t === 'due';
+  document.getElementById('step2-name').textContent = hasPricingStep ? 'Pricing type' : 'Payment options';
+  document.getElementById('sep2').style.display = hasPricingStep ? 'inline' : 'none';
+  document.getElementById('step3-tab').style.display = hasPricingStep ? 'flex' : 'none';
+  updatePreview();
+}
+
+function setQ1(v) {
+  q1 = v;
+  ['once','rec','both'].forEach(id => document.getElementById('q1-'+id).classList.toggle('on', id===v));
+  document.getElementById('q2-wrap').style.display = v==='rec' ? 'none' : 'block';
+  updatePreview();
+}
+
+function setQ2(v) {
+  q2 = v;
+  ['period','none'].forEach(id => document.getElementById('q2-'+id).classList.toggle('on', id===v));
+  document.getElementById('period-opts').style.display = v==='period' ? 'block' : 'none';
+  updatePreview();
+}
+
+function updatePreview() {
+  const prev = document.getElementById('preview');
+  const head = document.getElementById('prev-head');
+  const text = document.getElementById('prev-text');
+  const bar = document.getElementById('prev-bar');
+  const note = document.getElementById('prev-note');
+  const hint = document.getElementById('footer-hint');
+  const steps = type === 'due' ? '3' : '2';
+
+  if (q1 === 'rec') {
+    prev.className = 'preview prev-blue';
+    head.textContent = 'Recurring billing — one invoice per cycle';
+    text.textContent = 'A new invoice is created at the start of each billing cycle. Each invoice covers exactly that cycle period.';
+    bar.innerHTML = `
+      <div class="bar-seg" style="width:25%;background:rgba(26,95,168,0.2);color:var(--blue);">Q1</div>
+      <div class="bar-seg" style="width:25%;background:rgba(26,95,168,0.3);color:var(--blue);">Q2</div>
+      <div class="bar-seg" style="width:25%;background:rgba(26,95,168,0.2);color:var(--blue);">Q3</div>
+      <div class="bar-seg" style="width:25%;background:rgba(26,95,168,0.15);color:var(--blue);">Q4 ···</div>`;
+    note.textContent = 'No end date needed. Continues until membership ends or admin stops it. Billing cycle is set in the next step.';
+    hint.textContent = `Step 1 of ${steps} — ${type==='due'?'Membership due':'Product'} · Recurring`;
+  } else if (q1 === 'both') {
+    prev.className = 'preview prev-blue';
+    head.textContent = 'Both options available at assignment';
+    text.textContent = 'Admin chooses at assignment time — a single invoice or a recurring plan. You define both options in the payment options step.';
+    bar.innerHTML = `
+      <div class="bar-seg" style="width:50%;background:rgba(26,95,168,0.2);color:var(--blue);">Once-off option</div>
+      <div class="bar-seg" style="width:50%;background:rgba(26,95,168,0.3);color:var(--blue);">Recurring option</div>`;
+    note.textContent = 'Both once-off and recurring payment options will be available on this product.';
+    hint.textContent = `Step 1 of ${steps} — ${type==='due'?'Membership due':'Product'} · Once-off & Recurring`;
+  } else if (q2 === 'none') {
+    prev.className = 'preview prev-amber';
+    head.textContent = 'One-time charge — no service period';
+    text.textContent = 'A single invoice is created with no service period. Just a charge on the invoice date — e.g. a joining fee or equipment charge.';
+    bar.innerHTML = `<div class="bar-seg" style="width:100%;background:rgba(196,92,0,0.15);color:var(--amber);">Invoice date only — no period shown on invoice</div>`;
+    note.textContent = 'The assignment is still recorded for traceability but shows as a one-time charge, not a date range.';
+    hint.textContent = `Step 1 of ${steps} — ${type==='due'?'Membership due':'Product'} · Once-off · No period`;
+  } else {
+    prev.className = 'preview prev-teal';
+    head.textContent = 'Once-off invoice covering a defined period';
+    text.textContent = 'One invoice per assignment covering the full period. If a member joins mid-year the period start is adjusted to their membership date automatically.';
+    bar.innerHTML = `
+      <div class="bar-seg" style="width:100%;background:rgba(0,166,147,0.2);color:var(--teal-dark);">01 Jan 2027 ———————————— 31 Dec 2027</div>`;
+    note.textContent = 'Mid-year example: period shortened automatically (e.g. 01 May – 31 Dec). Price unchanged — apply a manual discount if needed.';
+    hint.textContent = `Step 1 of ${steps} — ${type==='due'?'Membership due':'Product'} · Once-off · Calendar year 2027`;
+  }
+}
+
+setType('due');
+setQ1('once');
+setQ2('period');
+</script>
+</body>
+</html>
