@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Product setup v9</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f3f5f6;color:#182230;font-size:14px}.topbar{height:56px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:20}.topbar strong{font-size:15px}.btn{height:40px;padding:0 17px;border:1px solid #d0d5dd;background:#fff;border-radius:8px;font:inherit;font-weight:600;cursor:pointer}.btn.primary{background:#31b3af;border-color:#31b3af;color:#fff}.stepper{height:66px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:center;gap:56px;position:sticky;top:56px;z-index:19}.step{display:flex;align-items:center;gap:10px;color:#98a2b3;font-weight:600;cursor:pointer}.step .n{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#eef1f3;font-size:12px}.step.active{color:#1d2939}.step.active .n{background:#31b3af;color:#fff}.step.done .n{background:#dff6f4;color:#158f8a}.layout{max-width:1320px;margin:auto;padding:24px 28px 100px;display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:22px}.type-strip{background:#fff;border:1px solid #e4e7ec;border-radius:14px;padding:16px 18px;margin-bottom:18px}.type-strip h2{font-size:15px;margin:0 0 4px}.sub{font-size:12px;color:#667085}.type-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.choice{border:1.5px solid #dfe3e7;border-radius:11px;padding:14px 15px;cursor:pointer;position:relative;background:#fff;transition:.15s}.choice:hover{border-color:#aeb7c2}.choice.on{border-color:#31b3af;background:#effaf9}.choice .radio{position:absolute;right:13px;top:13px;width:17px;height:17px;border-radius:50%;border:1.5px solid #c9cfd7;background:#fff}.choice.on .radio{border:5px solid #31b3af}.ct{font-weight:700;margin-bottom:4px}.cd{font-size:12px;color:#667085;line-height:1.45;padding-right:20px}.card{background:#fff;border:1px solid #e4e7ec;border-radius:14px;margin-bottom:18px;box-shadow:0 1px 2px rgba(16,24,40,.03)}.card-head{padding:17px 20px;border-bottom:1px solid #edf0f2}.card-title{font-size:16px;font-weight:700}.card-body{padding:20px}.field{margin-top:16px}.field:first-child{margin-top:0}.label{font-size:12px;font-weight:600;color:#344054;margin-bottom:7px}.req{color:#e5484d}.pill{font-size:10px;padding:2px 7px;border-radius:999px;background:#f2f4f7;color:#667085;margin-left:5px}.input,.select,.textarea{width:100%;border:1px solid #d0d5dd;border-radius:8px;background:#fff;font:inherit;color:#101828}.input,.select{height:40px;padding:0 12px}.textarea{min-height:82px;padding:10px 12px;resize:vertical}.hint{font-size:11px;color:#98a2b3;margin-top:6px;line-height:1.45}.name-image{display:grid;grid-template-columns:minmax(300px,560px) 116px;gap:16px;align-items:end}.image-box{height:90px;border:1.5px dashed #cfd5dc;border-radius:10px;background:#f8fafb;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;color:#667085}.image-box:hover{border-color:#31b3af;background:#f0fbfa}.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.fixed-category{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #e4e7ec;border-radius:9px;background:#f8fafb}.icon{width:34px;height:34px;border-radius:8px;background:#e6f6f4;display:grid;place-items:center}.use-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.settings{margin-top:14px;padding:14px;border:1px solid #cceeea;background:#f4fbfa;border-radius:10px}.inline{display:grid;grid-template-columns:1.2fr .8fr 1fr;gap:12px}.note{font-size:12px;color:#156f6a;margin-top:11px}.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #eef1f3}.toggle-row:last-child{border-bottom:0}.switch{width:42px;height:24px;border-radius:999px;background:#d0d5dd;position:relative;cursor:pointer}.switch:after{content:"";position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;box-shadow:0 1px 2px rgba(0,0,0,.2);transition:.15s}.switch.on{background:#31b3af}.switch.on:after{left:21px}.hidden{display:none!important}.summary{position:sticky;top:144px}.summary-hero{padding:18px;background:linear-gradient(135deg,#0f766e,#31b3af);color:#fff;border-radius:14px 14px 0 0}.summary-type{font-size:11px;text-transform:uppercase;letter-spacing:.08em;opacity:.8}.summary-name{font-size:20px;font-weight:700;margin-top:4px}.summary-body{padding:17px}.sum-row{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid #eef1f3}.sum-row:last-child{border-bottom:0}.sk{font-size:12px;color:#667085}.sv{font-size:12px;font-weight:600;text-align:right}.footer{position:fixed;left:0;right:0;bottom:0;height:68px;background:#fff;border-top:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;z-index:30}.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.price-box{margin-top:14px;padding-top:14px;border-top:1px solid #eef1f3}.model-list{display:grid;gap:10px}.model-list .choice{padding:13px 15px}.advanced{font-size:10px;font-weight:700;background:#fff3d6;color:#9a6700;border-radius:999px;padding:2px 7px;margin-left:7px}.range-list{display:grid;gap:9px;margin-top:12px}.range-row{display:grid;grid-template-columns:1fr 1fr 42px;gap:9px;align-items:end}.range-row.family{grid-template-columns:1fr 1fr 42px}.icon-btn{height:40px;width:42px;border:1px solid #d0d5dd;background:#fff;border-radius:8px;cursor:pointer;font-size:18px}.section-label{font-size:12px;font-weight:700;color:#344054;margin-top:14px}.info{margin-top:12px;padding:11px 13px;background:#f2f8ff;border:1px solid #d7e8fb;border-radius:9px;font-size:12px;color:#34546f;line-height:1.45}
+.type-strip{padding:14px 18px}.type-row{grid-template-columns:220px 240px;gap:10px}.choice.type-choice{display:flex;align-items:center;gap:11px;padding:11px 13px;min-height:58px}.type-symbol{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 34px;background:#e8f7f5;color:#128b84}.type-choice[data-type="due"] .type-symbol{background:#eeecff;color:#5546b8}.type-copy{min-width:0}.type-choice .ct{margin:0;font-size:13px}.type-choice .cd{margin-top:2px;padding:0;font-size:11px;line-height:1.35}.type-explainer{margin-top:10px;padding:9px 11px;border-left:3px solid #31b3af;background:#f6fbfb;border-radius:0 8px 8px 0;font-size:11.5px;color:#475467;line-height:1.45}.category-picker{position:relative;max-width:420px}.category-trigger{height:40px;width:100%;border:1px solid #d0d5dd;border-radius:8px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 11px;cursor:pointer;font:inherit;color:#101828}.category-selected{display:flex;align-items:center;gap:9px}.cat-icon{width:26px;height:26px;border-radius:7px;background:#f2f4f7;display:grid;place-items:center;font-size:15px}.category-menu{position:absolute;z-index:50;left:0;right:0;top:46px;background:#fff;border:1px solid #d0d5dd;border-radius:10px;box-shadow:0 12px 30px rgba(16,24,40,.14);padding:6px}.category-option{display:flex;align-items:center;gap:10px;padding:9px;border-radius:7px;cursor:pointer}.category-option:hover,.category-option.on{background:#f0fbfa}.category-option strong{font-size:13px}.category-option span:last-child{font-size:11px;color:#667085}.billing-compact{display:grid;grid-template-columns:1fr 1fr .72fr;gap:10px;align-items:stretch}.choice.advanced-model{background:#fafafa;border-style:dashed}.choice.advanced-model:not(.on){opacity:.76}.choice.advanced-model .ct{font-size:12px}.choice.advanced-model .cd{font-size:10.5px}.advanced{font-size:9px}.section-line{border-top:1px solid #e6e9ed;margin-top:18px}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.summary{position:static}.use-grid,.pay-grid,.g3{grid-template-columns:1fr 1fr}}@media(max-width:980px){.billing-compact{grid-template-columns:1fr 1fr}.choice.advanced-model{grid-column:1/-1}}@media(max-width:680px){.layout{padding:18px 14px 100px}.type-row,.use-grid,.pay-grid,.g2,.g3,.inline,.name-image{grid-template-columns:1fr}.stepper{gap:20px}.footer{padding:0 14px}}
+</style>
+</head>
+<body>
+<div class="topbar"><div>← &nbsp;<strong>New product</strong></div><button class="btn" id="saveDraft">Save as draft</button></div>
+<div class="stepper"><div class="step active" data-step="1"><div class="n">1</div>Product setup</div><div class="step" data-step="2"><div class="n">2</div>Pricing & options</div></div>
+<div class="layout">
+<main>
+<section id="step1">
+  <div class="type-strip">
+    <h2>Type</h2>
+    <div class="type-row">
+      <div class="choice type-choice on" data-type="product"><div class="type-symbol">◫</div><div class="type-copy"><div class="ct">Product</div><div class="cd">Events, camps, courses, equipment and other charges.</div></div><div class="radio"></div></div>
+      <div class="choice type-choice" data-type="due"><div class="type-symbol">♜</div><div class="type-copy"><div class="ct">Membership fee</div><div class="cd">Fees connected to a club or department membership.</div></div><div class="radio"></div></div>
+    </div>
+    <div id="typeExplainer" class="type-explainer"><strong>Product:</strong> Can be used in registrations, assigned manually and invoiced to any contact.</div>
+  </div>
+
+  <div class="card"><div class="card-head"><div class="card-title">Product details</div><div class="sub">Basic information shown to admins and members.</div></div><div class="card-body">
+    <div class="name-image"><div><div class="label">Name <span class="req">*</span></div><input id="name" class="input" value="Football Camp 2026"></div><div><div class="label">Image <span class="pill">Optional</span></div><label class="image-box"><input id="imageInput" type="file" hidden><div style="font-size:22px">＋</div><div style="font-size:11px;font-weight:600">Add image</div></label></div></div>
+    <div id="productCategory" class="field"><div class="label">Category <span class="req">*</span></div>
+      <div class="category-picker">
+        <button id="categoryTrigger" class="category-trigger" type="button"><span class="category-selected"><span id="categoryIcon" class="cat-icon">🎟</span><span id="categoryLabel">Event</span></span><span>⌄</span></button>
+        <div id="categoryMenu" class="category-menu hidden">
+          <div class="category-option on" data-category="Event" data-icon="🎟"><span class="cat-icon">🎟</span><div><strong>Event</strong><br><span>Matches, tournaments and social events</span></div></div>
+          <div class="category-option" data-category="Camp" data-icon="⛺"><span class="cat-icon">⛺</span><div><strong>Camp</strong><br><span>Holiday and training camps</span></div></div>
+          <div class="category-option" data-category="Course" data-icon="🎓"><span class="cat-icon">🎓</span><div><strong>Course</strong><br><span>Courses, workshops and education</span></div></div>
+          <div class="category-option" data-category="Equipment" data-icon="📦"><span class="cat-icon">📦</span><div><strong>Equipment</strong><br><span>Clothing, kits and physical items</span></div></div>
+          <div class="category-option" data-category="Licence" data-icon="🪪"><span class="cat-icon">🪪</span><div><strong>Licence</strong><br><span>Licence and federation charges</span></div></div>
+          <div class="category-option" data-category="Other" data-icon="⋯"><span class="cat-icon">⋯</span><div><strong>Other</strong><br><span>Any other product or charge</span></div></div>
+        </div>
+        <input id="category" type="hidden" value="Event">
+      </div><div class="hint">The icon is also used in product lists and registrations.</div></div>
+    <div id="dueCategory" class="field hidden"><div class="label">Category</div><div class="fixed-category"><div class="icon">👥</div><div><strong>Membership</strong><div class="hint" style="margin-top:2px">Fixed for membership fees.</div></div></div></div>
+    <div class="field"><div class="label">Description <span class="pill">Optional</span></div><textarea class="textarea" placeholder="Describe the product"></textarea></div>
+  </div></div>
+
+  <div class="card"><div class="card-head"><div class="card-title">Accounting & assignment</div><div class="sub">Where revenue is booked and, for membership fees, where the assignment applies.</div></div><div class="card-body">
+    <div class="g3"><div><div class="label">Tax <span class="req">*</span></div><select id="tax" class="select"><option>Tax exempt</option><option>VAT 8.1%</option><option>VAT 19%</option></select></div><div><div class="label">Bank account <span class="req">*</span></div><select id="bank" class="select"><option>Main account</option><option>Football account</option><option>Tennis account</option></select></div><div id="deptWrap" class="hidden"><div class="label">Department <span class="pill">Optional</span></div><select id="department" class="select"><option>Whole club</option><option>Football</option><option>Tennis</option></select><div class="hint">The fee ends when this membership ends.</div></div></div>
+  </div></div>
+
+  <div class="card"><div class="card-head"><div class="card-title">Available payment options</div><div class="sub">Choose which types of payment options can be configured for this product in the next step.</div></div><div class="card-body">
+    <div class="billing-compact">
+      <div class="choice on" data-model="fixed"><div class="radio"></div><div class="ct">One-time &amp; installments</div><div class="cd">Offer payment in full or split a fixed total across several invoices.</div></div>
+      <div class="choice" data-model="recurring"><div class="radio"></div><div class="ct">Recurring billing</div><div class="cd">Offer monthly, quarterly, half-yearly or yearly payment options.</div></div>
+      <div class="choice advanced-model" data-model="both"><div class="radio"></div><div class="ct">Both <span class="advanced">Advanced</span></div><div class="cd">Allow fixed-total and recurring options on the same product.</div></div>
+    </div>
+    <div id="modelExplainer" class="type-explainer" style="margin-top:12px"><strong>Available in Step 2:</strong> One-time payment and installments.</div>
+  </div></div>
+
+  <div class="card"><div class="card-head"><div class="card-title" id="coverTitle">What does this product cover?</div><div class="sub" id="coverSub">Choose whether the fixed total relates to a defined date range.</div></div><div class="card-body">
+    <div id="fixedCoverBlock">
+    <div class="use-grid">
+      <div class="choice on" data-cover="fixed"><div class="radio"></div><div class="ct">A defined period</div><div class="cd">For a season, year, camp or course with a clear start and end.</div></div>
+      <div class="choice" data-cover="once"><div class="radio"></div><div class="ct">A one-time charge</div><div class="cd">For a joining fee, jersey, licence fee or similar charge.</div></div>
+    </div>
+    <div id="fixedSettings" class="settings">
+      <div class="inline"><div><div class="label">Use</div><select id="periodKind" class="select"><option value="calendar">Calendar year</option><option value="club">Club year</option><option value="custom">Custom dates</option></select></div><div id="yearWrap"><div class="label">Year</div><input id="year" class="input" value="2027"></div><div id="previewWrap"><div class="label">Preview</div><div id="periodPreview" class="input" style="display:flex;align-items:center;background:#fff">01 Jan 2027 – 31 Dec 2027</div></div></div>
+      <div id="customDates" class="g2 hidden" style="margin-top:12px"><div><div class="label">Start date</div><input id="startDate" class="input" type="date" value="2027-07-01"></div><div><div class="label">End date</div><input id="endDate" class="input" type="date" value="2027-07-07"></div></div>
+      <div id="coverNote" class="note">For membership fees, the start is adjusted when a member joins later. No automatic pro-rata is applied.</div>
+    </div>
+    </div>
+    <div id="recurringOnlyInfo" class="hidden">
+      <div class="use-grid">
+        <div class="choice on" data-rec-cover="cycle"><div class="radio"></div><div class="ct">Each invoice covers its billing period</div><div class="cd">For example, a monthly invoice covers that month. The exact cycle is configured per payment option.</div></div>
+        <div class="choice" data-rec-cover="none"><div class="radio"></div><div class="ct">No period shown</div><div class="cd">Recurring invoices show the charge, but no covered date range.</div></div>
+      </div>
+    </div>
+    <div id="bothInfo" class="info hidden"><strong>Recurring options:</strong> Their billing cycle and invoice coverage are configured separately on each recurring payment option in Step 2.</div>
+  </div></div>
+</section>
+
+<section id="step2" class="hidden">
+  <div class="card"><div class="card-head"><div class="card-title">Pricing rules</div><div class="sub">Set rules that apply across all payment options.</div></div><div class="card-body">
+    <div class="toggle-row"><div><strong>Age-based pricing</strong><div class="hint">Use the member's age to determine the available price.</div></div><div id="ageSwitch" class="switch"></div></div>
+    <div id="agePanel" class="hidden" style="padding:14px 0">
+      <div class="g2"><div><div class="label">Evaluate age on</div><select class="select"><option>Invoice date</option><option>Club year date</option></select></div><div><div class="label">When no range matches</div><select class="select"><option>Flag assignment and skip invoice</option><option>Use standard price</option></select></div></div>
+      <div class="section-label">Age ranges</div>
+      <div class="hint">Define the ranges once on the product. Each payment option receives a price for every range.</div>
+      <div id="ageRanges" class="range-list">
+        <div class="range-row"><div><div class="label">From age</div><input class="input" type="number" value="0"></div><div><div class="label">To age</div><input class="input" type="number" value="12"></div><button class="icon-btn remove-range" type="button">×</button></div>
+        <div class="range-row"><div><div class="label">From age</div><input class="input" type="number" value="13"></div><div><div class="label">To age</div><input class="input" type="number" value="17"></div><button class="icon-btn remove-range" type="button">×</button></div>
+        <div class="range-row"><div><div class="label">From age</div><input class="input" type="number" value="18"></div><div><div class="label">To age</div><input class="input" type="number" placeholder="No maximum"></div><button class="icon-btn remove-range" type="button">×</button></div>
+      </div>
+      <button id="addAgeRange" class="btn" type="button" style="margin-top:10px">＋ Add age range</button>
+    </div>
+    <div class="toggle-row"><div><strong>Family pricing</strong><div class="hint">Use one base price and a reduced amount for additional family members.</div></div><div id="familySwitch" class="switch"></div></div>
+    <div id="familyPanel" class="hidden" style="padding:14px 0">
+      <div class="g2"><div><div class="label">Family mode</div><select class="select"><option>Members must have active membership</option><option>No membership required</option></select></div><div><div class="label">Count members by</div><select class="select"><option>Active people in family group</option><option>Assigned people only</option></select></div></div>
+      <div class="section-label">Number of people ranges</div>
+      <div class="hint">Define the family sizes once on the product. Prices are entered per payment option.</div>
+      <div id="familyRanges" class="range-list">
+        <div class="range-row family"><div><div class="label">From people</div><input class="input" type="number" min="1" value="1"></div><div><div class="label">To people</div><input class="input" type="number" min="1" value="2"></div><button class="icon-btn remove-range" type="button">×</button></div>
+        <div class="range-row family"><div><div class="label">From people</div><input class="input" type="number" min="1" value="3"></div><div><div class="label">To people</div><input class="input" type="number" min="1" value="4"></div><button class="icon-btn remove-range" type="button">×</button></div>
+        <div class="range-row family"><div><div class="label">From people</div><input class="input" type="number" min="1" value="5"></div><div><div class="label">To people</div><input class="input" type="number" min="1" placeholder="No maximum"></div><button class="icon-btn remove-range" type="button">×</button></div>
+      </div>
+      <button id="addFamilyRange" class="btn" type="button" style="margin-top:10px">＋ Add people range</button>
+    </div>
+  </div></div>
+
+  <div class="card"><div class="card-head"><div class="card-title">Payment options</div><div class="sub">Add one or more ways to pay. Billing cycle stays on the option.</div></div><div class="card-body">
+    <div class="pay-grid">
+      <div class="choice on" data-pay="full"><div class="radio"></div><div class="ct">Payment in full</div><div class="cd">One invoice for the full amount.</div></div>
+      <div class="choice" data-pay="installments"><div class="radio"></div><div class="ct">Installments</div><div class="cd">Several separate scheduled invoices.</div></div>
+      <div class="choice" data-pay="recurring"><div class="radio"></div><div class="ct">Recurring billing</div><div class="cd">A new invoice for each selected cycle.</div></div>
+    </div>
+    <div class="price-box"><div class="g3"><div><div class="label">Option name</div><input id="optionName" class="input" value="Standard price"></div><div><div class="label">Price</div><input id="price" class="input" value="120.00"></div><div><div class="label">Currency</div><select id="currency" class="select"><option>EUR</option><option>CHF</option></select></div></div>
+      <div id="recurringSettings" class="hidden" style="margin-top:14px"><div class="g3"><div><div class="label">Billing cycle</div><select id="cycle" class="select"><option>Monthly</option><option>Quarterly</option><option>Half-yearly</option><option>Yearly</option></select></div><div><div class="label">What does each invoice cover?</div><select id="recurringCoverage" class="select"><option value="cycle">The billing period</option><option value="none">No period shown</option></select><div class="hint">Example: a monthly invoice covers that month.</div></div><div><div class="label">Initial payment <span class="pill">Optional</span></div><input class="input" value="0.00"></div></div></div>
+      <div id="installmentSettings" class="g2 hidden" style="margin-top:14px"><div><div class="label">Number of invoices</div><input class="input" value="4"></div><div><div class="label">First invoice</div><select class="select"><option>At assignment</option><option>Specific date</option><option>Start of next month</option></select></div></div>
+      <button class="btn" style="margin-top:16px">＋ Add another payment option</button>
+    </div>
+  </div></div>
+</section>
+</main>
+<aside><div class="card summary"><div class="summary-hero"><div id="sumType" class="summary-type">Product</div><div id="sumName" class="summary-name">Football Camp 2026</div></div><div class="summary-body"><div class="sum-row"><div class="sk">Category</div><div id="sumCategory" class="sv">Event</div></div><div class="sum-row"><div class="sk">Billing model</div><div id="sumModel" class="sv">One-time or installments</div></div><div class="sum-row"><div class="sk">Covers</div><div id="sumCover" class="sv">Defined period</div></div><div class="sum-row"><div class="sk">Dates</div><div id="sumDates" class="sv">01 Jan–31 Dec 2027</div></div><div class="sum-row"><div class="sk">Department</div><div id="sumDept" class="sv">Not restricted</div></div><div class="sum-row"><div class="sk">Payment option</div><div id="sumPay" class="sv">Payment in full</div></div><div class="sum-row"><div class="sk">Price</div><div id="sumPrice" class="sv">EUR 120.00</div></div></div></div></aside>
+</div>
+<div class="footer"><div id="footerText" class="sub">Step 1 of 2 · Product setup</div><div style="display:flex;gap:9px"><button id="backBtn" class="btn">Cancel</button><button id="nextBtn" class="btn primary">Continue →</button></div></div>
+<script>
+let step=1,type='product',model='fixed',cover='fixed',pay='full';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+function choose(sel,el){$$(sel).forEach(x=>x.classList.remove('on'));el.classList.add('on')}
+function showStep(n){step=n;$('#step1').classList.toggle('hidden',n!==1);$('#step2').classList.toggle('hidden',n!==2);$$('.step').forEach((x,i)=>{x.classList.toggle('active',i===n-1);x.classList.toggle('done',i<n-1)});$('#backBtn').textContent=n===1?'Cancel':'← Back';$('#nextBtn').textContent=n===2?'Save product':'Continue →';$('#footerText').textContent=`Step ${n} of 2 · ${n===1?'Product setup':'Pricing & options'}`;window.scrollTo({top:0,behavior:'smooth'})}
+$$('[data-step]').forEach(x=>x.onclick=()=>showStep(Number(x.dataset.step)));
+$$('[data-type]').forEach(x=>x.onclick=()=>{choose('[data-type]',x);type=x.dataset.type;$('#productCategory').classList.toggle('hidden',type!=='product');$('#dueCategory').classList.toggle('hidden',type!=='due');$('#deptWrap').classList.toggle('hidden',type!=='due');$('#name').value=type==='due'?'Annual Membership 2027':'Football Camp 2026';$('#typeExplainer').innerHTML=type==='due'?'<strong>Membership fee:</strong> Assigned only to members and can end automatically with club or department membership.':'<strong>Product:</strong> Can be used in registrations, assigned manually and invoiced to any contact.';update()});
+$$('[data-model]').forEach(x=>x.onclick=()=>{choose('[data-model]',x);model=x.dataset.model;applyModel();update()});
+$$('[data-rec-cover]').forEach(x=>x.onclick=()=>{choose('[data-rec-cover]',x);update()});
+function applyModel(){
+  const recurringOnly=model==='recurring';
+  $('#fixedCoverBlock').classList.toggle('hidden',recurringOnly);
+  $('#recurringOnlyInfo').classList.toggle('hidden',!recurringOnly);
+  $('#bothInfo').classList.toggle('hidden',model!=='both');
+  $('#coverTitle').textContent=recurringOnly?'What should recurring invoices cover?':model==='both'?'Coverage settings':'What does this product cover?';
+  $('#coverSub').textContent=recurringOnly?'Choose the default invoice display. The billing cycle itself remains on each payment option.':model==='both'?'Configure fixed-total coverage here. Recurring coverage is configured per option.':'Choose whether the fixed total relates to a defined date range.';
+  const expl={fixed:'<strong>Available in Step 2:</strong> One-time payment and installments.',recurring:'<strong>Available in Step 2:</strong> Recurring options with monthly, quarterly, half-yearly or yearly cycles.',both:'<strong>Available in Step 2:</strong> One-time, installment and recurring payment options.'};
+  $('#modelExplainer').innerHTML=expl[model];
+  $$('[data-pay]').forEach(el=>{const p=el.dataset.pay;el.classList.toggle('hidden',model==='fixed'&&p==='recurring'||model==='recurring'&&p!=='recurring')});
+  if(model==='fixed'&&pay==='recurring')pay='full';
+  if(model==='recurring')pay='recurring';
+  $$('[data-pay]').forEach(el=>el.classList.toggle('on',el.dataset.pay===pay));
+  $('#recurringSettings').classList.toggle('hidden',pay!=='recurring');
+  $('#installmentSettings').classList.toggle('hidden',pay!=='installments');
+}
+$$('[data-cover]').forEach(x=>x.onclick=()=>{choose('[data-cover]',x);cover=x.dataset.cover;$('#fixedSettings').classList.toggle('hidden',cover!=='fixed');update()});
+$('#periodKind').onchange=()=>{$('#customDates').classList.toggle('hidden',$('#periodKind').value!=='custom');$('#yearWrap').classList.toggle('hidden',$('#periodKind').value==='custom');update()};
+['name','year','startDate','endDate','price'].forEach(id=>$('#'+id).addEventListener('input',update));
+['department','currency','cycle','recurringCoverage'].forEach(id=>$('#'+id).addEventListener('change',update));
+$('#categoryTrigger').onclick=()=>$('#categoryMenu').classList.toggle('hidden');
+$$('.category-option').forEach(x=>x.onclick=()=>{$$('.category-option').forEach(o=>o.classList.remove('on'));x.classList.add('on');$('#category').value=x.dataset.category;$('#categoryLabel').textContent=x.dataset.category;$('#categoryIcon').textContent=x.dataset.icon;$('#categoryMenu').classList.add('hidden');update()});
+document.addEventListener('click',e=>{if(!e.target.closest('.category-picker'))$('#categoryMenu').classList.add('hidden')});
+$('#ageSwitch').onclick=()=>{$('#ageSwitch').classList.toggle('on');$('#agePanel').classList.toggle('hidden')};
+$('#familySwitch').onclick=()=>{$('#familySwitch').classList.toggle('on');$('#familyPanel').classList.toggle('hidden')};
+$$('[data-pay]').forEach(x=>x.onclick=()=>{choose('[data-pay]',x);pay=x.dataset.pay;$('#recurringSettings').classList.toggle('hidden',pay!=='recurring');$('#installmentSettings').classList.toggle('hidden',pay!=='installments');update()});
+function bindRemoveButtons(){document.querySelectorAll('.remove-range').forEach(b=>b.onclick=()=>b.closest('.range-row').remove())}
+$('#addAgeRange').onclick=()=>{const d=document.createElement('div');d.className='range-row';d.innerHTML='<div><div class="label">From age</div><input class="input" type="number"></div><div><div class="label">To age</div><input class="input" type="number" placeholder="No maximum"></div><button class="icon-btn remove-range" type="button">×</button>';$('#ageRanges').appendChild(d);bindRemoveButtons()};
+$('#addFamilyRange').onclick=()=>{const d=document.createElement('div');d.className='range-row family';d.innerHTML='<div><div class="label">From people</div><input class="input" type="number" min="1"></div><div><div class="label">To people</div><input class="input" type="number" min="1" placeholder="No maximum"></div><button class="icon-btn remove-range" type="button">×</button>';$('#familyRanges').appendChild(d);bindRemoveButtons()};
+bindRemoveButtons();
+$('#nextBtn').onclick=()=>{if(step===1)showStep(2);else alert('Prototype: product saved as draft')};$('#backBtn').onclick=()=>{if(step===2)showStep(1)};$('#saveDraft').onclick=()=>alert('Prototype: draft saved');
+function fmtDate(v){if(!v)return '—';const d=new Date(v+'T00:00:00');return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}
+function update(){
+ const y=$('#year').value||'2027';$('#sumType').textContent=type==='due'?'Membership fee':'Product';$('#sumName').textContent=$('#name').value||'Untitled product';$('#sumCategory').textContent=type==='due'?'Membership':$('#category').value;const modelNames={fixed:'One-time or installments',recurring:'Recurring billing',both:'Both billing models'};$('#sumModel').textContent=modelNames[model];$('#sumDept').textContent=type==='due'?$('#department').value:'Not restricted';
+ let coverText='Defined period',dates=`01 Jan–31 Dec ${y}`;
+ if(model==='recurring'){const rc=$('[data-rec-cover].on')?.dataset.recCover||'cycle';coverText=rc==='cycle'?'Billing period':'No period shown';dates=rc==='cycle'?'Defined by each option cycle':'No date range'}else if(cover==='once'){coverText='One-time charge';dates='No defined period'}
+ if(cover==='fixed'&&$('#periodKind').value==='club'){dates=`Club year ${y}`}
+ if(cover==='fixed'&&$('#periodKind').value==='custom'){dates=`${fmtDate($('#startDate').value)} – ${fmtDate($('#endDate').value)}`}
+ $('#sumCover').textContent=coverText;$('#sumDates').textContent=dates;$('#periodPreview').textContent=dates;
+ const payNames={full:'Payment in full',installments:'Installments',recurring:'Recurring billing'};let paySummary=payNames[pay];if(pay==='recurring'){paySummary+=` · ${$('#cycle').value}`;paySummary+=` · ${$('#recurringCoverage').value==='cycle'?'covers billing period':'no period shown'}`}$('#sumPay').textContent=paySummary;$('#sumPrice').textContent=`${$('#currency').value} ${$('#price').value||'0.00'}`;
+ $('#coverNote').textContent=type==='due'?'For membership fees, the start is adjusted when a member joins later. No automatic pro-rata is applied.':'The selected dates are used as the default coverage when the product is assigned or used in a registration.';
+}
+applyModel();showStep(1);update();
+</script>
+</body></html>
