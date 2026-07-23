@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Familiengruppe — coachbetter Prototype</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f0ee; color: #1a1a1a; font-size: 14px; }
+
+/* Layout */
+.app { display: flex; min-height: 100vh; }
+.sidebar { width: 220px; background: white; border-right: 1px solid #e8e8e4; padding: 1rem 0; flex-shrink: 0; }
+.sidebar-logo { padding: 0 1rem 1rem; font-weight: 700; font-size: 16px; color: #00a693; border-bottom: 1px solid #e8e8e4; margin-bottom: 8px; }
+.sidebar-item { padding: 8px 1rem; font-size: 13px; color: #555; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+.sidebar-item:hover { background: #f5f5f3; }
+.sidebar-item.active { background: #e6f7f5; color: #00a693; font-weight: 500; }
+.sidebar-sub { padding: 6px 1rem 6px 2.5rem; font-size: 12px; color: #777; cursor: pointer; }
+.sidebar-sub:hover { background: #f5f5f3; }
+.sidebar-sub.active { color: #00a693; font-weight: 500; }
+.main { flex: 1; display: flex; flex-direction: column; }
+.topbar { background: white; border-bottom: 1px solid #e8e8e4; padding: 0.75rem 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+.topbar-title { font-size: 13px; color: #999; }
+.topbar-actions { display: flex; gap: 8px; }
+.content { padding: 1.5rem; flex: 1; }
+
+/* Buttons */
+.btn { height: 36px; padding: 0 16px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border: none; }
+.btn-primary { background: #00a693; color: white; }
+.btn-primary:hover { background: #008f7e; }
+.btn-secondary { background: white; color: #1a1a1a; border: 1.5px solid #d0d0cb; }
+.btn-secondary:hover { background: #f5f5f3; }
+.btn-outline { background: white; color: #00a693; border: 1.5px solid #00a693; }
+.btn-sm { height: 30px; padding: 0 12px; font-size: 12px; border-radius: 6px; }
+
+/* Cards */
+.card { background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+.card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.card-sub { font-size: 12px; color: #777; margin-bottom: 1rem; }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { font-size: 11px; font-weight: 600; color: #888; text-align: left; padding: 8px 12px; border-bottom: 1px solid #e8e8e4; text-transform: uppercase; letter-spacing: 0.04em; }
+td { padding: 10px 12px; border-bottom: 1px solid #f0f0ed; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: #fafaf8; }
+
+/* Badges */
+.badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+.badge-green { background: #e6f7f5; color: #007a6c; }
+.badge-amber { background: #fff3e0; color: #c45c00; }
+.badge-gray { background: #f0f0ee; color: #666; }
+.badge-blue { background: #e6f1fb; color: #0c447c; }
+.badge-red { background: #fef2f2; color: #991b1b; }
+
+/* Modal overlay */
+.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 100; display: none; }
+.modal-overlay.visible { display: flex; }
+.modal { background: white; border-radius: 16px; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; }
+.modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #e8e8e4; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 1; }
+.modal-logo { font-weight: 700; font-size: 15px; color: #00a693; }
+.modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #999; line-height: 1; }
+.modal-body { padding: 1.5rem; }
+.modal-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.modal-sub { font-size: 13px; color: #777; margin-bottom: 1.25rem; }
+.modal-footer { padding: 1rem 1.5rem; border-top: 1px solid #e8e8e4; display: flex; justify-content: space-between; gap: 8px; }
+
+/* Form elements */
+.field { margin-bottom: 1rem; }
+.field label { font-size: 12px; font-weight: 500; color: #444; margin-bottom: 5px; display: block; }
+.field input, .field select { width: 100%; height: 38px; border: 1px solid #d8d8d4; border-radius: 8px; padding: 0 12px; font-size: 14px; outline: none; }
+.field input:focus, .field select:focus { border-color: #00a693; box-shadow: 0 0 0 3px rgba(0,166,147,0.1); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Member chip in modal */
+.member-chip { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #e8e8e4; border-radius: 10px; margin-bottom: 8px; }
+.member-avatar { width: 32px; height: 32px; border-radius: 50%; background: #e6f7f5; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: #00a693; flex-shrink: 0; }
+.member-name { font-size: 13px; font-weight: 500; flex: 1; }
+.member-meta { font-size: 11px; color: #888; }
+.member-role { font-size: 11px; }
+.primary-tag { font-size: 10px; background: #e6f1fb; color: #0c447c; padding: 2px 6px; border-radius: 10px; }
+
+/* Warning box */
+.warning-box { background: #fffbeb; border: 1.5px solid #fcd34d; border-radius: 10px; padding: 12px 14px; margin-bottom: 1rem; }
+.warning-title { font-size: 13px; font-weight: 600; color: #92400e; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.warning-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #fde68a; }
+.warning-item:last-child { border-bottom: none; }
+.warning-item-left { font-size: 12px; color: #78350f; }
+.warning-item-actions { display: flex; gap: 6px; }
+.warn-btn { font-size: 11px; padding: 3px 10px; border-radius: 6px; cursor: pointer; border: 1px solid; }
+.warn-btn-end { border-color: #ef4444; color: #ef4444; background: white; }
+.warn-btn-keep { border-color: #d0d0cb; color: #555; background: white; }
+
+/* Profile view */
+.profile-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
+.profile-avatar { width: 56px; height: 56px; border-radius: 50%; background: #e6f7f5; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #00a693; }
+.profile-name { font-size: 18px; font-weight: 700; }
+.profile-meta { font-size: 13px; color: #777; }
+
+/* Family group display */
+.family-card { border: 1.5px solid #00a693; border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; background: #f5fffe; }
+.family-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.family-card-title { font-size: 14px; font-weight: 600; color: #1a1a1a; display: flex; align-items: center; gap: 6px; }
+.family-members-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+.family-member-pill { display: flex; align-items: center; gap: 6px; background: white; border: 1px solid #e8e8e4; border-radius: 20px; padding: 4px 10px; font-size: 12px; }
+.family-due-row { background: white; border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.family-due-row:last-child { margin-bottom: 0; }
+.family-invoice-row { background: white; border-radius: 8px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+
+/* Step indicator */
+.steps { display: flex; align-items: center; gap: 0; margin-bottom: 1.5rem; }
+.step { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+.step-num { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; }
+.step.done .step-num { background: #00a693; color: white; }
+.step.active .step-num { background: #1a1a1a; color: white; }
+.step.todo .step-num { background: #e8e8e4; color: #888; }
+.step.done .step-label { color: #00a693; }
+.step.active .step-label { color: #1a1a1a; font-weight: 600; }
+.step.todo .step-label { color: #888; }
+.step-line { flex: 1; height: 1px; background: #e8e8e4; margin: 0 6px; }
+
+/* Tabs */
+.tabs { display: flex; gap: 0; border-bottom: 1px solid #e8e8e4; margin-bottom: 1.25rem; }
+.tab { padding: 8px 16px; font-size: 13px; color: #777; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tab.active { color: #00a693; border-bottom-color: #00a693; font-weight: 500; }
+
+/* Info row */
+.info-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f0f0ed; font-size: 13px; }
+.info-row:last-child { border-bottom: none; }
+.info-label { color: #777; }
+.info-value { font-weight: 500; }
+
+.divider { border: none; border-top: 1px solid #e8e8e4; margin: 1rem 0; }
+
+/* Navigation state management */
+.screen { display: none; }
+.screen.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">coachbetter</div>
+    <div class="sidebar-item" onclick="showScreen('dashboard')">📊 Dashboard</div>
+    <div class="sidebar-item active" onclick="showScreen('members')">
+      👥 Mitglieder & Kontakte
+    </div>
+    <div class="sidebar-sub active" onclick="showScreen('members')">Mitglieder</div>
+    <div class="sidebar-sub" onclick="showScreen('familygroups')">Familiengruppen</div>
+    <div class="sidebar-sub">Alle Kontakte</div>
+    <div class="sidebar-sub">Abteilungen</div>
+    <div class="sidebar-item">📣 Kommunikation</div>
+    <div class="sidebar-item active" onclick="showScreen('invoices')">🏷 Produkte & Rechnungen</div>
+    <div class="sidebar-sub" onclick="showScreen('invoices')">Rechnungen</div>
+    <div class="sidebar-sub" onclick="showScreen('paymentplans')">Zahlungspläne</div>
+    <div class="sidebar-item">📝 Registrierungen</div>
+    <div class="sidebar-item">⚙️ Club verwalten</div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main">
+
+    <!-- SCREEN: Members list -->
+    <div class="screen active" id="screen-members">
+      <div class="topbar">
+        <div class="topbar-title">VEREIN · QA Coachbetter</div>
+        <div class="topbar-actions">
+          <button class="btn btn-secondary">Verwalten ▾</button>
+          <button class="btn btn-primary" onclick="openModal('modal-add-member')">+ Mitglied hinzufügen</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="tabs">
+          <div class="tab active">Aktiv</div>
+          <div class="tab">Beendet</div>
+          <div class="tab">Alle</div>
+        </div>
+        <div class="card" style="padding:0;">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Mitglied</th>
+                  <th>Mitgliedschaft</th>
+                  <th>Familiengruppe</th>
+                  <th>Mitgliedschaftszeitraum</th>
+                  <th>Beiträge</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onclick="showScreen('profile-mueller-kind1')" style="cursor:pointer;">
+                  <td>
+                    <div style="font-weight:500;">Müller, Emma (8)</div>
+                    <div style="font-size:11px;color:#888;">emma@mueller.de</div>
+                  </td>
+                  <td><div>#MID-1001</div><div style="font-size:11px;color:#00a693;">Aktiv</div></td>
+                  <td><span class="badge badge-blue">👨‍👩‍👧‍👦 Familie Müller</span></td>
+                  <td>01.01.2026</td>
+                  <td><span style="font-size:16px;">💰</span></td>
+                </tr>
+                <tr onclick="showScreen('profile-mueller-kind2')" style="cursor:pointer;">
+                  <td>
+                    <div style="font-weight:500;">Müller, Luca (11)</div>
+                    <div style="font-size:11px;color:#888;">luca@mueller.de</div>
+                  </td>
+                  <td><div>#MID-1002</div><div style="font-size:11px;color:#00a693;">Aktiv</div></td>
+                  <td><span class="badge badge-blue">👨‍👩‍👧‍👦 Familie Müller</span></td>
+                  <td>01.01.2026</td>
+                  <td><span style="font-size:16px;">💰</span></td>
+                </tr>
+                <tr onclick="showScreen('profile-single')" style="cursor:pointer;">
+                  <td>
+                    <div style="font-weight:500;">Tellion, Liana (34)</div>
+                    <div style="font-size:11px;color:#888;">liana@tellion.de</div>
+                  </td>
+                  <td><div>#MID-1003</div><div style="font-size:11px;color:#00a693;">Aktiv</div></td>
+                  <td><span style="font-size:12px;color:#bbb;">—</span></td>
+                  <td>15.07.2026</td>
+                  <td><span style="font-size:16px;">💰</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="font-weight:500;">Schmidt, Jonas (9)</div>
+                    <div style="font-size:11px;color:#888;">—</div>
+                  </td>
+                  <td><div>#MID-1004</div><div style="font-size:11px;color:#00a693;">Aktiv</div></td>
+                  <td><span style="font-size:12px;color:#bbb;">—</span></td>
+                  <td>01.03.2026</td>
+                  <td><span style="font-size:16px; opacity:0.3;">💰</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: Family Groups list -->
+    <div class="screen" id="screen-familygroups">
+      <div class="topbar">
+        <div class="topbar-title">VEREIN · QA Coachbetter · Familiengruppen</div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary" onclick="openModal('modal-create-family')">+ Familiengruppe erstellen</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="card" style="padding:0;">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Familiengruppe</th>
+                  <th>Mitglieder</th>
+                  <th>Hauptmitglied</th>
+                  <th>Aktive Beiträge</th>
+                  <th>Offene Rechnungen</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr onclick="showScreen('family-detail')" style="cursor:pointer;">
+                  <td><div style="font-weight:600;">Familie Müller</div></td>
+                  <td>
+                    <div style="display:flex;gap:4px;align-items:center;">
+                      <div style="width:24px;height:24px;border-radius:50%;background:#e6f7f5;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#00a693;">E</div>
+                      <div style="width:24px;height:24px;border-radius:50%;background:#e6f1fb;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#0c447c;">L</div>
+                      <span style="font-size:12px;color:#888;margin-left:4px;">2 Mitglieder</span>
+                    </div>
+                  </td>
+                  <td>Müller, Emma</td>
+                  <td><span class="badge badge-green">1 aktiv</span></td>
+                  <td><span class="badge badge-amber">EUR 168.00</span></td>
+                  <td><span class="badge badge-green">Aktiv</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: Family Detail -->
+    <div class="screen" id="screen-family-detail">
+      <div class="topbar">
+        <div class="topbar-title">
+          <span onclick="showScreen('familygroups')" style="cursor:pointer;color:#00a693;">Familiengruppen</span>
+          · Familie Müller
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-secondary" onclick="openModal('modal-add-due')">+ Beitrag hinzufügen</button>
+          <button class="btn btn-secondary">Mitglied hinzufügen</button>
+        </div>
+      </div>
+      <div class="content">
+        <div style="display:grid;grid-template-columns:1fr 340px;gap:16px;">
+          <div>
+            <!-- Members -->
+            <div class="card">
+              <div class="card-title">Mitglieder</div>
+              <div class="member-chip">
+                <div class="member-avatar">E</div>
+                <div style="flex:1;">
+                  <div class="member-name">Müller, Emma <span class="primary-tag">Hauptmitglied</span></div>
+                  <div class="member-meta">#MID-1001 · Aktiv seit 01.01.2026</div>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="showScreen('profile-mueller-kind1')">Profil</button>
+              </div>
+              <div class="member-chip">
+                <div class="member-avatar" style="background:#e6f1fb;color:#0c447c;">L</div>
+                <div style="flex:1;">
+                  <div class="member-name">Müller, Luca</div>
+                  <div class="member-meta">#MID-1002 · Aktiv seit 01.01.2026</div>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="showScreen('profile-mueller-kind2')">Profil</button>
+              </div>
+              <div style="margin-top:8px;font-size:12px;color:#888;">
+                Rechnungsempfänger: <strong>Müller, Thomas</strong> (Elternteil, kein Clubmitglied) · via billing contact
+              </div>
+            </div>
+
+            <!-- Dues -->
+            <div class="card">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+                <div class="card-title" style="margin:0;">Familienbeiträge</div>
+                <button class="btn btn-outline btn-sm" onclick="openModal('modal-add-due')">+ Beitrag hinzufügen</button>
+              </div>
+              <div style="border:1px solid #e8e8e4;border-radius:10px;padding:12px 14px;margin-bottom:8px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;">
+                  <div>
+                    <div style="font-weight:600;font-size:14px;">Familienbeitrag 2026</div>
+                    <div style="font-size:12px;color:#888;">Einmalzahlung · 2 Mitglieder</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-weight:700;font-size:15px;">EUR 168.00</div>
+                    <span class="badge badge-green">Aktiv</span>
+                  </div>
+                </div>
+                <div style="font-size:12px;color:#888;margin-bottom:8px;">📅 Beitragszeitraum: 01.01.2026 – 31.12.2026</div>
+                <div style="background:#f8f8f6;border-radius:8px;padding:10px 12px;font-size:12px;">
+                  <div style="display:flex;justify-content:space-between;padding:2px 0;"><span style="color:#777;">Grundpreis (1. Mitglied)</span><span>EUR 120.00</span></div>
+                  <div style="display:flex;justify-content:space-between;padding:2px 0;"><span style="color:#777;">2. Mitglied</span><span>EUR 48.00</span></div>
+                  <div style="display:flex;justify-content:space-between;padding:4px 0;border-top:1px solid #e8e8e4;margin-top:4px;font-weight:600;"><span>Gesamt</span><span>EUR 168.00</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Invoices -->
+            <div class="card">
+              <div class="card-title">Rechnungen</div>
+              <div class="card-sub">Alle Rechnungen dieser Familiengruppe</div>
+              <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                <thead>
+                  <tr>
+                    <th style="text-align:left;padding:6px 0;font-size:11px;color:#888;border-bottom:1px solid #e8e8e4;">Rechnung</th>
+                    <th style="text-align:left;padding:6px 0;font-size:11px;color:#888;border-bottom:1px solid #e8e8e4;">Betrifft</th>
+                    <th style="text-align:left;padding:6px 0;font-size:11px;color:#888;border-bottom:1px solid #e8e8e4;">Betrag</th>
+                    <th style="text-align:left;padding:6px 0;font-size:11px;color:#888;border-bottom:1px solid #e8e8e4;">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="padding:8px 0;border-bottom:1px solid #f0f0ed;">
+                      <div style="font-weight:500;">FAM-2026-001</div>
+                      <div style="font-size:11px;color:#888;">Familienbeitrag 2026</div>
+                    </td>
+                    <td style="padding:8px 0;border-bottom:1px solid #f0f0ed;">
+                      <div style="font-size:12px;">Emma Müller</div>
+                      <div style="font-size:12px;">Luca Müller</div>
+                    </td>
+                    <td style="padding:8px 0;border-bottom:1px solid #f0f0ed;font-weight:600;">EUR 168.00</td>
+                    <td style="padding:8px 0;border-bottom:1px solid #f0f0ed;"><span class="badge badge-amber">Offen</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Right panel -->
+          <div>
+            <div class="card">
+              <div class="card-title">Gruppeninfo</div>
+              <div class="info-row"><span class="info-label">Name</span><span class="info-value">Familie Müller</span></div>
+              <div class="info-row"><span class="info-label">Status</span><span class="info-value"><span class="badge badge-green">Aktiv</span></span></div>
+              <div class="info-row"><span class="info-label">Mitglieder</span><span class="info-value">2</span></div>
+              <div class="info-row"><span class="info-label">Erstellt</span><span class="info-value">01.01.2026</span></div>
+              <div class="info-row"><span class="info-label">Hauptmitglied</span><span class="info-value">Emma Müller</span></div>
+              <div class="info-row"><span class="info-label">Rechnungsempfänger</span><span class="info-value">Thomas Müller</span></div>
+            </div>
+            <div class="card">
+              <div class="card-title">Offene Beträge</div>
+              <div style="font-size:24px;font-weight:700;color:#c45c00;margin:8px 0;">EUR 168.00</div>
+              <div style="font-size:12px;color:#888;margin-bottom:12px;">1 offene Rechnung</div>
+              <button class="btn btn-primary" style="width:100%;">Zahlung erfassen</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: Member profile with family group -->
+    <div class="screen" id="screen-profile-mueller-kind1">
+      <div class="topbar">
+        <div class="topbar-title">
+          <span onclick="showScreen('members')" style="cursor:pointer;color:#00a693;">Mitglieder</span>
+          · Müller, Emma
+        </div>
+      </div>
+      <div class="content">
+        <div class="profile-header">
+          <div class="profile-avatar">E</div>
+          <div>
+            <div class="profile-name">Müller, Emma</div>
+            <div class="profile-meta">#MID-1001 · Aktiv · Geb. 2018</div>
+          </div>
+        </div>
+
+        <!-- Family group on profile -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div class="card-title" style="margin:0;">Familiengruppe</div>
+            <button class="btn btn-outline btn-sm" onclick="showScreen('family-detail')">Gruppe anzeigen →</button>
+          </div>
+          <div class="family-card">
+            <div class="family-card-header">
+              <div class="family-card-title">👨‍👩‍👧‍👦 Familie Müller</div>
+              <span class="badge badge-green">Aktiv</span>
+            </div>
+            <div class="family-members-row">
+              <div class="family-member-pill">
+                <div style="width:20px;height:20px;border-radius:50%;background:#e6f7f5;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#00a693;">E</div>
+                Emma <span class="primary-tag">Haupt</span>
+              </div>
+              <div class="family-member-pill">
+                <div style="width:20px;height:20px;border-radius:50%;background:#e6f1fb;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0c447c;">L</div>
+                Luca
+              </div>
+            </div>
+            <div style="font-size:12px;color:#888;margin-bottom:8px;">Rechnungsempfänger: Thomas Müller (Elternteil)</div>
+            <div class="family-due-row">
+              <div>
+                <div style="font-size:13px;font-weight:500;">Familienbeitrag 2026</div>
+                <div style="font-size:11px;color:#888;">01.01.2026 – 31.12.2026 · 2 Mitglieder</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:700;">EUR 168.00</div>
+                <span class="badge badge-amber">Offen</span>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#888;margin-top:4px;">
+            ℹ️ Beitrag und Rechnung werden auf Gruppenebene verwaltet. Emma ist Hauptmitglied dieser Gruppe.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Mitgliedschaft</div>
+          <div class="info-row"><span class="info-label">Mitgliedsnummer</span><span class="info-value">#MID-1001</span></div>
+          <div class="info-row"><span class="info-label">Typ</span><span class="info-value">Aktiv</span></div>
+          <div class="info-row"><span class="info-label">Seit</span><span class="info-value">01.01.2026</span></div>
+        </div>
+
+        <!-- Family invoice on profile -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div class="card-title" style="margin:0;">Rechnungen</div>
+          </div>
+
+          <!-- Family invoice entry -->
+          <div style="border:1px solid #e8e8e4;border-radius:10px;padding:12px 14px;background:#f5fffe;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div style="font-size:13px;font-weight:500;">QACOA-00001601</div>
+                <div style="font-size:12px;color:#0c447c;margin-top:2px;">👨‍👩‍👧‍👦 Familienrechnung · Familie Müller</div>
+                <div style="font-size:12px;color:#888;margin-top:2px;">Familienbeitrag 2026 · 01.01.2026</div>
+                <div style="font-size:11px;color:#888;margin-top:6px;background:#e6f1fb;border-radius:6px;padding:4px 8px;display:inline-block;">
+                  ℹ️ Diese Rechnung wird auf Gruppenebene verwaltet
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:700;font-size:14px;">EUR 168.00</div>
+                <span class="badge badge-amber" style="margin-top:4px;">Offen</span>
+              </div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e8e8e4;">
+              <button class="btn btn-outline btn-sm" onclick="showScreen('family-detail')">Zur Gruppenrechnung →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: Invoices list -->
+    <div class="screen" id="screen-invoices">
+      <div class="topbar">
+        <div class="topbar-title">VEREIN · QA Coachbetter · Rechnungen & Zahlungen</div>
+      </div>
+      <div class="content">
+        <!-- KPI row -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;">
+          <div class="card" style="padding:14px 16px;">
+            <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">YTD Einnahmen</div>
+            <div style="font-size:13px;line-height:1.8;"><div>EUR 171,998.43</div><div>USD 2,171,654.56</div></div>
+          </div>
+          <div class="card" style="padding:14px 16px;">
+            <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Offene Zahlungen</div>
+            <div style="font-size:13px;line-height:1.8;"><div>EUR 136,295.27</div><div>USD 1,508,318.08</div></div>
+          </div>
+          <div class="card" style="padding:14px 16px;">
+            <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px;">Fällige Zahlungen</div>
+            <div style="font-size:13px;line-height:1.8;"><div>EUR 134,266.22</div><div>USD 1,499,016.90</div></div>
+          </div>
+        </div>
+
+        <div class="card" style="padding:0;">
+          <!-- Tabs -->
+          <div style="padding:0 16px;border-bottom:1px solid #e8e8e4;display:flex;gap:0;">
+            <div class="tab active" style="padding:12px 16px;">Offen (4557)</div>
+            <div class="tab" style="padding:12px 16px;">Bezahlt/Erstattet (3138)</div>
+            <div class="tab" style="padding:12px 16px;">Alle (7922)</div>
+          </div>
+
+          <!-- Filters -->
+          <div style="padding:12px 16px;display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid #e8e8e4;">
+            <input style="height:34px;border:1px solid #d8d8d4;border-radius:8px;padding:0 10px;font-size:12px;width:220px;outline:none;" placeholder="🔍 Suche nach Person- oder Rechnungs-ID">
+            <select style="height:34px;border:1px solid #d8d8d4;border-radius:8px;padding:0 10px;font-size:12px;outline:none;"><option>Produkt</option></select>
+            <select style="height:34px;border:1px solid #d8d8d4;border-radius:8px;padding:0 10px;font-size:12px;outline:none;"><option>Betrag</option></select>
+            <select style="height:34px;border:1px solid #d8d8d4;border-radius:8px;padding:0 10px;font-size:12px;outline:none;"><option>Zahlungsmethode</option></select>
+          </div>
+
+          <!-- Quick filters -->
+          <div style="padding:8px 16px;display:flex;gap:8px;border-bottom:1px solid #e8e8e4;font-size:12px;color:#555;flex-wrap:wrap;">
+            <span style="color:#888;">Schnellfilter:</span>
+            <span style="cursor:pointer;color:#00a693;">→ SEPA-Fällige Zahlungen</span>
+            <span style="cursor:pointer;color:#00a693;">→ Mahnung 1 fällig</span>
+            <span style="cursor:pointer;color:#00a693;">→ Mahnung 2 fällig</span>
+            <span style="cursor:pointer;color:#00a693;font-weight:500;">→ Familienrechnungen</span>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:32px;"><input type="checkbox"></th>
+                  <th>Registrierte Person / Gruppe</th>
+                  <th>Rechnungsnummer</th>
+                  <th>Produkt</th>
+                  <th>Zahlungsmethode</th>
+                  <th>Datum</th>
+                  <th>Betrag</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Family invoice row -->
+                <tr style="background:#f5fffe;">
+                  <td><input type="checkbox"></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:28px;height:28px;border-radius:50%;background:#e6f1fb;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0c447c;">FM</div>
+                      <div>
+                        <div style="font-weight:500;font-size:13px;">👨‍👩‍👧‍👦 Familie Müller</div>
+                        <div style="font-size:11px;color:#888;">Empfänger: Thomas Müller · Emma, Luca</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div style="font-size:13px;">QACOA-00001601</div>
+                    <div style="font-size:11px;color:#888;">👨‍👩‍👧‍👦 Familienrechnung</div>
+                  </td>
+                  <td>
+                    <div style="font-size:13px;">Familienbeitrag 2026</div>
+                    <div style="font-size:11px;color:#888;">Mitgliedschaft</div>
+                  </td>
+                  <td>—</td>
+                  <td style="font-size:13px;">01.01.2026</td>
+                  <td style="font-weight:600;">EUR 168.00</td>
+                  <td><span class="badge badge-amber">Offen</span></td>
+                  <td><button style="background:none;border:none;cursor:pointer;color:#888;font-size:18px;">⋮</button></td>
+                </tr>
+                <!-- Normal invoice rows -->
+                <tr>
+                  <td><input type="checkbox"></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:28px;height:28px;border-radius:50%;background:#e6f7f5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#00a693;">S</div>
+                      <div>
+                        <div style="font-weight:500;font-size:13px;">Shelly xx</div>
+                        <div style="font-size:11px;color:#888;">Nicht als Spieler registriert</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div style="font-size:13px;">QACOA-00001539</div></td>
+                  <td><div style="font-size:13px;">Rolliing elo - Once off</div><div style="font-size:11px;color:#888;">Veranstaltung</div></td>
+                  <td><span style="font-size:16px;">💳</span></td>
+                  <td style="font-size:13px;">15.07.2026</td>
+                  <td style="font-weight:600;">USD 36.30</td>
+                  <td><span class="badge badge-amber">Offen</span></td>
+                  <td><button style="background:none;border:none;cursor:pointer;color:#888;font-size:18px;">⋮</button></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox"></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:28px;height:28px;border-radius:50%;background:#f0f0ee;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#888;">L</div>
+                      <div>
+                        <div style="font-weight:500;font-size:13px;">Liana Tellion</div>
+                        <div style="font-size:11px;color:#888;">Nicht registriert</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div style="font-size:13px;">QACOA-00001538</div></td>
+                  <td><div style="font-size:13px;">aaaaaaa bbbbbbb - Once off</div><div style="font-size:11px;color:#888;">Mitgliedschaft</div></td>
+                  <td>—</td>
+                  <td style="font-size:13px;">15.07.2026</td>
+                  <td style="font-weight:600;">USD 57.75</td>
+                  <td><span class="badge badge-amber">Offen</span></td>
+                  <td><button style="background:none;border:none;cursor:pointer;color:#888;font-size:18px;">⋮</button></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox"></td>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:28px;height:28px;border-radius:50%;background:#e6f7f5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#00a693;">E</div>
+                      <div>
+                        <div style="font-weight:500;font-size:13px;">elda player pixel</div>
+                        <div style="font-size:11px;color:#888;">elda+5@pixel-plus.ch</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div style="font-size:13px;">QACOA-00001491</div></td>
+                  <td><div style="font-size:13px;">membership product 212144 - Subscription: 29</div><div style="font-size:11px;color:#888;">Mitgliedschaft</div></td>
+                  <td><span style="font-size:16px;">🏛</span></td>
+                  <td style="font-size:13px;">15.07.2026</td>
+                  <td style="font-weight:600;">EUR 27.07</td>
+                  <td><span class="badge badge-amber">Offen</span></td>
+                  <td><button style="background:none;border:none;cursor:pointer;color:#888;font-size:18px;">⋮</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: Payment plans list -->
+    <div class="screen" id="screen-paymentplans">
+      <div class="topbar">
+        <div class="topbar-title">VEREIN · QA Coachbetter · Zahlungspläne</div>
+      </div>
+      <div class="content">
+        <!-- Search -->
+        <div style="margin-bottom:12px;">
+          <input style="height:36px;border:1px solid #d8d8d4;border-radius:8px;padding:0 12px;font-size:13px;width:280px;outline:none;" placeholder="🔍 Nach Person suchen">
+        </div>
+
+        <div class="card" style="padding:0;">
+          <!-- Tabs -->
+          <div style="padding:0 16px;border-bottom:1px solid #e8e8e4;display:flex;gap:0;">
+            <div class="tab active" style="padding:12px 16px;">Alle</div>
+            <div class="tab" style="padding:12px 16px;">Aktiv</div>
+            <div class="tab" style="padding:12px 16px;">Storniert</div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Person / Gruppe</th>
+                  <th>Produkt</th>
+                  <th>Startdatum ↓</th>
+                  <th>Enddatum</th>
+                  <th>Wiederkehrender Betrag</th>
+                  <th>Gesamtrechnungen</th>
+                  <th>Kommentar</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Family payment plan row -->
+                <tr style="background:#f5fffe;">
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:28px;height:28px;border-radius:50%;background:#e6f1fb;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#0c447c;">FM</div>
+                      <div>
+                        <div style="font-weight:500;font-size:13px;">👨‍👩‍👧‍👦 Familie Müller</div>
+                        <div style="font-size:11px;color:#888;">Emma · Luca · 2 Mitglieder</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div style="font-size:13px;">Familienbeitrag 2026</div>
+                    <div style="font-size:11px;color:#888;">👨‍👩‍👧‍👦 Familienplan</div>
+                  </td>
+                  <td style="font-size:13px;">01.01.2026</td>
+                  <td style="font-size:13px;">31.12.2026</td>
+                  <td style="font-size:13px;">EUR 168.00</td>
+                  <td style="font-size:13px;">1</td>
+                  <td>—</td>
+                  <td><span class="badge badge-green">Aktiv</span></td>
+                </tr>
+                <!-- Normal rows -->
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:28px;height:28px;border-radius:50%;background:#f0f0ee;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#888;">N</div>
+                      <div>
+                        <div style="font-weight:500;font-size:13px;">new contact test</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div style="font-size:13px;">Rolliing elo</div></td>
+                  <td style="font-size:13px;">07.07.2026</td>
+                  <td>—</td>
+                  <td style="font-size:13px;">USD 0.00</td>
+                  <td style="font-size:13px;">10</td>
+                  <td>—</td>
+                  <td><span class="badge badge-green">Aktiv</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:28px;height:28px;border-radius:50%;background:#e6f7f5;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#00a693;">E</div>
+                      <div>
+                        <div style="font-weight:500;font-size:13px;">eli qa</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div style="font-size:13px;">Rolliing elo</div></td>
+                  <td style="font-size:13px;">03.07.2026</td>
+                  <td>—</td>
+                  <td style="font-size:13px;">USD 60.50</td>
+                  <td style="font-size:13px;">14</td>
+                  <td>—</td>
+                  <td><span class="badge badge-green">Aktiv</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:28px;height:28px;border-radius:50%;background:#f0f0ee;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#888;">A</div>
+                      <div>
+                        <div style="font-weight:500;font-size:13px;">aeldaa 0e</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div style="font-size:13px;">membership product 2</div></td>
+                  <td style="font-size:13px;">02.07.2026</td>
+                  <td style="font-size:13px;">01.08.2026</td>
+                  <td style="font-size:13px;">EUR 0.00</td>
+                  <td style="font-size:13px;">1</td>
+                  <td>—</td>
+                  <td><span class="badge badge-green">Aktiv</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <div style="width:28px;height:28px;border-radius:50%;background:#f0f0ee;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#888;">E</div>
+                      <div>
+                        <div style="font-weight:500;font-size:13px;">elda coach 16</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><div style="font-size:13px;">test 919</div></td>
+                  <td style="font-size:13px;">01.07.2026</td>
+                  <td style="font-size:13px;">31.03.2026</td>
+                  <td style="font-size:13px;">USD 110.00</td>
+                  <td style="font-size:13px;">1</td>
+                  <td>—</td>
+                  <td><span class="badge badge-red">Storniert</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: Single member profile (no family group) -->
+    <div class="screen" id="screen-profile-single">
+      <div class="topbar">
+        <div class="topbar-title">
+          <span onclick="showScreen('members')" style="cursor:pointer;color:#00a693;">Mitglieder</span>
+          · Tellion, Liana
+        </div>
+      </div>
+      <div class="content">
+        <div class="profile-header">
+          <div class="profile-avatar" style="background:#fef2f2;color:#991b1b;">L</div>
+          <div>
+            <div class="profile-name">Tellion, Liana</div>
+            <div class="profile-meta">#MID-1003 · Aktiv · Geb. 1990</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <div class="card-title" style="margin:0;">Mitgliedsbeiträge</div>
+            <button class="btn btn-outline btn-sm" onclick="openModal('modal-due-type')">+ Beitrag hinzufügen</button>
+          </div>
+          <div class="card-sub">Fügen Sie Mitgliederbeiträge, Zeiträume und Abrechnungen für dieses Mitglied hinzu</div>
+
+          <div style="border:1px solid #e8e8e4;border-radius:10px;padding:12px 14px;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div style="font-weight:600;">Jahresbeitrag 2026</div>
+                <div style="font-size:12px;color:#888;">test once off</div>
+                <div style="font-size:12px;color:#888;margin-top:4px;">📅 Zeitraum: 15.07.2026 &nbsp;|&nbsp; Rechnung: 15.07.2026</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:700;">USD 57.75</div>
+                <span class="badge badge-amber">Offen</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREEN: Member 2 profile -->
+    <div class="screen" id="screen-profile-mueller-kind2">
+      <div class="topbar">
+        <div class="topbar-title">
+          <span onclick="showScreen('members')" style="cursor:pointer;color:#00a693;">Mitglieder</span>
+          · Müller, Luca
+        </div>
+      </div>
+      <div class="content">
+        <div class="profile-header">
+          <div class="profile-avatar" style="background:#e6f1fb;color:#0c447c;">L</div>
+          <div>
+            <div class="profile-name">Müller, Luca</div>
+            <div class="profile-meta">#MID-1002 · Aktiv · Geb. 2015</div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div class="card-title" style="margin:0;">Familiengruppe</div>
+            <button class="btn btn-outline btn-sm" onclick="showScreen('family-detail')">Gruppe anzeigen →</button>
+          </div>
+          <div class="family-card">
+            <div class="family-card-header">
+              <div class="family-card-title">👨‍👩‍👧‍👦 Familie Müller</div>
+              <span class="badge badge-green">Aktiv</span>
+            </div>
+            <div class="family-members-row">
+              <div class="family-member-pill">
+                <div style="width:20px;height:20px;border-radius:50%;background:#e6f7f5;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#00a693;">E</div>
+                Emma <span class="primary-tag">Haupt</span>
+              </div>
+              <div class="family-member-pill">
+                <div style="width:20px;height:20px;border-radius:50%;background:#e6f1fb;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0c447c;">L</div>
+                Luca
+              </div>
+            </div>
+            <div style="font-size:12px;color:#888;margin-bottom:8px;">Rechnungsempfänger: Thomas Müller (Elternteil)</div>
+            <div class="family-due-row">
+              <div>
+                <div style="font-size:13px;font-weight:500;">Familienbeitrag 2026</div>
+                <div style="font-size:11px;color:#888;">01.01.2026 – 31.12.2026 · 2 Mitglieder</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:700;">EUR 168.00</div>
+                <span class="badge badge-amber">Offen</span>
+              </div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#888;margin-top:4px;">
+            ℹ️ Beitrag und Rechnung werden auf Gruppenebene verwaltet.
+          </div>
+        </div>
+
+        <!-- Family invoice on Luca profile -->
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <div class="card-title" style="margin:0;">Rechnungen</div>
+          </div>
+          <div style="border:1px solid #e8e8e4;border-radius:10px;padding:12px 14px;background:#f5fffe;">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div style="font-size:13px;font-weight:500;">QACOA-00001601</div>
+                <div style="font-size:12px;color:#0c447c;margin-top:2px;">👨‍👩‍👧‍👦 Familienrechnung · Familie Müller</div>
+                <div style="font-size:12px;color:#888;margin-top:2px;">Familienbeitrag 2026 · 01.01.2026</div>
+                <div style="font-size:11px;color:#888;margin-top:6px;background:#e6f1fb;border-radius:6px;padding:4px 8px;display:inline-block;">
+                  ℹ️ Diese Rechnung wird auf Gruppenebene verwaltet
+                </div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-weight:700;font-size:14px;">EUR 168.00</div>
+                <span class="badge badge-amber" style="margin-top:4px;">Offen</span>
+              </div>
+            </div>
+            <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e8e8e4;">
+              <button class="btn btn-outline btn-sm" onclick="showScreen('family-detail')">Zur Gruppenrechnung →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end main -->
+</div><!-- end app -->
+
+<!-- MODAL: Add member step 1 — search -->
+<div class="modal-overlay" id="modal-add-member">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-add-member')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title">Neues Vereinsmitglied hinzufügen</div>
+      <div class="modal-sub">Zuerst nach bestehenden Kontakten suchen, um Duplikate zu vermeiden. Zur Erstellung eines neuen Kontaktes, den Vor- und Nachnamen eingeben.</div>
+      <div class="field">
+        <input type="text" id="member-search" placeholder="Vorname, Nachname" oninput="showMemberResults(this.value)">
+      </div>
+      <div id="member-search-results" style="display:none;">
+        <div style="border:1px solid #e8e8e4;border-radius:10px;overflow:hidden;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #f0f0ed;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:#e6f7f5;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#00a693;">V</div>
+              <span style="font-size:13px;">Varun test</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="switchModal('modal-add-member','modal-add-member-details')">Hinzufügen</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid #f0f0ed;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:#f0f0ee;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#888;">C</div>
+              <span style="font-size:13px;">Claudia testt</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="switchModal('modal-add-member','modal-add-member-details')">Hinzufügen</button>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:50%;background:#f0f0ee;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#888;">T</div>
+              <span style="font-size:13px;">test user</span>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="switchModal('modal-add-member','modal-add-member-details')">Hinzufügen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-member')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="switchModal('modal-add-member','modal-add-member-details')">+ Mitglied hinzufügen</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add member step 2 — personal details -->
+<div class="modal-overlay" id="modal-add-member-details">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-add-member-details')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title">Personendetails</div>
+      <div class="field">
+        <label>Vor- und Nachname</label>
+        <input type="text" placeholder="Vorname" style="margin-bottom:6px;">
+        <input type="text" placeholder="Nachname">
+      </div>
+      <div class="field">
+        <label>Geburtsdatum und Geschlecht</label>
+        <input type="text" placeholder="MM/TT/JJJJ" style="margin-bottom:6px;">
+        <select><option value="">Geschlecht</option><option>Männlich</option><option>Weiblich</option><option>Divers</option></select>
+      </div>
+      <div class="field">
+        <label>Kontaktinformationen</label>
+        <input type="text" placeholder="E-Mail (optional)" style="margin-bottom:6px;">
+        <input type="text" placeholder="Telefon (optional)">
+      </div>
+      <div class="field">
+        <label>Adresse (optional)</label>
+        <input type="text" placeholder="Straße und Hausnummer" style="margin-bottom:6px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px;">
+          <input type="text" placeholder="Postleitzahl">
+          <input type="text" placeholder="Stadt">
+        </div>
+        <input type="text" placeholder="Bundesland">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="switchModal('modal-add-member-details','modal-add-member')">← Zurück</button>
+      <button class="btn btn-primary" onclick="switchModal('modal-add-member-details','modal-add-member-membership')">Weiter</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add member step 3 — membership -->
+<div class="modal-overlay" id="modal-add-member-membership">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-add-member-membership')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title">Club-Mitgliedschaft</div>
+      <div style="background:#f8f8f6;border-radius:10px;padding:10px 14px;margin-bottom:1rem;display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#e6f7f5;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#00a693;">N</div>
+        <div>
+          <div style="font-weight:500;font-size:14px;">Neues Mitglied</div>
+          <div style="font-size:12px;color:#888;">15.07.2026</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Mitgliedsnummer *</label>
+          <input type="text" value="M-IMP44-016">
+        </div>
+        <div class="field">
+          <label>Typ *</label>
+          <select><option>Aktiv</option><option>Passiv</option></select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Startdatum *</label>
+          <input type="text" value="07/15/2026">
+        </div>
+        <div class="field">
+          <label>Enddatum</label>
+          <input type="text" placeholder="MM/TT/JJJJ">
+        </div>
+      </div>
+      <div class="field">
+        <label>Kommentar</label>
+        <textarea style="width:100%;height:80px;border:1px solid #d8d8d4;border-radius:8px;padding:10px;font-size:13px;resize:none;outline:none;" placeholder="Kommentar"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="switchModal('modal-add-member-membership','modal-add-member-details')">← Zurück</button>
+      <button class="btn btn-primary" onclick="switchModal('modal-add-member-membership','modal-add-member-departments')">Weiter</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add member step 4 — departments -->
+<div class="modal-overlay" id="modal-add-member-departments">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-add-member-departments')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title">Abteilungen (optional)</div>
+      <div style="background:#f8f8f6;border-radius:10px;padding:10px 14px;margin-bottom:1rem;display:flex;align-items:center;gap:10px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#e6f7f5;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#00a693;">N</div>
+        <div>
+          <div style="font-weight:500;font-size:14px;">Neues Mitglied</div>
+          <div style="font-size:12px;color:#888;">15.07.2026</div>
+        </div>
+      </div>
+      <div style="font-weight:500;font-size:14px;margin-bottom:4px;">Abteilungszuweisung</div>
+      <div style="font-size:13px;color:#777;margin-bottom:1rem;">Wählen Sie die Abteilungen aus, in denen das Mitglied aktiv sein soll.</div>
+      <div style="border:1px dashed #d0d0cb;border-radius:10px;padding:12px;text-align:center;cursor:pointer;color:#777;font-size:13px;">
+        + Abteilung zuweisen
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="switchModal('modal-add-member-departments','modal-add-member-membership')">← Zurück</button>
+      <button class="btn btn-primary" onclick="switchModal('modal-add-member-departments','modal-add-member-success')">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add member success -->
+<div class="modal-overlay" id="modal-add-member-success">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-add-member-success')">×</button>
+    </div>
+    <div class="modal-body" style="text-align:center;padding:2rem 1.5rem;">
+      <div style="width:56px;height:56px;border-radius:50%;background:#e6f7f5;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 1rem;">✅</div>
+      <div class="modal-title">Mitglied erfolgreich hinzugefügt!</div>
+      <div style="font-size:13px;color:#777;margin:8px 0 1.5rem;">Neues Mitglied ist jetzt Mitglied!</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="closeModal('modal-add-member-success');openModal('modal-due-type')">Mitgliedsbeiträge hinzufügen</button>
+        <button class="btn btn-secondary" style="width:100%;justify-content:center;" onclick="closeModal('modal-add-member-success')">Zum Profil</button>
+        <button class="btn btn-secondary" style="width:100%;justify-content:center;" onclick="switchModal('modal-add-member-success','modal-add-member')">Weiteres Mitglied hinzufügen</button>
+        <button class="btn btn-secondary" style="width:100%;justify-content:center;" onclick="switchModal('modal-add-member-success','modal-create-family')">Zur Familiengruppe hinzufügen</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Create family group -->
+<div class="modal-overlay" id="modal-create-family">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-create-family')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="steps">
+        <div class="step active"><div class="step-num">1</div><div class="step-label">Gruppe</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">2</div><div class="step-label">Mitglieder</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">3</div><div class="step-label">Beitrag</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">4</div><div class="step-label">Rechnung</div></div>
+      </div>
+      <div class="modal-title">Familiengruppe erstellen</div>
+      <div class="modal-sub">Definieren Sie einen Namen für diese Familiengruppe.</div>
+      <div class="field">
+        <label>Gruppenname *</label>
+        <input type="text" placeholder="z.B. Familie Müller" value="Familie Müller">
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select><option>Aktiv</option><option>Inaktiv</option></select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-create-family')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="switchModal('modal-create-family','modal-family-members')">Weiter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Family members step -->
+<div class="modal-overlay" id="modal-family-members">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-family-members')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="steps">
+        <div class="step done"><div class="step-num">✓</div><div class="step-label">Gruppe</div></div>
+        <div class="step-line"></div>
+        <div class="step active"><div class="step-num">2</div><div class="step-label">Mitglieder</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">3</div><div class="step-label">Beitrag</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">4</div><div class="step-label">Rechnung</div></div>
+      </div>
+      <div class="modal-title">Mitglieder hinzufügen</div>
+      <div class="modal-sub">Alle Mitglieder müssen aktive Clubmitglieder sein. Ein Mitglied wird als Hauptmitglied (Rechnungsanker) markiert.</div>
+
+      <div class="field">
+        <label>Mitglied suchen und hinzufügen</label>
+        <input type="text" placeholder="Name suchen...">
+      </div>
+
+      <div style="margin-bottom:8px;font-size:12px;font-weight:500;color:#555;">Hinzugefügte Mitglieder:</div>
+      <div class="member-chip">
+        <div class="member-avatar">E</div>
+        <div style="flex:1;">
+          <div class="member-name">Müller, Emma <span class="primary-tag">Hauptmitglied</span></div>
+          <div class="member-meta">#MID-1001 · Mitgliedschaft aktiv ✓</div>
+        </div>
+        <button class="warn-btn warn-btn-keep">Haupt ★</button>
+      </div>
+      <div class="member-chip">
+        <div class="member-avatar" style="background:#e6f1fb;color:#0c447c;">L</div>
+        <div style="flex:1;">
+          <div class="member-name">Müller, Luca</div>
+          <div class="member-meta">#MID-1002 · Mitgliedschaft aktiv ✓</div>
+        </div>
+        <button class="warn-btn warn-btn-end" style="border-color:#d0d0cb;color:#555;">Entfernen</button>
+      </div>
+
+      <div style="font-size:12px;color:#888;margin-top:8px;">
+        Rechnungsempfänger: Wird über den <strong>billing contact</strong> der Hauptmitglied-Person gesteuert.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="switchModal('modal-family-members','modal-create-family')">← Zurück</button>
+      <button class="btn btn-primary" onclick="switchModal('modal-family-members','modal-family-due')">Weiter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Family due step -->
+<div class="modal-overlay" id="modal-family-due">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-family-due')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="steps">
+        <div class="step done"><div class="step-num">✓</div><div class="step-label">Gruppe</div></div>
+        <div class="step-line"></div>
+        <div class="step done"><div class="step-num">✓</div><div class="step-label">Mitglieder</div></div>
+        <div class="step-line"></div>
+        <div class="step active"><div class="step-num">3</div><div class="step-label">Beitrag</div></div>
+        <div class="step-line"></div>
+        <div class="step todo"><div class="step-num">4</div><div class="step-label">Rechnung</div></div>
+      </div>
+      <div class="modal-title">Familienbeitrag zuweisen</div>
+      <div class="modal-sub">Wählen Sie einen Familienbeitrag für diese Gruppe.</div>
+
+      <div class="field">
+        <label>Mitgliedsbeitrag *</label>
+        <select>
+          <option>Familienbeitrag 2026 · Einmalzahlung</option>
+          <option>Familienbeitrag 2026 · Jährlich</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Startdatum *</label>
+          <input type="text" value="01.01.2026">
+        </div>
+        <div class="field">
+          <label>Enddatum</label>
+          <input type="text" placeholder="MM/TT/JJJJ">
+        </div>
+      </div>
+
+      <div style="background:#f8f8f6;border-radius:10px;padding:12px 14px;margin-bottom:1rem;">
+        <div style="font-size:12px;font-weight:600;color:#555;margin-bottom:8px;">Preisberechnung · 2 Mitglieder</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;"><span style="color:#777;">Grundpreis (1. Mitglied)</span><span>EUR 120.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;"><span style="color:#777;">2. Mitglied</span><span>EUR 48.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-top:1px solid #e8e8e4;margin-top:4px;font-weight:700;"><span>Gesamt</span><span>EUR 168.00</span></div>
+      </div>
+
+      <!-- Warning: existing individual dues -->
+      <div class="warning-box">
+        <div class="warning-title">⚠️ Aktive Einzelbeiträge gefunden</div>
+        <div class="warning-item">
+          <div class="warning-item-left">
+            <div style="font-weight:500;">Müller, Emma</div>
+            <div>Jahresbeitrag 2026 · EUR 80.00/Jahr · bis 31.12.2026</div>
+          </div>
+          <div class="warning-item-actions">
+            <button class="warn-btn warn-btn-end">Beenden</button>
+            <button class="warn-btn warn-btn-keep">Behalten</button>
+          </div>
+        </div>
+        <div class="warning-item">
+          <div class="warning-item-left">
+            <div style="font-weight:500;">Müller, Luca</div>
+            <div>Jahresbeitrag 2026 · EUR 80.00/Jahr · bis 31.12.2026</div>
+          </div>
+          <div class="warning-item-actions">
+            <button class="warn-btn warn-btn-end">Beenden</button>
+            <button class="warn-btn warn-btn-keep">Behalten</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="switchModal('modal-family-due','modal-family-members')">← Zurück</button>
+      <button class="btn btn-primary" onclick="switchModal('modal-family-due','modal-family-invoice')">Weiter →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Family invoice step -->
+<div class="modal-overlay" id="modal-family-invoice">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-family-invoice')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="steps">
+        <div class="step done"><div class="step-num">✓</div><div class="step-label">Gruppe</div></div>
+        <div class="step-line"></div>
+        <div class="step done"><div class="step-num">✓</div><div class="step-label">Mitglieder</div></div>
+        <div class="step-line"></div>
+        <div class="step done"><div class="step-num">✓</div><div class="step-label">Beitrag</div></div>
+        <div class="step-line"></div>
+        <div class="step active"><div class="step-num">4</div><div class="step-label">Rechnung</div></div>
+      </div>
+      <div class="modal-title">Rechnung erstellen</div>
+      <div class="modal-sub">Eine Sammelrechnung für alle Mitglieder der Familiengruppe.</div>
+
+      <div class="field">
+        <label>Rechnungsdatum *</label>
+        <input type="text" value="01.01.2026">
+      </div>
+      <div class="field">
+        <label>Rabatt (optional)</label>
+        <input type="text" placeholder="Rabattcode suchen...">
+      </div>
+
+      <div style="background:#f8f8f6;border-radius:10px;padding:14px 16px;margin-bottom:1rem;">
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px;">Zusammenfassung</div>
+        <div style="font-size:12px;color:#888;margin-bottom:8px;">Familienbeitrag 2026 · Familie Müller</div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;"><span style="color:#777;">Emma Müller</span><span>EUR 120.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;"><span style="color:#777;">Luca Müller</span><span>EUR 48.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;"><span style="color:#777;">Steuer (8%)</span><span>EUR 13.44</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-top:1px solid #e8e8e4;margin-top:4px;font-weight:700;"><span>Gesamt</span><span>EUR 181.44</span></div>
+        <div style="font-size:12px;color:#888;margin-top:6px;">Rechnungsempfänger: <strong>Thomas Müller</strong> (billing contact)</div>
+      </div>
+
+      <div style="background:#e6f7f5;border-radius:8px;padding:10px 12px;font-size:12px;color:#007a6c;">
+        ✓ 1 Rechnung wird erstellt · An Thomas Müller (Elternteil) · Rechnungen werden aktuell nicht automatisch versandt.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="switchModal('modal-family-invoice','modal-family-due')">← Zurück</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-family-invoice');showScreen('family-detail');">✓ Familiengruppe erstellen</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Due type choice (from single member profile) -->
+<div class="modal-overlay" id="modal-due-type">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-due-type')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title">Beitrag hinzufügen</div>
+      <div class="modal-sub">Wählen Sie die Art des Beitrags.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+        <div style="border:1.5px solid #e8e8e4;border-radius:12px;padding:16px;text-align:center;cursor:pointer;" onclick="closeModal('modal-due-type')">
+          <div style="font-size:24px;margin-bottom:8px;">👤</div>
+          <div style="font-weight:600;font-size:14px;">Einzelbeitrag</div>
+          <div style="font-size:12px;color:#888;margin-top:4px;">Beitrag nur für dieses Mitglied</div>
+        </div>
+        <div style="border:1.5px solid #00a693;border-radius:12px;padding:16px;text-align:center;cursor:pointer;background:#f5fffe;" onclick="switchModal('modal-due-type','modal-create-family')">
+          <div style="font-size:24px;margin-bottom:8px;">👨‍👩‍👧‍👦</div>
+          <div style="font-weight:600;font-size:14px;color:#00a693;">Familienbeitrag</div>
+          <div style="font-size:12px;color:#888;margin-top:4px;">Beitrag für eine Familiengruppe</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:flex-end;">
+      <button class="btn btn-secondary" onclick="closeModal('modal-due-type')">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Add due to existing family -->
+<div class="modal-overlay" id="modal-add-due">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-logo">coachbetter</span>
+      <button class="modal-close" onclick="closeModal('modal-add-due')">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title">Familienbeitrag hinzufügen</div>
+      <div class="modal-sub">Beitrag für Familie Müller (2 Mitglieder)</div>
+      <div class="member-chip" style="margin-bottom:1rem;">
+        <div class="member-avatar">F</div>
+        <div><div class="member-name">Familie Müller</div><div class="member-meta">Emma Müller · Luca Müller</div></div>
+      </div>
+      <div class="field">
+        <label>Mitgliedsbeitrag *</label>
+        <select><option>Familienbeitrag 2026 · Einmalzahlung</option></select>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Startdatum *</label><input type="text" value="01.01.2026"></div>
+        <div class="field"><label>Enddatum</label><input type="text" placeholder="MM/TT/JJJJ"></div>
+      </div>
+      <div style="background:#f8f8f6;border-radius:10px;padding:12px 14px;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;"><span style="color:#777;">Grundpreis</span><span>EUR 120.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;padding:3px 0;"><span style="color:#777;">2. Mitglied</span><span>EUR 48.00</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-top:1px solid #e8e8e4;margin-top:4px;font-weight:700;"><span>Gesamt</span><span>EUR 168.00</span></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-add-due')">Abbrechen</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-add-due')">✓ Beitrag hinzufügen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function showMemberResults(val) {
+  document.getElementById('member-search-results').style.display = val.length > 0 ? 'block' : 'none';
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  // Update sidebar
+  document.querySelectorAll('.sidebar-sub').forEach(s => s.classList.remove('active'));
+  if (id === 'members' || id.startsWith('profile')) {
+    document.querySelectorAll('.sidebar-sub')[0].classList.add('active');
+  } else if (id === 'familygroups' || id === 'family-detail') {
+    document.querySelectorAll('.sidebar-sub')[1].classList.add('active');
+  }
+}
+
+function openModal(id) {
+  document.getElementById(id).classList.add('visible');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('visible');
+}
+
+function switchModal(from, to) {
+  closeModal(from);
+  openModal(to);
+}
+</script>
+</body>
+</html>
